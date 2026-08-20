@@ -15,13 +15,16 @@ GoRouter routes = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: RoutePaths.login,
   routes: [
+    /*
     GoRoute(
       path: RoutePaths.splashScreen,
       builder: (context, state) => SplashScreen(),
     ),
+    */
 
     // --------------------AUTH--------------------
     GoRoute(path: RoutePaths.login, builder: (context, state) => LoginScreen()),
+    /*
     GoRoute(
       path: RoutePaths.signup,
       builder: (context, state) => SignupScreen(),
@@ -30,34 +33,32 @@ GoRouter routes = GoRouter(
       path: RoutePaths.aLocked,
       builder: (context, state) => AccountLockedScreen(),
     ),
-
     GoRoute(
       path: RoutePaths.verifyOTP,
       builder: (context, state) => VerifyOtpScreen(),
-    ), // POST /api/auth/verify-otp
+    ),
     GoRoute(
       path: RoutePaths.resendOTP,
       builder: (context, state) => ResendOtpScreen(),
-    ), // POST /api/auth/resend-otp
+    ),
     GoRoute(
       path: RoutePaths.forgotPassword,
       builder: (context, state) => ForgotPasswordScreen(),
-    ), // POST /api/auth/forgot-password
+    ),
     GoRoute(
       path: RoutePaths.resetPassword,
       builder: (context, state) => ResetPasswordScreen(),
     ),
-
     GoRoute(
       path: RoutePaths.cTrackEntry,
-      builder: (context, state) => TrackEntryScreen(), // Shows input field
+      builder: (context, state) => TrackEntryScreen(),
     ),
-
     GoRoute(
       path: RoutePaths.cTrackCode,
       builder: (context, state) =>
           TrackComplaintScreen(code: state.pathParameters['code']!),
-    ), // GET /api/complaints/track/{code}
+    ),
+    */
     // ----------------------------------------
     ShellRoute(
       builder: (context, state, child) {
@@ -71,19 +72,23 @@ GoRouter routes = GoRouter(
         return AdaptiveShellBuilder(currentChild: child, role: role);
       },
       routes: [
+        /*
         GoRoute(
           path: RoutePaths.submissionSuccess,
           builder: (context, state) => SubmissionSuccessScreen(),
-        ), // GET /submision/success
+        ),
+        */
         // All logged-in users)
         GoRoute(
           path: RoutePaths.profile,
           builder: (context, state) => ProfileScreen(),
         ), // GET/PUT/DELETE /api/auth/profile
+        /*
         GoRoute(
           path: RoutePaths.notifications,
           builder: (context, state) => NotificationsScreen(),
-        ), // GET/PUT/DELETE /api/auth/profile
+        ),
+        */
         // ----------------------------------------
         // CITIZEN ( /api/complaints)
         // ----------------------------------------
@@ -91,54 +96,59 @@ GoRouter routes = GoRouter(
           path: RoutePaths.cComplaints,
           builder: (context, state) => CitizenComplaintListScreen(),
         ), // GET /api/complaints
+        /*
         GoRoute(
           path: RoutePaths.cComplaintDetails,
           builder: (context, state) => CitizenComplaintDetailScreen(),
-        ), // GET /api/complaints/{id}
+        ),
+        */
         GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),
         ), // POST /api/complaints (multipart)
+        /*
         GoRoute(
           path: RoutePaths.cUpdate,
           builder: (context, state) => UpdateComplaintScreen(),
-        ), // PUT /api/complaints/{id}
-
+        ),
         GoRoute(
           path: RoutePaths.cAttachments,
           builder: (context, state) => UploadAttachmentsScreen(),
-        ), // POST /api/complaints/{id}/attachments
+        ),
+        */
         // ----------------------------------------
         // Staff ( /api/agency/ )
         // ----------------------------------------
         GoRoute(
           path: RoutePaths.sComplaints,
-          builder: (context, state) => StaffQueueScreen(),
+          builder: (context, state) => StaffComplainsQueueScreen(),
         ), // GET /api/agency/complaints
+        /*
         GoRoute(
           path: RoutePaths.sComplaint,
           builder: (context, state) => StaffComplaintDetailScreen(),
-        ), // GET /api/agency/complaints/{id}
+        ),
         GoRoute(
           path: RoutePaths.updateComplaint,
           builder: (context, state) => StaffUpdateComplaintScreen(),
-        ), // PUT /api/agency/complaints/{id}
+        ),
         GoRoute(
           path: RoutePaths.complaintLock,
           builder: (context, state) => StaffLockComplaintScreen(),
-        ), // POST /api/agency/complaints/{id}/lock
+        ),
         GoRoute(
           path: RoutePaths.complaintUnlock,
           builder: (context, state) => StaffUnlockComplaintScreen(),
-        ), // POST /api/agency/complaints/{id}/unlock
+        ),
         GoRoute(
           path: RoutePaths.complaintRevisions,
           builder: (context, state) => StaffRevisionsScreen(),
-        ), // GET /api/agency/complaints/{id}/revisions
+        ),
         GoRoute(
           path: RoutePaths.complaintStatusHistory,
           builder: (context, state) => StaffStatusHistoryScreen(),
-        ), // GET /api/agency/complaints/{id}/status-history
+        ),
+        */
         // ----------------------------------------
         // ADMIN ( /api/admin, /api/statistics, /api/agencies)
         // ----------------------------------------
@@ -150,44 +160,48 @@ GoRouter routes = GoRouter(
           path: RoutePaths.users,
           builder: (context, state) => AdminUsersListScreen(),
         ), // GET /api/admin/users
+        /*
         GoRoute(
           path: RoutePaths.performance,
           builder: (context, state) => SystemPerformanceScreen(),
-        ), // GET /api/admin/performance
+        ),
+        */
         GoRoute(
           path: RoutePaths.cHome,
           builder: (context, state) => const CitizenHomeScreen(),
         ),
+        /*
         GoRoute(
           path: RoutePaths.user,
           builder: (context, state) => AdminUserDetailScreen(),
-        ), // GET/PUT/DELETE /api/admin/users/{id}
+        ),
+        */
         GoRoute(
           path: RoutePaths.agencies,
           builder: (context, state) => AdminAgenciesListScreen(),
         ), // GET /api/agencies, POST /api/agencies
+        /*
         GoRoute(
           path: RoutePaths.agency,
           builder: (context, state) => AdminAgencyDetailScreen(),
-        ), // GET/PUT/DELETE /api/agencies/{id}
+        ),
         GoRoute(
           path: RoutePaths.agencyUsers,
           builder: (context, state) => AdminAgencyUsersListScreen(),
-        ), // GET/POST /api/agencies/{id}/users
+        ),
         GoRoute(
           path: RoutePaths.agencyUser,
           builder: (context, state) => AdminAgencyUserDetailScreen(),
-        ), // PUT/DELETE /api/agencies/{id}/users/{userId}
+        ),
+        */
         GoRoute(
           path: RoutePaths.reports,
           builder: (context, state) => AdminReportsScreen(),
-        ), // GET /api/reports/complaints/csv, /pdf, /statistics/csv         // GET /api/reports/complaints/csv, /pdf, /statistics/csv
+        ), // GET /api/reports/complaints/csv, /pdf, /statistics/csv
       ],
     ),
   ],
-  redirect: (context, state) {
-    return _redirectContent(context, state);
-  },
+  redirect: (context, state) => _redirectContent(context, state),
 );
 
 String _getHomePath(UserRole role) {

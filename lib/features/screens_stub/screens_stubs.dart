@@ -8,112 +8,11 @@ import '../../core/router/route_paths.dart';
 import '../locale/presentation/bloc/locale_cubit.dart';
 import '../theme/presentation/bloc/theme_cubit.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('SplashScreen')));
-}
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Login')));
-}
-
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Signup')));
-}
-
-class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Signup')));
-}
-
-class AccountLockedScreen extends StatelessWidget {
-  const AccountLockedScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Account Locked')));
-}
-
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Register')));
-}
-
-class VerifyOtpScreen extends StatelessWidget {
-  const VerifyOtpScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Verify OTP')));
-}
-
-class ResendOtpScreen extends StatelessWidget {
-  const ResendOtpScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Resend OTP')));
-}
-
-class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Forgot Password')));
-}
-
-class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Reset Password')));
-}
-
-// ------------------track entry------------
-class TrackEntryScreen extends StatelessWidget {
-  const TrackEntryScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final TextEditingController codeController = TextEditingController();
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Track Complaint')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: codeController,
-              decoration: const InputDecoration(
-                labelText: 'Enter Tracking Code',
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final code = codeController.text.trim();
-                if (code.isNotEmpty) {
-                  // Navigate to the required /:code route
-                  context.go('/citizen/track/$code');
-                }
-              },
-              child: const Text('Track'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 // ----------------Profile-------------------
@@ -306,20 +205,6 @@ class CitizenComplaintListScreen extends StatelessWidget {
       const Scaffold(body: Center(child: Text('My Complaints')));
 }
 
-class SubmissionSuccessScreen extends StatelessWidget {
-  const SubmissionSuccessScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('My Complaints')));
-}
-
-class CitizenComplaintDetailScreen extends StatelessWidget {
-  const CitizenComplaintDetailScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Complaint Detail')));
-}
-
 class SubmitComplaintScreen extends StatelessWidget {
   const SubmitComplaintScreen({super.key});
   @override
@@ -327,90 +212,17 @@ class SubmitComplaintScreen extends StatelessWidget {
       const Scaffold(body: Center(child: Text('Submit Complaint')));
 }
 
-class UpdateComplaintScreen extends StatelessWidget {
-  const UpdateComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Update Complaint')));
-}
-
-class TrackComplaintScreen extends StatelessWidget {
-  const TrackComplaintScreen({super.key, required this.code});
-
-  final String code;
-
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Track Complaint')));
-}
-
-class UploadAttachmentsScreen extends StatelessWidget {
-  const UploadAttachmentsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Upload Attachments')));
-}
-
 // ----- STAFF -----
-class StaffQueueScreen extends StatelessWidget {
-  const StaffQueueScreen({super.key});
+class StaffComplainsQueueScreen extends StatelessWidget {
+  const StaffComplainsQueueScreen({super.key});
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Staff Queue')));
 }
 
-class StaffComplaintDetailScreen extends StatelessWidget {
-  const StaffComplaintDetailScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Staff Complaint Detail')));
-}
-
-class StaffUpdateComplaintScreen extends StatelessWidget {
-  const StaffUpdateComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Staff Update')));
-}
-
-class StaffLockComplaintScreen extends StatelessWidget {
-  const StaffLockComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Lock Complaint')));
-}
-
-class StaffUnlockComplaintScreen extends StatelessWidget {
-  const StaffUnlockComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Unlock Complaint')));
-}
-
-class StaffRevisionsScreen extends StatelessWidget {
-  const StaffRevisionsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Revisions')));
-}
-
-class StaffStatusHistoryScreen extends StatelessWidget {
-  const StaffStatusHistoryScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Status History')));
-}
-
 // ----- ADMIN -----
 class AdminStatisticsScreen extends StatelessWidget {
   const AdminStatisticsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Statistics')));
-}
-
-class SystemPerformanceScreen extends StatelessWidget {
-  const SystemPerformanceScreen({super.key});
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Statistics')));
@@ -423,39 +235,11 @@ class AdminUsersListScreen extends StatelessWidget {
       const Scaffold(body: Center(child: Text('Users List')));
 }
 
-class AdminUserDetailScreen extends StatelessWidget {
-  const AdminUserDetailScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('User Detail')));
-}
-
 class AdminAgenciesListScreen extends StatelessWidget {
   const AdminAgenciesListScreen({super.key});
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Agencies List')));
-}
-
-class AdminAgencyDetailScreen extends StatelessWidget {
-  const AdminAgencyDetailScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Agency Detail')));
-}
-
-class AdminAgencyUsersListScreen extends StatelessWidget {
-  const AdminAgencyUsersListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Agency Users')));
-}
-
-class AdminAgencyUserDetailScreen extends StatelessWidget {
-  const AdminAgencyUserDetailScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Agency User Detail')));
 }
 
 class AdminReportsScreen extends StatelessWidget {
