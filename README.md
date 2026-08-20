@@ -62,13 +62,10 @@ lib/
 │ ├── router/ # go_router configuration & navigation guards
 │ ├── theme/ # Light/Dark theme definitions (AppColors)
 │ └── widgets/ # Shared widgets (AdaptiveShell, NavigationRail, etc.)
-├── features/
-│ ├── auth/ # Authentication (Login, OTP, Register)
-│ ├── citizen/ # Citizen specific screens (Submit, List, Track)
-│ ├── staff/ # Staff specific screens (Queue, Lock, Status)
-│ ├── admin/ # Admin specific screens (Stats, Users, Agencies)
-│ ├── locale/ # Locale Cubit (Language persistence)
-│ └── theme/ # Theme Cubit (Dark/Light persistence)
+├── feature/
+├── data/ models · remote_datasource · repository_impl
+├── domain/ entities · repository interface
+└── presentation/ bloc/ (event · state · bloc) · screens · widgets
 └── main.dart
 
 ---
