@@ -1,0 +1,99 @@
+# --------------------------------------------------------------
+#  FLUTTER & DART
+# --------------------------------------------------------------
+.dart_tool/
+.pub-cache/
+.pub/
+build/
+coverage/
+pubspec.lock           # Commit this for apps, ignore for packages. I recommend committing it.
+*.lock
+*.pid
+*.tmp
+*.swp
+*.swo
+*~
+
+# --------------------------------------------------------------
+#  ANDROID
+# --------------------------------------------------------------
+android/app/build/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/.gradle/
+android/local.properties
+android/*.iml
+android/.idea/
+android/captures/
+android/.project
+android/.settings/
+android/.classpath
+android/gen/
+android/bin/
+android/gradle/wrapper/gradle-wrapper.jar
+
+# SIGNING (CRITICAL: DO NOT COMMIT)
+android/app/key.properties
+*.keystore
+*.jks
+*.p12
+
+# --------------------------------------------------------------
+#  iOS
+# --------------------------------------------------------------
+ios/Pods/
+ios/Podfile.lock
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcworkspace/xcshareddata/
+ios/*.xcuserstate
+ios/Flutter/flutter_assets/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/engine/
+
+# FIREBASE (CRITICAL: DO NOT COMMIT)
+google-services.json
+GoogleService-Info.plist
+*.p8
+
+# --------------------------------------------------------------
+#  ENVIRONMENT & SECRETS (CRITICAL: DO NOT COMMIT)
+# --------------------------------------------------------------
+.env
+*.env
+*.env.local
+*.env.*.local
+secrets.json
+
+# --------------------------------------------------------------
+#  WEB
+# --------------------------------------------------------------
+web/
+
+# --------------------------------------------------------------
+#  OS / IDE
+# --------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+*.class
+*.log
+*.pyc
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/

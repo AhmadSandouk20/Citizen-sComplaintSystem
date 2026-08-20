@@ -1,0 +1,21 @@
+{
+  "login": "Login",
+  "email": "Email",
+  "password": "Password",
+  "complaints": "Complaints",
+  "submit": "Submit",
+  "profile": "Profile",
+  "queue": "Queue",
+  "statistics": "Statistics",
+  "users": "Users",
+  "agencies": "Agencies",
+  "reports": "Reports",
+  "logout": "Logout",
+  "CCS": "CCS",
+  "track": "track",
+  "agenciesQueue": "Agencies Queue",
+  "language": "Language",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark"
+}
