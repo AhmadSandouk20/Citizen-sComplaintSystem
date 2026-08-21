@@ -96,10 +96,16 @@ GoRouter routes = GoRouter(
           path: RoutePaths.cComplaints,
           builder: (context, state) => CitizenComplaintListScreen(),
         ), // GET /api/complaints
+        GoRoute(
+          path: RoutePaths.cHome,
+          builder: (context, state) => const CitizenHomeScreen(),
+        ),
         /*
         GoRoute(
           path: RoutePaths.cComplaintDetails,
-          builder: (context, state) => CitizenComplaintDetailScreen(),
+          builder: (context, state) => CitizenComplaintDetailScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         */
         GoRoute(
@@ -109,11 +115,15 @@ GoRouter routes = GoRouter(
         /*
         GoRoute(
           path: RoutePaths.cUpdate,
-          builder: (context, state) => UpdateComplaintScreen(),
+          builder: (context, state) => UpdateComplaintScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.cAttachments,
-          builder: (context, state) => UploadAttachmentsScreen(),
+          builder: (context, state) => UploadAttachmentsScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         */
         // ----------------------------------------
@@ -123,30 +133,48 @@ GoRouter routes = GoRouter(
           path: RoutePaths.sComplaints,
           builder: (context, state) => StaffComplainsQueueScreen(),
         ), // GET /api/agency/complaints
+        // GoRoute(
+        //   path: RoutePaths.staffRequestInfo,
+        //   builder: (context, state) => StaffRequestInfoScreen(
+        //     complaintId: int.parse(state.pathParameters['id']!),
+        //   ),
+        // ), // POST /api/agency/complaints/{id}/request-info
         /*
         GoRoute(
           path: RoutePaths.sComplaint,
-          builder: (context, state) => StaffComplaintDetailScreen(),
+          builder: (context, state) => StaffComplaintDetailScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.updateComplaint,
-          builder: (context, state) => StaffUpdateComplaintScreen(),
+          builder: (context, state) => StaffUpdateComplaintScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.complaintLock,
-          builder: (context, state) => StaffLockComplaintScreen(),
+          builder: (context, state) => StaffLockComplaintScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.complaintUnlock,
-          builder: (context, state) => StaffUnlockComplaintScreen(),
+          builder: (context, state) => StaffUnlockComplaintScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.complaintRevisions,
-          builder: (context, state) => StaffRevisionsScreen(),
+          builder: (context, state) => StaffRevisionsScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.complaintStatusHistory,
-          builder: (context, state) => StaffStatusHistoryScreen(),
+          builder: (context, state) => StaffStatusHistoryScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         */
         // ----------------------------------------
@@ -160,38 +188,63 @@ GoRouter routes = GoRouter(
           path: RoutePaths.users,
           builder: (context, state) => AdminUsersListScreen(),
         ), // GET /api/admin/users
+        // GoRoute(
+        //   path: RoutePaths.addUser,
+        //   builder: (context, state) => AdminUserFormScreen(),
+        // ), // POST /api/admin/users
+        // GoRoute(
+        //   path: RoutePaths.updateUser,
+        //   builder: (context, state) => AdminUserFormScreen(
+        //     userId: int.parse(state.pathParameters['id']!),
+        //   ),
+        // ), // PUT /api/admin/users/{id}
         /*
         GoRoute(
           path: RoutePaths.performance,
           builder: (context, state) => SystemPerformanceScreen(),
         ),
         */
-        GoRoute(
-          path: RoutePaths.cHome,
-          builder: (context, state) => const CitizenHomeScreen(),
-        ),
         /*
         GoRoute(
           path: RoutePaths.user,
-          builder: (context, state) => AdminUserDetailScreen(),
+          builder: (context, state) => AdminUserDetailScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         */
-        GoRoute(
-          path: RoutePaths.agencies,
-          builder: (context, state) => AdminAgenciesListScreen(),
-        ), // GET /api/agencies, POST /api/agencies
+        // GoRoute(
+        //   path: RoutePaths.agencies,
+        //   builder: (context, state) => AdminAgenciesListScreen(),
+        // ), // GET /api/agencies, POST /api/agencies
+        // GoRoute(
+        //   path: RoutePaths.addAgency,
+        //   builder: (context, state) => AdminAgencyFormScreen(),
+        // ), // POST /api/agencies
+        // GoRoute(
+        //   path: RoutePaths.updateAgency,
+        //   builder: (context, state) => AdminAgencyFormScreen(
+        //     id: int.parse(state.pathParameters['id']!),
+        //   ),
+        // ), // PUT /api/agencies/{id}
+        // GoRoute(
+        //   path: RoutePaths.agency,
+        //   builder: (context, state) => AdminAgencyDetailsScreen(
+        //     id: int.parse(state.pathParameters['id']!),
+        //   ),
+        // ), // GET /api/agencies/{id}
         /*
         GoRoute(
-          path: RoutePaths.agency,
-          builder: (context, state) => AdminAgencyDetailScreen(),
-        ),
-        GoRoute(
           path: RoutePaths.agencyUsers,
-          builder: (context, state) => AdminAgencyUsersListScreen(),
+          builder: (context, state) => AdminAgencyUsersListScreen(
+            agencyId: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.agencyUser,
-          builder: (context, state) => AdminAgencyUserDetailScreen(),
+          builder: (context, state) => AdminAgencyUserDetailScreen(
+            agencyId: int.parse(state.pathParameters['id']!),
+            userId: int.parse(state.pathParameters['userId']!),
+          ),
         ),
         */
         GoRoute(

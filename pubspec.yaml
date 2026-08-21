@@ -44,18 +44,22 @@ dependencies:
   flutter_secure_storage: ^10.3.1
   shared_preferences:
   easy_localization: ^3.0.8
+  json_annotation:
+  freezed_annotation: 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+ 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-
+  build_runner: ^2.4.12
+  json_serializable: ^6.7.1
+  freezed: 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -71,7 +75,7 @@ flutter:
   assets:
     - assets/translations/ar.json
     - assets/translations/en.json
-  #   - images/a_dot_ham.jpeg
+    - assets/images/MOH.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

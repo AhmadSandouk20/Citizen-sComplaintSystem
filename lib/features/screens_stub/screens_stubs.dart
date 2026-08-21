@@ -235,13 +235,6 @@ class AdminUsersListScreen extends StatelessWidget {
       const Scaffold(body: Center(child: Text('Users List')));
 }
 
-class AdminAgenciesListScreen extends StatelessWidget {
-  const AdminAgenciesListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Agencies List')));
-}
-
 class AdminReportsScreen extends StatelessWidget {
   const AdminReportsScreen({super.key});
   @override

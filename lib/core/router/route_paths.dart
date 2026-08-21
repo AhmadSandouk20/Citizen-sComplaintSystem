@@ -31,14 +31,19 @@ class RoutePaths {
   static const String complaintRevisions = '/staff/complaints/:id/revisions';
   static const String complaintStatusHistory =
       '/staff/complaints/:id/status-history';
+  static const String staffRequestInfo = "/staff/complaints/:id/request-info";
 
   // admin
   static const String statistics = '/admin/statistics';
   static const String users = '/admin/users';
   static const String user = '/admin/users/:id';
+  static const String addUser = "/admin/users/add";
+  static const String updateUser = "/admin/users/:id/edit";
   static const String agencies = '/admin/agencies';
   static const String agency = '/admin/agencies/:id';
   static const String agencyUsers = '/admin/agencies/:id/users';
+  static const String addAgency = "/admin/agencies/add";
+  static const String updateAgency = "/admin/agencies/:id/edit";
   static const String agencyUser = '/admin/agencies/:id/users/:userId';
   static const String reports = '/admin/reports';
   static const String performance = '/admin/Performance';
