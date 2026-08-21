@@ -1,31 +1,26 @@
 import 'package:bloc/bloc.dart';
-import 'package:final_flutter/features/auth/data/models/user_model.dart';
-import 'package:final_flutter/features/auth/data/models/user_role_enum.dart';
+import 'package:final_flutter/features/auth/domain/auth_repository.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
+import 'package:final_flutter/features/auth/data/auth_repository_implementation.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  // AuthCubit() : super(AuthInitState());
+  final AuthRepository _authRepository = AuthRepositoryImplementation();
 
-  // AuthCubit()
-  //   : super(
-  //       LoginSuccessState(
-  //         UserModel(
-  //           id: 1,
-  //           name: "ahmad",
-  //           role: UserRole.citizen,
-  //           token: "adsf79843",
-  //         ),
-  //       ),
-  //     );
-  AuthCubit()
-    : super(
-        LoginSuccessState(
-          UserModel(
-            id: 1,
-            name: "ahmad",
-            role: UserRole.admin,
-            token: "adsf79843",
-          ),
-        ),
-      );
+  AuthCubit() : super(AuthInitState());
+
+  Future<void> login(String identifier, String password) async {
+    emit(AuthLoadingState());
+
+    try {
+      final user = await _authRepository.login(identifier, password);
+      emit(LoginSuccessState(user));
+    } catch (e) {
+      emit(LoginFailState(e.toString()));
+    }
+  }
+
+  Future<void> logout() async {
+    await _authRepository.logout();
+    emit(AuthInitState());
+  }
 }
