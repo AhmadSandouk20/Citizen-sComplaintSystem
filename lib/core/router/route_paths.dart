@@ -47,4 +47,33 @@ class RoutePaths {
   static const String agencyUser = '/admin/agencies/:id/users/:userId';
   static const String reports = '/admin/reports';
   static const String performance = '/admin/Performance';
+
+  // ----------------------------Helper methods--------------------------------
+
+  // Citizen
+  static String cComplaintDetailsPath(int id) => '/citizen/complaints/$id';
+  static String cUpdatePath(int id) => '/citizen/update/$id';
+  static String cAttachmentsPath(int id) => '/citizen/attachments/$id';
+  static String cTrackCodePath(String code) => '/citizen/track/$code';
+
+  // Staff
+  static String sComplaintPath(int id) => '/staff/complaints/$id';
+  static String updateComplaintPath(int id) => '/staff/complaints/$id/update';
+  static String complaintLockPath(int id) => '/staff/complaints/$id/lock';
+  static String complaintUnlockPath(int id) => '/staff/complaints/$id/unlock';
+  static String complaintRevisionsPath(int id) =>
+      '/staff/complaints/$id/revisions';
+  static String complaintStatusHistoryPath(int id) =>
+      '/staff/complaints/$id/status-history';
+  static String staffRequestInfoPath(int id) =>
+      "/staff/complaints/$id/request-info";
+
+  // Admin
+  static String userPath(int id) => '/admin/users/$id';
+  static String updateUserPath(int id) => "/admin/users/$id/edit";
+  static String agencyPath(int id) => '/admin/agencies/$id';
+  static String agencyUsersPath(int id) => '/admin/agencies/$id/users';
+  static String updateAgencyPath(int id) => "/admin/agencies/$id/edit";
+  static String agencyUserPath(int agencyId, int userId) =>
+      '/admin/agencies/$agencyId/users/$userId';
 }

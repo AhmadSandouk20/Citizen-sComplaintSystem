@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
 import '../../features/screens_stub/screens_stubs.dart';
@@ -216,16 +217,15 @@ GoRouter routes = GoRouter(
         //   path: RoutePaths.agencies,
         //   builder: (context, state) => AdminAgenciesListScreen(),
         // ), // GET /api/agencies, POST /api/agencies
-        // GoRoute(
-        //   path: RoutePaths.addAgency,
-        //   builder: (context, state) => AdminAgencyFormScreen(),
-        // ), // POST /api/agencies
-        // GoRoute(
-        //   path: RoutePaths.updateAgency,
-        //   builder: (context, state) => AdminAgencyFormScreen(
-        //     id: int.parse(state.pathParameters['id']!),
-        //   ),
-        // ), // PUT /api/agencies/{id}
+        GoRoute(
+          path: RoutePaths.addAgency,
+          builder: (context, state) => AdminAgencyFormScreen(),
+        ), // POST /api/agencies
+        GoRoute(
+          path: RoutePaths.updateAgency,
+          builder: (context, state) =>
+              AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
+        ), // PUT /api/agencies/{id}
         // GoRoute(
         //   path: RoutePaths.agency,
         //   builder: (context, state) => AdminAgencyDetailsScreen(
