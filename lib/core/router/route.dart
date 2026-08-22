@@ -6,10 +6,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
+import '../../features/profile/ presentation/cubit/profile_cubit.dart';
+import '../../features/profile/ presentation/screens/profile_screen.dart';
 import '../../features/screens_stub/screens_stubs.dart';
 import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
 import 'route_paths.dart';
+import '../di/injector.dart';
 
 GoRouter routes = GoRouter(
   navigatorKey: navigatorKey,
@@ -79,10 +82,16 @@ GoRouter routes = GoRouter(
         ),
         */
         // All logged-in users)
+        //profile
         GoRoute(
           path: RoutePaths.profile,
-          builder: (context, state) => ProfileScreen(),
-        ), // GET/PUT/DELETE /api/auth/profile
+          builder: (context, state) {
+            return BlocProvider(
+              create: (_) => getIt<ProfileCubit>(),
+              child: const ProfileScreen(),
+            );
+          },
+        ),// GET/PUT/DELETE /api/auth/profile
         /*
         GoRoute(
           path: RoutePaths.notifications,

@@ -1,12 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/router/route_paths.dart';
-import '../locale/presentation/bloc/locale_cubit.dart';
-import '../theme/presentation/bloc/theme_cubit.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -16,114 +11,114 @@ class LoginScreen extends StatelessWidget {
 }
 
 // ----------------Profile-------------------
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final themeCubit = context.read<ThemeCubit>();
-    final localeCubit = context.read<LocaleCubit>();
-
-    final currentTheme = context.watch<ThemeCubit>().state;
-    final currentLocale = context.watch<LocaleCubit>().state;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile (Test Center)'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${LocaleKeys.theme.tr()}: ${currentTheme.themeMode == ThemeMode.dark ? LocaleKeys.dark.tr() : LocaleKeys.light.tr()}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () => themeCubit.toggleThemeMode(),
-                      icon: Icon(
-                        currentTheme.themeMode == ThemeMode.dark
-                            ? Icons.light_mode
-                            : Icons.dark_mode,
-                      ),
-                      label: Text(
-                        currentTheme.themeMode == ThemeMode.dark
-                            ? 'Switch to Light'
-                            : 'Switch to Dark',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${LocaleKeys.language.tr()}: ${currentLocale.locale.languageCode == 'en' ? 'English' : 'العربية'}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () =>
-                          localeCubit.toggleLanguage(context), // YOUR method
-                      icon: Icon(
-                        currentLocale.locale.languageCode == 'en'
-                            ? Icons.translate
-                            : Icons.translate,
-                      ),
-                      label: Text(
-                        currentLocale.locale.languageCode == 'en'
-                            ? 'Switch to العربية'
-                            : 'Switch to English',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class ProfileScreen extends StatelessWidget {
+//   const ProfileScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final themeCubit = context.read<ThemeCubit>();
+//     final localeCubit = context.read<LocaleCubit>();
+//
+//     final currentTheme = context.watch<ThemeCubit>().state;
+//     final currentLocale = context.watch<LocaleCubit>().state;
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Profile (Test Center)'),
+//         centerTitle: true,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(24.0),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             Card(
+//               elevation: 4,
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(16),
+//               ),
+//               child: Padding(
+//                 padding: const EdgeInsets.all(20.0),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       '${LocaleKeys.theme.tr()}: ${currentTheme.themeMode == ThemeMode.dark ? LocaleKeys.dark.tr() : LocaleKeys.light.tr()}',
+//                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 16),
+//                     ElevatedButton.icon(
+//                       onPressed: () => themeCubit.toggleThemeMode(),
+//                       icon: Icon(
+//                         currentTheme.themeMode == ThemeMode.dark
+//                             ? Icons.light_mode
+//                             : Icons.dark_mode,
+//                       ),
+//                       label: Text(
+//                         currentTheme.themeMode == ThemeMode.dark
+//                             ? 'Switch to Light'
+//                             : 'Switch to Dark',
+//                       ),
+//                       style: ElevatedButton.styleFrom(
+//                         minimumSize: const Size(double.infinity, 48),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//
+//             const SizedBox(height: 24),
+//
+//             Card(
+//               elevation: 4,
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(16),
+//               ),
+//               child: Padding(
+//                 padding: const EdgeInsets.all(20.0),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       '${LocaleKeys.language.tr()}: ${currentLocale.locale.languageCode == 'en' ? 'English' : 'العربية'}',
+//                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     const SizedBox(height: 16),
+//                     ElevatedButton.icon(
+//                       onPressed: () =>
+//                           localeCubit.toggleLanguage(context), // YOUR method
+//                       icon: Icon(
+//                         currentLocale.locale.languageCode == 'en'
+//                             ? Icons.translate
+//                             : Icons.translate,
+//                       ),
+//                       label: Text(
+//                         currentLocale.locale.languageCode == 'en'
+//                             ? 'Switch to العربية'
+//                             : 'Switch to English',
+//                       ),
+//                       style: ElevatedButton.styleFrom(
+//                         minimumSize: const Size(double.infinity, 48),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//
+//             const SizedBox(height: 32),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class CitizenHomeScreen extends StatelessWidget {
   const CitizenHomeScreen({super.key});

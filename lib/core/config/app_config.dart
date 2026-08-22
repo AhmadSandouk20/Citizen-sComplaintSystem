@@ -1,7 +1,7 @@
 class AppConfig {
   AppConfig._();
 
-  static const String host = '127.0.0.1';
+  static const String host = '192.168.1.105';
   static const int port = 8000;
 
   static const String baseUrl = 'http://$host:$port';

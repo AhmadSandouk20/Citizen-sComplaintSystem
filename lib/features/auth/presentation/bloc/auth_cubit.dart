@@ -24,7 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
             id: 1,
             name: "ahmad",
             role: UserRole.admin,
-            token: "adsf79843",
+            token: "2|54XKVCXEYgMibfQ6cOZksVqd5bS6yhp57fIZFbFD5b8ef188",
           ),
         ),
       );
