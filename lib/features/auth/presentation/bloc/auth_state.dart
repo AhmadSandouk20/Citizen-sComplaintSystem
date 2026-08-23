@@ -8,6 +8,11 @@ class AuthInitState extends AuthState {
   List<Object?> get props => [];
 }
 
+class LoginLoadingState extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
 class LoginSuccessState extends AuthState {
   final UserModel user;
 

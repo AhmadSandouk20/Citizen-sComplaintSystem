@@ -17,5 +17,13 @@
   "language": "اللّغة",
   "theme": "الثيم",
   "light": "فاتح",
-  "dark": "داكن"
+  "dark": "داكن",
+  "notifications": "الإشعارات",
+  "notificationsEmpty": "لا توجد إشعارات بعد",
+  "notificationsEmptyHint": "ستظهر هنا تحديثات الشكاوى.",
+  "markAllRead": "تعليم الكل كمقروء",
+  "retry": "إعادة المحاولة",
+  "justNow": "الآن",
+  "minutesAgo": "منذ {} دقيقة",
+  "hoursAgo": "منذ {} ساعة"
 }

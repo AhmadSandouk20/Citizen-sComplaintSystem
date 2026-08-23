@@ -12,10 +12,18 @@ class LocaleKeys {
   static const reports = 'reports';
   static const logout = 'logout';
   static const ccs = 'CCS';
-  static const track = "track";
-  static const agenciesQueue = "agenciesQueue";
-  static const language = "language";
-  static const theme = "theme";
-  static const dark = "dark";
-  static const light = "light";
+  static const track = 'track';
+  static const agenciesQueue = 'agenciesQueue';
+  static const language = 'language';
+  static const theme = 'theme';
+  static const dark = 'dark';
+  static const light = 'light';
+  static const notifications = 'notifications';
+  static const notificationsEmpty = 'notificationsEmpty';
+  static const notificationsEmptyHint = 'notificationsEmptyHint';
+  static const markAllRead = 'markAllRead';
+  static const retry = 'retry';
+  static const justNow = 'justNow';
+  static const minutesAgo = 'minutesAgo';
+  static const hoursAgo = 'hoursAgo';
 }
