@@ -234,7 +234,34 @@ class AdminAgenciesListScreen extends StatelessWidget {
   const AdminAgenciesListScreen({super.key});
   @override
   Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Agencies List')));
+       Scaffold(body: Column(
+         mainAxisAlignment: MainAxisAlignment.center,
+         children: [
+           Text('Agencies List'),
+
+           ElevatedButton(
+             onPressed: () {
+               context.go(
+                 RoutePaths.citizenAttachments(2),
+               );
+             },
+             child: const Text('اختبار المرفقات'),
+           ),
+
+           SizedBox(
+             height: 20,
+           ),
+
+           ElevatedButton(
+             onPressed: () {
+               context.go(
+                 RoutePaths.citizenAttachmentGallery(2),
+               );
+             },
+             child: const Text('اختبار معرض المرفقات'),
+           ),
+         ],
+       ),);
 }
 
 class AdminReportsScreen extends StatelessWidget {

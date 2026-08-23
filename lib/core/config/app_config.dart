@@ -5,10 +5,10 @@ class AppConfig {
   static const int port = 8000;
 
   static const String baseUrl = 'http://$host:$port';
-
   static const String apiBaseUrl = '$baseUrl/api';
 
-  static const int maxAttachmentSizeInBytes = 10 * 1024 * 1024;
+  static const int maxAttachmentSizeInBytes =
+      10 * 1024 * 1024;
 
   static const int imageQuality = 75;
 }

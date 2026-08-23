@@ -22,6 +22,18 @@ class RoutePaths {
   static const String cTrackCode = '/citizen/track/:code';
   static const String cAttachments = '/citizen/attachments/:id';
 
+  static String citizenAttachments(int complaintId) {
+    return '/citizen/attachments/$complaintId';
+  }
+
+  static const String cAttachmentGallery =
+      '/citizen/attachments/:id/gallery';
+
+  static String citizenAttachmentGallery(
+      int complaintId,
+      ) {
+    return '/citizen/attachments/$complaintId/gallery';
+  }
   // staff
   static const String sComplaints = '/staff/complaints';
   static const String sComplaint = '/staff/complaints/:id';

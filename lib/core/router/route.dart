@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/attachments/presentation/cubit/attachment_cubit.dart';
+import '../../features/attachments/presentation/cubit/attachment_gallery_cubit.dart';
+import '../../features/attachments/presentation/screens/attachment_gallery_test_screen.dart';
+import '../../features/attachments/presentation/screens/attachments_screen.dart';
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
 import '../../features/profile/ presentation/cubit/profile_cubit.dart';
@@ -115,23 +119,53 @@ GoRouter routes = GoRouter(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),
         ), // POST /api/complaints (multipart)
-        /*
-        GoRoute(
-          path: RoutePaths.cUpdate,
-          builder: (context, state) => UpdateComplaintScreen(),
-        ),
+
+        // GoRoute(
+        //   path: RoutePaths.cUpdate,
+        //   builder: (context, state) => UpdateComplaintScreen(),
+        // ),
+        //Attachments
         GoRoute(
           path: RoutePaths.cAttachments,
-          builder: (context, state) => UploadAttachmentsScreen(),
+          builder: (context, state) {
+            final complaintId = int.parse(
+              state.pathParameters['id']!,
+            );
+
+            return BlocProvider(
+              create: (_) => getIt<AttachmentCubit>(),
+              child: AttachmentsScreen(
+                complaintId: complaintId,
+              ),
+            );
+          },
         ),
-        */
         // ----------------------------------------
         // Staff ( /api/agency/ )
         // ----------------------------------------
         GoRoute(
           path: RoutePaths.sComplaints,
           builder: (context, state) => StaffComplainsQueueScreen(),
-        ), // GET /api/agency/complaints
+        ),
+        // test attachment
+        GoRoute(
+          path: RoutePaths.cAttachmentGallery,
+          builder: (context, state) {
+            final complaintId = int.parse(
+              state.pathParameters['id']!,
+            );
+
+            return BlocProvider(
+              create: (_) =>
+                  getIt<AttachmentGalleryCubit>(),
+              child:
+              AttachmentGalleryTestScreen(
+                complaintId: complaintId,
+              ),
+            );
+          },
+        ),
+        // GET /api/agency/complaints
         /*
         GoRoute(
           path: RoutePaths.sComplaint,
