@@ -19,7 +19,9 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.12.2
+  # Lowered from ^3.12.2 so the whole team (and the review machine) can build
+  # on the current stable Flutter. Nothing in the codebase needs 3.12 features.
+  sdk: ^3.11.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,13 +41,33 @@ dependencies:
   flutter_bloc: ^9.1.1
   go_router: ^17.5.0
   pinput: ^6.0.2
+  bloc:
+
+  # Network
   dio: ^5.11.0
-  bloc: 
+  pretty_dio_logger: ^1.4.0
+
+  # Storage
   flutter_secure_storage: ^10.3.1
   shared_preferences:
+
+  # Localization
   easy_localization: ^3.0.8
+
+  # Models / codegen (mandated by the project plan — do not remove)
   json_annotation:
-  freezed_annotation: 
+  freezed_annotation:
+
+  # Notifications
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  flutter_local_notifications: ^18.0.1
+
+  # Attachments
+  file_picker: ^10.3.7
+  image_picker: ^1.2.1
+  flutter_image_compress: ^2.4.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

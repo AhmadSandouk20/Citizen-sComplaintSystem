@@ -1,17 +1,26 @@
+import '../../features/auth/data/models/user_role_enum.dart';
+
+/// Every path in the app. No screen builds a URL by hand.
 class RoutePaths {
-  static const String login = "/";
-  static const String splashScreen = "/splash";
-  static const String signup = "/signup";
-  static const String aLocked = "/account-locked";
+  RoutePaths._();
+
+  // ---------------------------- Auth / public -------------------------------
+  static const String login = '/';
+  static const String splashScreen = '/splash';
+  static const String signup = '/signup';
+  static const String aLocked = '/account-locked';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String resendOTP = '/resend-otp';
   static const String verifyOTP = '/verify-otp';
 
-  static const String notifications = "/notifications";
+  // --------------------------- All logged-in users --------------------------
+  static const String notifications = '/notifications';
   static const String profile = '/profile';
+  static const String editProfile = '/profile/edit';
+  static const String deleteAccount = '/profile/delete';
 
-  // citizen
+  // -------------------------------- Citizen ---------------------------------
   static const String cHome = '/citizen/home';
   static const String submissionSuccess = '/Submission-Success';
   static const String cComplaints = '/citizen/complaints';
@@ -22,7 +31,7 @@ class RoutePaths {
   static const String cTrackCode = '/citizen/track/:code';
   static const String cAttachments = '/citizen/attachments/:id';
 
-  // staff
+  // --------------------------------- Staff ----------------------------------
   static const String sComplaints = '/staff/complaints';
   static const String sComplaint = '/staff/complaints/:id';
   static const String updateComplaint = '/staff/complaints/:id/update';
@@ -31,24 +40,24 @@ class RoutePaths {
   static const String complaintRevisions = '/staff/complaints/:id/revisions';
   static const String complaintStatusHistory =
       '/staff/complaints/:id/status-history';
-  static const String staffRequestInfo = "/staff/complaints/:id/request-info";
+  static const String staffRequestInfo = '/staff/complaints/:id/request-info';
 
-  // admin
+  // --------------------------------- Admin ----------------------------------
   static const String statistics = '/admin/statistics';
   static const String users = '/admin/users';
   static const String user = '/admin/users/:id';
-  static const String addUser = "/admin/users/add";
-  static const String updateUser = "/admin/users/:id/edit";
+  static const String addUser = '/admin/users/add';
+  static const String updateUser = '/admin/users/:id/edit';
   static const String agencies = '/admin/agencies';
   static const String agency = '/admin/agencies/:id';
   static const String agencyUsers = '/admin/agencies/:id/users';
-  static const String addAgency = "/admin/agencies/add";
-  static const String updateAgency = "/admin/agencies/:id/edit";
+  static const String addAgency = '/admin/agencies/add';
+  static const String updateAgency = '/admin/agencies/:id/edit';
   static const String agencyUser = '/admin/agencies/:id/users/:userId';
   static const String reports = '/admin/reports';
-  static const String performance = '/admin/Performance';
+  static const String performance = '/admin/performance';
 
-  // ----------------------------Helper methods--------------------------------
+  // ------------------------------ Helper methods ----------------------------
 
   // Citizen
   static String cComplaintDetailsPath(int id) => '/citizen/complaints/$id';
@@ -66,14 +75,48 @@ class RoutePaths {
   static String complaintStatusHistoryPath(int id) =>
       '/staff/complaints/$id/status-history';
   static String staffRequestInfoPath(int id) =>
-      "/staff/complaints/$id/request-info";
+      '/staff/complaints/$id/request-info';
 
   // Admin
   static String userPath(int id) => '/admin/users/$id';
-  static String updateUserPath(int id) => "/admin/users/$id/edit";
+  static String updateUserPath(int id) => '/admin/users/$id/edit';
   static String agencyPath(int id) => '/admin/agencies/$id';
   static String agencyUsersPath(int id) => '/admin/agencies/$id/users';
-  static String updateAgencyPath(int id) => "/admin/agencies/$id/edit";
+  static String updateAgencyPath(int id) => '/admin/agencies/$id/edit';
   static String agencyUserPath(int agencyId, int userId) =>
       '/admin/agencies/$agencyId/users/$userId';
+
+  // ------------------------------- Route groups -----------------------------
+
+  /// Landing route after a successful login, per role.
+  static String homeForRole(UserRole role) {
+    switch (role) {
+      case UserRole.admin:
+        return statistics;
+      case UserRole.staff:
+        return sComplaints;
+      case UserRole.citizen:
+        return cHome;
+    }
+  }
+
+  /// Reachable without a session.
+  static bool isPublic(String location) =>
+      location == cTrackEntry ||
+      location.startsWith('/citizen/track/') ||
+      location == aLocked ||
+      location == splashScreen;
+
+  /// Part of the sign-in flow — a logged-in user is redirected away from these.
+  static bool isAuthRoute(String location) =>
+      location == login ||
+      location == signup ||
+      location == verifyOTP ||
+      location == resendOTP ||
+      location == forgotPassword ||
+      location == resetPassword;
+
+  static bool isAdminRoute(String location) => location.startsWith('/admin');
+
+  static bool isStaffRoute(String location) => location.startsWith('/staff');
 }

@@ -1,17 +1,33 @@
 import 'package:equatable/equatable.dart';
-import 'package:final_flutter/features/auth/data/models/user_model.dart';
 
-sealed class AuthState extends Equatable {}
+import '../../data/models/user_model.dart';
 
-class AuthInitState extends AuthState {
+sealed class AuthState extends Equatable {
+  const AuthState();
+
   @override
   List<Object?> get props => [];
+}
+
+/// No session. Also the state after logout.
+class AuthInitState extends AuthState {
+  const AuthInitState();
+}
+
+/// A stored token is being exchanged for a user on app start.
+/// The router treats this as "undecided" and holds on the splash route.
+class AuthRestoringState extends AuthState {
+  const AuthRestoringState();
+}
+
+class AuthLoadingState extends AuthState {
+  const AuthLoadingState();
 }
 
 class LoginSuccessState extends AuthState {
   final UserModel user;
 
-  LoginSuccessState(this.user);
+  const LoginSuccessState(this.user);
 
   @override
   List<Object?> get props => [user];
@@ -20,8 +36,11 @@ class LoginSuccessState extends AuthState {
 class LoginFailState extends AuthState {
   final String message;
 
-  LoginFailState(this.message);
+  /// Field-level errors from a 422, keyed by field name.
+  final Map<String, List<String>>? fieldErrors;
+
+  const LoginFailState(this.message, {this.fieldErrors});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, fieldErrors];
 }

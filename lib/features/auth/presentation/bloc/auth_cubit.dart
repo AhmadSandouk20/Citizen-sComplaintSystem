@@ -1,31 +1,83 @@
 import 'package:bloc/bloc.dart';
-import 'package:final_flutter/features/auth/data/models/user_model.dart';
-import 'package:final_flutter/features/auth/data/models/user_role_enum.dart';
-import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
 
+import '../../../../core/error/app_exception.dart';
+import '../../data/models/user_model.dart';
+import '../../data/models/user_role_enum.dart';
+import '../../domain/auth_repository.dart';
+import 'auth_state.dart';
+
+/// Owns the session for the whole app.
+///
+/// Everything else reads [token] / [user] / [role] from here — the Dio
+/// interceptor, the router guard, the shell, and the FCM registration.
 class AuthCubit extends Cubit<AuthState> {
-  // AuthCubit() : super(AuthInitState());
+  AuthCubit(this._repository) : super(const AuthInitState());
 
-  // AuthCubit()
-  //   : super(
-  //       LoginSuccessState(
-  //         UserModel(
-  //           id: 1,
-  //           name: "ahmad",
-  //           role: UserRole.citizen,
-  //           token: "adsf79843",
-  //         ),
-  //       ),
-  //     );
-  AuthCubit()
-    : super(
-        LoginSuccessState(
-          UserModel(
-            id: 1,
-            name: "ahmad",
-            role: UserRole.admin,
-            token: "adsf79843",
-          ),
-        ),
-      );
+  final AuthRepository _repository;
+
+  UserModel? get user => state is LoginSuccessState
+      ? (state as LoginSuccessState).user
+      : null;
+
+  String? get token => user?.token;
+
+  UserRole? get role => user?.role;
+
+  bool get isAuthenticated => user != null;
+
+  /// Exchanges a persisted token for a user on cold start.
+  ///
+  /// Called once from `main()` before the first frame so the router can make
+  /// its redirect decision with a settled session instead of bouncing the
+  /// user to the login screen and back.
+  Future<void> restoreSession() async {
+    final stored = await _repository.readStoredToken();
+    if (stored == null || stored.isEmpty) {
+      emit(const AuthInitState());
+      return;
+    }
+
+    emit(const AuthRestoringState());
+    try {
+      emit(LoginSuccessState(await _repository.getProfile(stored)));
+    } catch (_) {
+      // Expired or revoked token — start clean rather than showing an error
+      // the user cannot act on at launch.
+      await _repository.clearStoredToken();
+      emit(const AuthInitState());
+    }
+  }
+
+  Future<void> login({
+    required String identifier,
+    required String password,
+  }) async {
+    emit(const AuthLoadingState());
+    try {
+      emit(LoginSuccessState(await _repository.login(identifier, password)));
+    } on AppException catch (e) {
+      emit(LoginFailState(e.message, fieldErrors: e.fieldErrors));
+    } catch (e) {
+      emit(LoginFailState(e.toString()));
+    }
+  }
+
+  Future<void> logout() async {
+    await _repository.logout();
+    emit(const AuthInitState());
+  }
+
+  /// Drops the session locally without calling the API.
+  ///
+  /// Used by the 401 interceptor (the token is already invalid, so calling
+  /// `/auth/logout` would just 401 again) and after account deletion.
+  Future<void> clearSession() async {
+    await _repository.clearStoredToken();
+    if (state is! AuthInitState) emit(const AuthInitState());
+  }
+
+  /// Keeps the cached user in sync after a profile edit.
+  void updateUser(UserModel updated) {
+    if (state is LoginSuccessState) emit(LoginSuccessState(updated));
+  }
 }
