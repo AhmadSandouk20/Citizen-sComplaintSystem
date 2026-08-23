@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/screens_stub/screens_stubs.dart';
 import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
@@ -84,12 +85,10 @@ GoRouter routes = GoRouter(
           path: RoutePaths.profile,
           builder: (context, state) => ProfileScreen(),
         ), // GET/PUT/DELETE /api/auth/profile
-        /*
         GoRoute(
           path: RoutePaths.notifications,
-          builder: (context, state) => NotificationsScreen(),
+          builder: (context, state) => const NotificationsScreen(),
         ),
-        */
         // ----------------------------------------
         // CITIZEN ( /api/complaints)
         // ----------------------------------------
@@ -101,14 +100,12 @@ GoRouter routes = GoRouter(
           path: RoutePaths.cHome,
           builder: (context, state) => const CitizenHomeScreen(),
         ),
-        /*
         GoRoute(
           path: RoutePaths.cComplaintDetails,
           builder: (context, state) => CitizenComplaintDetailScreen(
             id: int.parse(state.pathParameters['id']!),
           ),
         ),
-        */
         GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),
@@ -134,6 +131,12 @@ GoRouter routes = GoRouter(
           path: RoutePaths.sComplaints,
           builder: (context, state) => StaffComplainsQueueScreen(),
         ), // GET /api/agency/complaints
+        GoRoute(
+          path: RoutePaths.sComplaint,
+          builder: (context, state) => StaffComplaintDetailScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
+        ),
         // GoRoute(
         //   path: RoutePaths.staffRequestInfo,
         //   builder: (context, state) => StaffRequestInfoScreen(
@@ -217,15 +220,16 @@ GoRouter routes = GoRouter(
         //   path: RoutePaths.agencies,
         //   builder: (context, state) => AdminAgenciesListScreen(),
         // ), // GET /api/agencies, POST /api/agencies
-        GoRoute(
-          path: RoutePaths.addAgency,
-          builder: (context, state) => AdminAgencyFormScreen(),
-        ), // POST /api/agencies
-        GoRoute(
-          path: RoutePaths.updateAgency,
-          builder: (context, state) =>
-              AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
-        ), // PUT /api/agencies/{id}
+        // Agency form screens are owned by another teammate and are not in this copy yet.
+        // GoRoute(
+        //   path: RoutePaths.addAgency,
+        //   builder: (context, state) => AdminAgencyFormScreen(),
+        // ),
+        // GoRoute(
+        //   path: RoutePaths.updateAgency,
+        //   builder: (context, state) =>
+        //       AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
+        // ),
         // GoRoute(
         //   path: RoutePaths.agency,
         //   builder: (context, state) => AdminAgencyDetailsScreen(

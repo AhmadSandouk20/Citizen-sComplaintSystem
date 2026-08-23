@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:final_flutter/core/di/injector.dart';
-
 import 'package:final_flutter/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
 import 'package:final_flutter/features/locale/presentation/bloc/locale_cubit.dart';
+import 'package:final_flutter/features/notifications/data/services/fcm_service.dart';
+import 'package:final_flutter/features/notifications/presentation/bloc/notifications_cubit.dart';
 import 'package:final_flutter/features/theme/presentation/bloc/theme_cubit.dart';
 import 'package:final_flutter/features/theme/presentation/bloc/theme_state.dart';
 import 'package:flutter/material.dart';
@@ -27,22 +29,31 @@ class AppEntry extends StatelessWidget {
             BlocProvider<AuthCubit>.value(value: getIt<AuthCubit>()),
             BlocProvider<ThemeCubit>.value(value: getIt<ThemeCubit>()),
             BlocProvider<LocaleCubit>.value(value: getIt<LocaleCubit>()),
+            BlocProvider<NotificationsCubit>.value(
+              value: getIt<NotificationsCubit>(),
+            ),
           ],
-          child: BlocBuilder<ThemeCubit, ThemeState>(
-            builder: (context, state) {
-              return MaterialApp.router(
-                locale: context.watch<LocaleCubit>().state.locale,
-                supportedLocales: context.supportedLocales,
-                localizationsDelegates: context.localizationDelegates,
-                themeMode: state.themeMode,
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                debugShowCheckedModeBanner: false,
-                routerConfig: routes,
-                //  "Citizen's Complaint System"
-                title: "CCS",
-              );
+          child: BlocListener<AuthCubit, AuthState>(
+            listenWhen: (previous, current) =>
+                previous is LoginSuccessState && current is AuthInitState,
+            listener: (context, state) {
+              getIt<FcmService>().unregister();
             },
+            child: BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                return MaterialApp.router(
+                  locale: context.watch<LocaleCubit>().state.locale,
+                  supportedLocales: context.supportedLocales,
+                  localizationsDelegates: context.localizationDelegates,
+                  themeMode: state.themeMode,
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  debugShowCheckedModeBanner: false,
+                  routerConfig: routes,
+                  title: 'CCS',
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -62,7 +73,6 @@ class _LocaleInitializerState extends State<LocaleInitializer> {
   @override
   void initState() {
     super.initState();
-    // Read the current locale and sync it with LocaleCubit
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final Locale? currentLocale = EasyLocalization.of(context)?.locale;
       if (currentLocale != null) {

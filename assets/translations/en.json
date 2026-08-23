@@ -17,5 +17,13 @@
   "language": "Language",
   "theme": "Theme",
   "light": "Light",
-  "dark": "Dark"
+  "dark": "Dark",
+  "notifications": "Notifications",
+  "notificationsEmpty": "No notifications yet",
+  "notificationsEmptyHint": "You will see updates about your complaints here.",
+  "markAllRead": "Mark all as read",
+  "retry": "Try again",
+  "justNow": "Just now",
+  "minutesAgo": "{} minutes ago",
+  "hoursAgo": "{} hours ago"
 }

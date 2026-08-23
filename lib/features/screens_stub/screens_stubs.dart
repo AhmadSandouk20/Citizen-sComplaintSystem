@@ -5,15 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/router/route_paths.dart';
+import '../auth/presentation/bloc/auth_cubit.dart';
 import '../locale/presentation/bloc/locale_cubit.dart';
 import '../theme/presentation/bloc/theme_cubit.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Login')));
-}
 
 // ----------------Profile-------------------
 class ProfileScreen extends StatelessWidget {
@@ -117,6 +111,15 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () {
+                context.read<AuthCubit>().logout();
+                context.go(RoutePaths.login);
+              },
+              icon: const Icon(Icons.logout),
+              label: Text(LocaleKeys.logout.tr()),
+            ),
             const SizedBox(height: 32),
           ],
         ),
@@ -240,4 +243,26 @@ class AdminReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Reports')));
+}
+
+class CitizenComplaintDetailScreen extends StatelessWidget {
+  const CitizenComplaintDetailScreen({super.key, required this.id});
+  final int id;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Complaint details')),
+    body: Center(child: Text('Complaint #$id')),
+  );
+}
+
+class StaffComplaintDetailScreen extends StatelessWidget {
+  const StaffComplaintDetailScreen({super.key, required this.id});
+  final int id;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Complaint details')),
+    body: Center(child: Text('Complaint #$id')),
+  );
 }
