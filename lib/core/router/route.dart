@@ -1,12 +1,19 @@
+import 'package:final_flutter/core/di/injector.dart';
+import 'package:final_flutter/features/admin/presentation/view/staff/admin_staff_management_form_screen.dart';
+import 'package:final_flutter/features/admin/presentation/view/user/user_management_screen.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/admin/presentation/bloc/user/user_management_cubit.dart';
+import '../../features/admin/presentation/view/agency/admin_agencies_list_screen.dart';
+import '../../features/admin/presentation/view/agency/admin_agency_details_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
-import '../../features/auth/data/models/user_role_enum.dart';
+import '../../features/auth/data/models/user_type_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
+import '../../features/auth/presentation/login_screen.dart';
 import '../../features/screens_stub/screens_stubs.dart';
 import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
@@ -14,7 +21,7 @@ import 'route_paths.dart';
 
 GoRouter routes = GoRouter(
   navigatorKey: navigatorKey,
-  initialLocation: RoutePaths.login,
+  initialLocation: RoutePaths.profile,
   routes: [
     /*
     GoRoute(
@@ -24,7 +31,13 @@ GoRouter routes = GoRouter(
     */
 
     // --------------------AUTH--------------------
-    GoRoute(path: RoutePaths.login, builder: (context, state) => LoginScreen()),
+    GoRoute(
+      path: RoutePaths.login,
+      builder: (context, state) => BlocProvider.value(
+        value: getIt<AuthCubit>(),
+        child: const LoginScreen(),
+      ),
+    ),
     /*
     GoRoute(
       path: RoutePaths.signup,
@@ -68,7 +81,7 @@ GoRouter routes = GoRouter(
         if (state is LoginSuccessState) {
           user = state.user;
         }
-        final role = user?.role ?? UserRole.citizen;
+        final role = user?.type ?? UserType.citizen;
 
         return AdaptiveShellBuilder(currentChild: child, role: role);
       },
@@ -187,36 +200,16 @@ GoRouter routes = GoRouter(
         ), // GET /api/statistics/overall, /by-agency, /by-date, /performance
         GoRoute(
           path: RoutePaths.users,
-          builder: (context, state) => AdminUsersListScreen(),
-        ), // GET /api/admin/users
-        // GoRoute(
-        //   path: RoutePaths.addUser,
-        //   builder: (context, state) => AdminUserFormScreen(),
-        // ), // POST /api/admin/users
-        // GoRoute(
-        //   path: RoutePaths.updateUser,
-        //   builder: (context, state) => AdminUserFormScreen(
-        //     userId: int.parse(state.pathParameters['id']!),
-        //   ),
-        // ), // PUT /api/admin/users/{id}
-        /*
-        GoRoute(
-          path: RoutePaths.performance,
-          builder: (context, state) => SystemPerformanceScreen(),
-        ),
-        */
-        /*
-        GoRoute(
-          path: RoutePaths.user,
-          builder: (context, state) => AdminUserDetailScreen(
-            id: int.parse(state.pathParameters['id']!),
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<UserManagementCubit>()..loadUsers(),
+            child: const AdminUsersManagementScreen(),
           ),
-        ),
-        */
-        // GoRoute(
-        //   path: RoutePaths.agencies,
-        //   builder: (context, state) => AdminAgenciesListScreen(),
-        // ), // GET /api/agencies, POST /api/agencies
+        ), // GET /api/admin/users
+
+        GoRoute(
+          path: RoutePaths.agencies,
+          builder: (context, state) => AdminAgenciesListScreen(),
+        ), // GET /api/agencies, POST /api/agencies
         GoRoute(
           path: RoutePaths.addAgency,
           builder: (context, state) => AdminAgencyFormScreen(),
@@ -226,27 +219,25 @@ GoRouter routes = GoRouter(
           builder: (context, state) =>
               AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
         ), // PUT /api/agencies/{id}
-        // GoRoute(
-        //   path: RoutePaths.agency,
-        //   builder: (context, state) => AdminAgencyDetailsScreen(
-        //     id: int.parse(state.pathParameters['id']!),
-        //   ),
-        // ), // GET /api/agencies/{id}
-        /*
         GoRoute(
-          path: RoutePaths.agencyUsers,
-          builder: (context, state) => AdminAgencyUsersListScreen(
+          path: RoutePaths.agency,
+          builder: (context, state) => AdminAgencyDetailsScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
+        ), // GET /api/agencies/{id}
+        GoRoute(
+          path: RoutePaths.addStaff,
+          builder: (context, state) => AdminStaffManagementFormScreen(
             agencyId: int.parse(state.pathParameters['id']!),
           ),
         ),
         GoRoute(
-          path: RoutePaths.agencyUser,
-          builder: (context, state) => AdminAgencyUserDetailScreen(
+          path: RoutePaths.updateStaff,
+          builder: (context, state) => AdminStaffManagementFormScreen(
             agencyId: int.parse(state.pathParameters['id']!),
-            userId: int.parse(state.pathParameters['userId']!),
+            staff: state.extra as UserModel?,
           ),
         ),
-        */
         GoRoute(
           path: RoutePaths.reports,
           builder: (context, state) => AdminReportsScreen(),
@@ -257,13 +248,13 @@ GoRouter routes = GoRouter(
   redirect: (context, state) => _redirectContent(context, state),
 );
 
-String _getHomePath(UserRole role) {
+String _getHomePath(UserType role) {
   switch (role) {
-    case UserRole.admin:
+    case UserType.admin:
       return RoutePaths.statistics;
-    case UserRole.staff:
+    case UserType.staff:
       return RoutePaths.sComplaints;
-    case UserRole.citizen:
+    case UserType.citizen:
       return RoutePaths.cHome;
   }
 }
@@ -289,23 +280,23 @@ _redirectContent(BuildContext context, GoRouterState state) {
       location == RoutePaths.resendOTP;
 
   if (user == null && !isAuthRoute && !isPublicRoute) return RoutePaths.login;
-  if (user != null && isAuthRoute) return _getHomePath(user.role);
+  if (user != null && isAuthRoute) return _getHomePath(user.type);
 
   // Role Guard
   if (user != null) {
     final isAdminRoute = location.startsWith('/admin');
     final isStaffRoute = location.startsWith('/staff');
 
-    if (user.role == UserRole.citizen && (isStaffRoute || isAdminRoute)) {
+    if (user.type == UserType.citizen && (isStaffRoute || isAdminRoute)) {
       return RoutePaths.cHome;
     }
-    if (user.role == UserRole.staff && isAdminRoute) {
+    if (user.type == UserType.staff && isAdminRoute) {
       return RoutePaths.sComplaints;
     }
   }
 
   if (user != null && location == '/') {
-    return _getHomePath(user.role);
+    return _getHomePath(user.type);
   }
 
   return null;

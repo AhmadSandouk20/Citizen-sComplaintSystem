@@ -1,7 +1,7 @@
 import 'package:final_flutter/core/shared/navigation_item.dart';
 import 'package:final_flutter/core/widget/app_bottom_navigation_bar.dart';
 import 'package:final_flutter/core/widget/app_navigation_rail.dart';
-import 'package:final_flutter/features/auth/data/models/user_role_enum.dart';
+import 'package:final_flutter/features/auth/data/models/user_type_enum.dart';
 import 'package:final_flutter/features/locale/presentation/bloc/locale_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +14,7 @@ class AdaptiveShellBuilder extends StatelessWidget {
     required this.currentChild,
     required this.role,
   });
-  final UserRole role;
+  final UserType role;
 
   final Widget currentChild;
 

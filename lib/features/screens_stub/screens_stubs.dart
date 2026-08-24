@@ -8,13 +8,6 @@ import '../../core/router/route_paths.dart';
 import '../locale/presentation/bloc/locale_cubit.dart';
 import '../theme/presentation/bloc/theme_cubit.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Login')));
-}
-
 // ----------------Profile-------------------
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -96,8 +89,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () =>
-                          localeCubit.toggleLanguage(context), // YOUR method
+                      onPressed: () => localeCubit.toggleLanguage(context),
                       icon: Icon(
                         currentLocale.locale.languageCode == 'en'
                             ? Icons.translate
@@ -139,7 +131,7 @@ class CitizenHomeScreen extends StatelessWidget {
           children: [
             Text('Welcome!', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 16),
-            // Quick action cards
+
             Wrap(
               spacing: 16,
               children: [
@@ -160,7 +152,6 @@ class CitizenHomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // Summary stats (unresolved, total, etc.) goes here later
           ],
         ),
       ),

@@ -1,20 +1,27 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'user_type_enum.dart';
 
-import 'user_role_enum.dart';
+part 'user_model.freezed.dart';
+part 'user_model.g.dart';
 
-class UserModel extends Equatable {
-  final int id;
-  final String name;
-  final UserRole role;
-  final String token;
+@freezed
+abstract class UserModel with _$UserModel {
+  const factory UserModel({
+    required int id,
+    required String name,
+    String? email,
+    String? phone,
+    String? password,
+    required UserType type,
+    @Default(false) @JsonKey(name: "is_active") bool isActive,
+    @JsonKey(name: "last_login_at") DateTime? lastLoginAt,
+    @JsonKey(name: "failed_login_attempts") int? failedLoginAttempts,
+    @JsonKey(name: "locked_until") DateTime? lockedUntil,
+    @JsonKey(name: "created_at") DateTime? createdAt,
+    @JsonKey(name: "updated_at") DateTime? updatedAt,
+    @JsonKey(includeFromJson: false) String? token,
+  }) = _UserModel;
 
-  const UserModel({
-    required this.id,
-    required this.name,
-    required this.role,
-    required this.token,
-  });
-
-  @override
-  List<Object?> get props => [id, name, role];
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }

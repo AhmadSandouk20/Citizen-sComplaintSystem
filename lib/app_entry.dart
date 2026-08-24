@@ -62,7 +62,7 @@ class _LocaleInitializerState extends State<LocaleInitializer> {
   @override
   void initState() {
     super.initState();
-    // Read the current locale and sync it with LocaleCubit
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final Locale? currentLocale = EasyLocalization.of(context)?.locale;
       if (currentLocale != null) {
