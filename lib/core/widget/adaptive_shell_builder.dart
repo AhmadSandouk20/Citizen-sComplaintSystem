@@ -1,3 +1,4 @@
+import 'package:final_flutter/core/router/route_paths.dart';
 import 'package:final_flutter/core/shared/navigation_item.dart';
 import 'package:final_flutter/core/widget/app_bottom_navigation_bar.dart';
 import 'package:final_flutter/core/widget/app_navigation_rail.dart';
@@ -32,7 +33,7 @@ class AdaptiveShellBuilder extends StatelessWidget {
         final currentLocation = GoRouterState.of(context).matchedLocation;
 
         final selectedIndex = navItems.indexWhere(
-          (item) => currentLocation.startsWith(item.route),
+          (item) => _isRouteSelected(currentLocation, item.route),
         );
         final safeIndex = selectedIndex != -1 ? selectedIndex : 0;
 
@@ -69,4 +70,11 @@ class AdaptiveShellBuilder extends StatelessWidget {
       },
     );
   }
+}
+
+bool _isRouteSelected(String location, String route) {
+  if (route == RoutePaths.statistics && location == RoutePaths.performance) {
+    return true;
+  }
+  return location == route || location.startsWith('$route/');
 }

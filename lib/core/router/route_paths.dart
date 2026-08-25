@@ -46,11 +46,8 @@ class RoutePaths {
   static const String updateAgency = "/admin/agencies/:id/edit";
   static const String agencyUser = '/admin/agencies/:id/users/:userId';
   static const String reports = '/admin/reports';
-  static const String performance = '/admin/Performance';
+  static const String performance = '/admin/performance';
 
-  // ----------------------------Helper methods--------------------------------
-
-  // Citizen
   static String cComplaintDetailsPath(int id) => '/citizen/complaints/$id';
   static String cUpdatePath(int id) => '/citizen/update/$id';
   static String cAttachmentsPath(int id) => '/citizen/attachments/$id';

@@ -1,5 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:final_flutter/core/di/injector.dart';
+import 'package:final_flutter/features/admin_users/presentation/bloc/admin_users_cubit.dart';
+import 'package:final_flutter/features/admin_analytics/presentation/bloc/statistics_cubit.dart';
+import 'package:final_flutter/features/admin_reports/presentation/bloc/reports_cubit.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
 import 'package:final_flutter/features/locale/presentation/bloc/locale_cubit.dart';
@@ -31,6 +34,15 @@ class AppEntry extends StatelessWidget {
             BlocProvider<LocaleCubit>.value(value: getIt<LocaleCubit>()),
             BlocProvider<NotificationsCubit>.value(
               value: getIt<NotificationsCubit>(),
+            ),
+            BlocProvider<AdminUsersCubit>.value(
+              value: getIt<AdminUsersCubit>(),
+            ),
+            BlocProvider<StatisticsCubit>.value(
+              value: getIt<StatisticsCubit>(),
+            ),
+            BlocProvider<ReportsCubit>.value(
+              value: getIt<ReportsCubit>(),
             ),
           ],
           child: BlocListener<AuthCubit, AuthState>(

@@ -90,8 +90,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () =>
-                          localeCubit.toggleLanguage(context), // YOUR method
+                      onPressed: () => localeCubit.toggleLanguage(context),
                       icon: Icon(
                         currentLocale.locale.languageCode == 'en'
                             ? Icons.translate
@@ -221,28 +220,6 @@ class StaffComplainsQueueScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Staff Queue')));
-}
-
-// ----- ADMIN -----
-class AdminStatisticsScreen extends StatelessWidget {
-  const AdminStatisticsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Statistics')));
-}
-
-class AdminUsersListScreen extends StatelessWidget {
-  const AdminUsersListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Users List')));
-}
-
-class AdminReportsScreen extends StatelessWidget {
-  const AdminReportsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Reports')));
 }
 
 class CitizenComplaintDetailScreen extends StatelessWidget {
