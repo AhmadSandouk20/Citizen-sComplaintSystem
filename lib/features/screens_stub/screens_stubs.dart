@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+﻿import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,13 +9,13 @@ import '../../core/router/route_paths.dart';
 ///
 /// Each one is a real route target so navigation, deep links and the shell can
 /// be exercised end to end. Delete a stub the moment its owner pushes the real
-/// screen — do not build features in here.
+/// screen â€” do not build features in here.
 ///
 /// Still owned elsewhere:
-///   Ibrahim — citizen complaints (list, submit, details, track)
-///   Leen    — staff workspace (queue, details, lock, revisions)
-///   Ahmad   — agencies and agency staff
-///   Joly    — statistics, reports, users
+///   Ibrahim â€” citizen complaints (list, submit, details, track)
+///   Leen    â€” staff workspace (queue, details, lock, revisions)
+///   Ahmad   â€” agencies and agency staff
+///   Joly    â€” statistics, reports, users
 class _Stub extends StatelessWidget {
   const _Stub(this.title, {this.detail, this.icon = Icons.construction_outlined});
 
@@ -196,35 +196,8 @@ class StaffComplaintDetailScreen extends StatelessWidget {
 }
 
 // -------------------------------- ADMIN -------------------------------------
-
-class AdminStatisticsScreen extends StatelessWidget {
-  const AdminStatisticsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.statistics.tr(), detail: 'GET /api/statistics/*');
-}
-
-class AdminUsersListScreen extends StatelessWidget {
-  const AdminUsersListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.users.tr(), detail: 'GET /api/admin/users');
-}
-
-class AdminAgenciesListScreen extends StatelessWidget {
-  const AdminAgenciesListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.agencies.tr(), detail: 'GET /api/agencies');
-}
-
-class AdminReportsScreen extends StatelessWidget {
-  const AdminReportsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.reports.tr(), detail: 'GET /api/reports/*');
-}
+//
+// Every admin screen now has a real implementation:
+//   agencies, agency staff, users  -> features/admin/
+//   statistics, system performance -> features/admin_analytics/
+//   reports                        -> features/admin_reports/

@@ -1,7 +1,15 @@
+import 'package:json_annotation/json_annotation.dart';
+
 /// The three roles defined in the backend `users.type` enum.
+///
+/// Serialized values match the API exactly, so `@JsonKey(name: 'type')` on
+/// [UserModel.role] round-trips without a custom converter.
 enum UserRole {
+  @JsonValue('admin')
   admin,
+  @JsonValue('staff')
   staff,
+  @JsonValue('citizen')
   citizen;
 
   /// Maps the API's `type` string onto the enum.

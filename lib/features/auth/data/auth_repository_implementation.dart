@@ -32,10 +32,11 @@ class AuthRepositoryImplementation implements AuthRepository {
       // Persist before returning so a cold start can restore this session.
       await TokenStorage.saveToken(token);
 
+      // The token travels beside the user object, not inside it, so it is
+      // attached after parsing.
       return UserModel.fromJson(
         Map<String, dynamic>.from(rawUser),
-        token: token,
-      );
+      ).copyWith(token: token);
     } catch (error) {
       throw DioClient.mapError(error);
     }
@@ -149,10 +150,11 @@ class AuthRepositoryImplementation implements AuthRepository {
         throw const AppException('Unexpected profile response.');
       }
 
+      // The token travels beside the user object, not inside it, so it is
+      // attached after parsing.
       return UserModel.fromJson(
         Map<String, dynamic>.from(rawUser),
-        token: token,
-      );
+      ).copyWith(token: token);
     } catch (error) {
       throw DioClient.mapError(error);
     }

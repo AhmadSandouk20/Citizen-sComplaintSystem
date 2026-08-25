@@ -8,11 +8,25 @@ import '../../features/auth/data/models/user_role_enum.dart';
 class NavItem {
   final String label;
   final IconData icon;
-  final String route; // The go_router path
-  NavItem({required this.label, required this.icon, required this.route});
+  final String route;
+  final int badgeCount;
+
+  NavItem({
+    required this.label,
+    required this.icon,
+    required this.route,
+    this.badgeCount = 0,
+  });
 }
 
-List<NavItem> getNavItemsForRole(UserRole role) {
+List<NavItem> getNavItemsForRole(UserRole role, {int unreadCount = 0}) {
+  final notificationsItem = NavItem(
+    label: LocaleKeys.notifications.tr(),
+    icon: Icons.notifications_outlined,
+    route: RoutePaths.notifications,
+    badgeCount: unreadCount,
+  );
+
   switch (role) {
     case UserRole.citizen:
       return [
@@ -26,12 +40,12 @@ List<NavItem> getNavItemsForRole(UserRole role) {
           icon: Icons.add_circle,
           route: RoutePaths.submit,
         ),
-
         NavItem(
           label: LocaleKeys.track.tr(),
           icon: Icons.search,
           route: RoutePaths.cTrackEntry,
-        ), // Uses /track/{code}
+        ),
+        notificationsItem,
         NavItem(
           label: LocaleKeys.profile.tr(),
           icon: Icons.person,
@@ -46,7 +60,7 @@ List<NavItem> getNavItemsForRole(UserRole role) {
           icon: Icons.queue,
           route: RoutePaths.sComplaints,
         ),
-        // GET /api/agency/complaints
+        notificationsItem,
         NavItem(
           label: LocaleKeys.profile.tr(),
           icon: Icons.person,
@@ -60,22 +74,28 @@ List<NavItem> getNavItemsForRole(UserRole role) {
           label: LocaleKeys.statistics.tr(),
           icon: Icons.dashboard,
           route: RoutePaths.statistics,
-        ), // GET /api/statistics/*
+        ),
+        NavItem(
+          label: LocaleKeys.performance.tr(),
+          icon: Icons.speed,
+          route: RoutePaths.performance,
+        ),
         NavItem(
           label: LocaleKeys.users.tr(),
           icon: Icons.people,
           route: RoutePaths.users,
-        ), // GET /api/admin/users
+        ),
         NavItem(
           label: LocaleKeys.agencies.tr(),
           icon: Icons.business,
           route: RoutePaths.agencies,
-        ), // GET /api/agencies
+        ),
         NavItem(
           label: LocaleKeys.reports.tr(),
           icon: Icons.file_copy,
           route: RoutePaths.reports,
-        ), // GET /api/reports/*
+        ),
+        notificationsItem,
         NavItem(
           label: LocaleKeys.profile.tr(),
           icon: Icons.person,

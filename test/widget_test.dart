@@ -36,7 +36,7 @@ void main() {
         'email': 'fatima.staff@example.com',
         'type': 'staff',
         'is_active': true,
-      }, token: 'abc123');
+      }).copyWith(token: 'abc123');
 
       expect(user.id, 7);
       expect(user.role, UserRole.staff);
@@ -49,7 +49,7 @@ void main() {
         'id': '42',
         'name': 'Ahmed',
         'type': 'citizen',
-      }, token: 't');
+      }).copyWith(token: 't');
 
       expect(user.id, 42);
     });

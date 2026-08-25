@@ -1,49 +1,173 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:final_flutter/core/di/injector.dart';
+import 'package:final_flutter/core/widget/app_button.dart';
+import 'package:final_flutter/core/widget/app_text_field.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_cubit/admin_agency_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_cubit/admin_agency_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../../core/localization/local_keys.dart';
+import '../../../../../core/error/app_exception.dart';
 
-/// PLACEHOLDER — owned by the agencies/staff track (Ahmad).
-///
-/// `route.dart` on `main` imported this file at commit `ab02bc4` but the file
-/// itself was never pushed, which left `main` with four analyzer errors and
-/// unbuildable. This stub restores the contract (`AdminAgencyFormScreen({int? id})`)
-/// so the router compiles and the two agency routes stay registered.
-///
-/// Replace the body with the real create/edit form:
-///   POST /api/agencies          when [id] is null
-///   PUT  /api/agencies/{id}     when [id] is set
-class AdminAgencyFormScreen extends StatelessWidget {
+class AdminAgencyFormScreen extends StatefulWidget {
+  final int? id;
   const AdminAgencyFormScreen({super.key, this.id});
 
-  /// Agency being edited, or null when creating a new one.
-  final int? id;
+  @override
+  State<AdminAgencyFormScreen> createState() => _AdminAgencyFormScreenState();
+}
 
-  bool get isEditing => id != null;
+class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final categoryController = TextEditingController();
+  final cityController = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
+
+  late final AdminAgenciesCubit _cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = getIt<AdminAgenciesCubit>();
+    if (widget.id != null) {
+      _cubit.getAgencyDetails(widget.id!);
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    categoryController.dispose();
+    cityController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(LocaleKeys.agencies.tr())),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.construction_outlined, size: 48),
-              const SizedBox(height: 12),
-              Text(
-                LocaleKeys.notImplementedYet.tr(),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium,
+    return BlocProvider<AdminAgenciesCubit>.value(
+      value: _cubit,
+      child: BlocListener<AdminAgenciesCubit, AdminAgenciesState>(
+        listener: (context, state) {
+          if (state is AgencyDetailsLoaded && widget.id != null) {
+            final agency = state.agencyModelDetails;
+            nameController.text = agency.name;
+            categoryController.text = agency.category;
+            cityController.text = agency.city;
+            phoneController.text = agency.phone;
+            addressController.text = agency.address;
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(widget.id == null ? 'Add Agency' : 'Edit Agency'),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          AppTextField(
+                            label: "Agency Name",
+                            controller: nameController,
+                          ),
+                          const SizedBox(height: 12),
+                          AppTextField(
+                            label: "Agency Category",
+                            controller: categoryController,
+                          ),
+                          const SizedBox(height: 12),
+                          AppTextField(
+                            label: "Agency City",
+                            controller: cityController,
+                          ),
+                          const SizedBox(height: 12),
+                          AppTextField(
+                            label: "Agency Address",
+                            controller: addressController,
+                          ),
+                          const SizedBox(height: 12),
+                          AppTextField(
+                            label: "Agency Phone",
+                            controller: phoneController,
+                            keyboardType: TextInputType.phone,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  AppButton(
+                    label: widget.id == null ? "Add" : "Update",
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        if (widget.id == null) {
+                          try {
+                            await _cubit.addAgency(
+                              name: nameController.text.trim(),
+                              category: categoryController.text.trim(),
+                              city: cityController.text.trim(),
+                              phone: phoneController.text.trim(),
+                              address: addressController.text.trim(),
+                            );
+                          } on AppException catch (e) {
+                            if (mounted && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.message)),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Something went wrong'),
+                                ),
+                              );
+                            }
+                          }
+                        } else {
+                          try {
+                            await _cubit.updateAgency(
+                              id: widget.id!,
+                              name: nameController.text.trim(),
+                              category: categoryController.text.trim(),
+                              city: cityController.text.trim(),
+                              phone: phoneController.text.trim(),
+                              address: addressController.text.trim(),
+                            );
+                          } on AppException catch (e) {
+                            if (mounted && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.message)),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted && context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Something went wrong'),
+                                ),
+                              );
+                            }
+                          }
+                          if (mounted && context.mounted) {
+                            context.pop();
+                          }
+                        }
+                      }
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                isEditing ? 'PUT /api/agencies/$id' : 'POST /api/agencies',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
+            ),
           ),
         ),
       ),

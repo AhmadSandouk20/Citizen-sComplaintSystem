@@ -1,5 +1,31 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/admin/data/agency_complaints_repository_implementation.dart';
+import '../../features/admin/data/agency_repository_implementation.dart';
+import '../../features/admin/data/staff_management_repository_implementation.dart';
+import '../../features/admin/data/user_management_repository_implementation.dart';
+import '../../features/admin/domain/agency_complaints_repository.dart';
+import '../../features/admin/domain/agency_repository.dart';
+import '../../features/admin/domain/staff_management_repository.dart';
+import '../../features/admin/domain/user_management_repository.dart';
+import '../../features/admin/presentation/bloc/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
+import '../../features/admin/presentation/bloc/agency/agency_cubit/admin_agency_cubit.dart';
+import '../../features/admin/presentation/bloc/staff/staff_management_cubit.dart';
+import '../../features/admin/presentation/bloc/user/user_management_cubit.dart';
+import '../../features/admin_analytics/data/datasources/statistics_remote_datasource.dart';
+import '../../features/admin_analytics/data/repositories/statistics_repository_impl.dart';
+import '../../features/admin_analytics/domain/repositories/statistics_repository.dart';
+import '../../features/admin_analytics/presentation/bloc/performance_cubit.dart';
+import '../../features/admin_analytics/presentation/bloc/statistics_cubit.dart';
+import '../../features/admin_reports/data/datasources/reports_remote_datasource.dart';
+import '../../features/admin_reports/data/repositories/reports_repository_impl.dart';
+import '../../features/admin_reports/domain/repositories/reports_repository.dart';
+import '../../features/admin_reports/presentation/bloc/reports_cubit.dart';
+import '../../features/admin_users/data/datasources/admin_users_remote_datasource.dart';
+import '../../features/admin_users/data/repositories/admin_users_repository_impl.dart';
+import '../../features/admin_users/domain/repositories/admin_users_repository.dart';
+import '../../features/admin_users/presentation/bloc/admin_user_detail_cubit.dart';
 import '../../features/auth/data/auth_repository_implementation.dart';
 import '../../features/auth/domain/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
@@ -14,6 +40,7 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/theme/presentation/bloc/theme_cubit.dart';
+import '../api/api_service.dart';
 import '../network/dio_client.dart';
 import '../services/file_service.dart';
 
@@ -40,6 +67,12 @@ void setupDependencies() {
       onUnauthorized: () => getIt<AuthCubit>().clearSession(),
     ),
   );
+
+  // The admin repositories are written against APIService, which wraps the
+  // one shared Dio. Registering it here keeps a single interceptor chain and
+  // a single base URL instead of a second client.
+  getIt.registerLazySingleton<Dio>(() => getIt<DioClient>().client);
+  getIt.registerLazySingleton<APIService>(() => APIService(getIt<Dio>()));
 
   // ------------------------------- Auth -------------------------------------
   getIt.registerLazySingleton<AuthRepository>(
@@ -71,6 +104,71 @@ void setupDependencies() {
   // separate routes and must share one state.
   getIt.registerLazySingleton(
     () => ProfileCubit(getIt<ProfileRepository>(), getIt<AuthCubit>()),
+  );
+
+  // ------------------- Admin: agencies, staff and users ---------------------
+  getIt.registerLazySingleton<AgencyRepository>(
+    () => AgencyRepositoryImplementation(getIt<APIService>()),
+  );
+  getIt.registerLazySingleton<StaffManagementRepository>(
+    () => StaffManagementRepoImplementation(getIt<APIService>()),
+  );
+  getIt.registerLazySingleton<AgencyComplaintsRepository>(
+    () => AgencyComplaintsRepositoryImplementation(getIt<APIService>()),
+  );
+  getIt.registerLazySingleton<UserManagementRepository>(
+    () => UserManagementRepositoryImplementation(getIt<APIService>()),
+  );
+
+  // Factories: each admin screen owns its own list state and filters.
+  getIt.registerFactory<AdminAgenciesCubit>(
+    () => AdminAgenciesCubit(getIt<AgencyRepository>()),
+  );
+  getIt.registerFactory<StaffManagementCubit>(
+    () => StaffManagementCubit(
+      getIt<StaffManagementRepository>(),
+      getIt<AgencyRepository>(),
+    ),
+  );
+  getIt.registerFactory<AdminAgenciesComplaintCubit>(
+    () => AdminAgenciesComplaintCubit(getIt<AgencyComplaintsRepository>()),
+  );
+  getIt.registerFactory<UserManagementCubit>(
+    () => UserManagementCubit(getIt<UserManagementRepository>()),
+  );
+
+  // ------------------- Admin: analytics and reports -------------------------
+  getIt.registerLazySingleton(
+    () => StatisticsRemoteDataSource(getIt<DioClient>()),
+  );
+  getIt.registerLazySingleton<StatisticsRepository>(
+    () => StatisticsRepositoryImpl(getIt<StatisticsRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => StatisticsCubit(getIt<StatisticsRepository>()),
+  );
+  getIt.registerFactory(
+    () => PerformanceCubit(getIt<StatisticsRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => ReportsRemoteDataSource(getIt<DioClient>()),
+  );
+  getIt.registerLazySingleton<ReportsRepository>(
+    () => ReportsRepositoryImpl(getIt<ReportsRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(() => ReportsCubit(getIt<ReportsRepository>()));
+
+  // The users list is served by UserManagementCubit above; this repository
+  // backs the single-user detail screen, which covers GET /admin/users/{id}.
+  getIt.registerLazySingleton(
+    () => AdminUsersRemoteDataSource(getIt<DioClient>()),
+  );
+  getIt.registerLazySingleton<AdminUsersRepository>(
+    () => AdminUsersRepositoryImpl(getIt<AdminUsersRemoteDataSource>()),
+  );
+  getIt.registerFactory(
+    () => AdminUserDetailCubit(getIt<AdminUsersRepository>()),
   );
 
   // ---------------------------- Attachments ---------------------------------

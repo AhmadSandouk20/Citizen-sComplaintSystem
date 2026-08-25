@@ -22,10 +22,27 @@ class AppBottomNavigationBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       items: navItems.map((item) {
         return BottomNavigationBarItem(
-          icon: Icon(item.icon),
+          icon: _NavIcon(icon: item.icon, badgeCount: item.badgeCount),
           label: item.label,
         );
       }).toList(),
+    );
+  }
+}
+
+class _NavIcon extends StatelessWidget {
+  const _NavIcon({required this.icon, required this.badgeCount});
+
+  final IconData icon;
+  final int badgeCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconWidget = Icon(icon);
+    if (badgeCount <= 0) return iconWidget;
+    return Badge(
+      label: Text(badgeCount > 99 ? '99+' : '$badgeCount'),
+      child: iconWidget,
     );
   }
 }

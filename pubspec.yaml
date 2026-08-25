@@ -63,6 +63,10 @@ dependencies:
   firebase_messaging: ^15.2.5
   flutter_local_notifications: ^18.0.1
 
+  # Admin analytics and reports
+  fl_chart: ^0.69.0
+  path_provider: ^2.1.5
+
   # Attachments
   file_picker: ^10.3.7
   image_picker: ^1.2.1

@@ -56,6 +56,8 @@ class RoutePaths {
   static const String agencyUser = '/admin/agencies/:id/users/:userId';
   static const String reports = '/admin/reports';
   static const String performance = '/admin/performance';
+  static const String addStaff = '/admin/agencies/:id/staff/add';
+  static const String updateStaff = '/admin/agencies/:id/staff/:userId/edit';
 
   // ------------------------------ Helper methods ----------------------------
 
@@ -85,6 +87,10 @@ class RoutePaths {
   static String updateAgencyPath(int id) => '/admin/agencies/$id/edit';
   static String agencyUserPath(int agencyId, int userId) =>
       '/admin/agencies/$agencyId/users/$userId';
+  static String addStaffPath(int agencyId) =>
+      '/admin/agencies/$agencyId/staff/add';
+  static String editStaffPath(int agencyId, int userId) =>
+      '/admin/agencies/$agencyId/staff/$userId/edit';
 
   // ------------------------------- Route groups -----------------------------
 

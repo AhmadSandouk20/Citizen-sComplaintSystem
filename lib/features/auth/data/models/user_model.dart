@@ -1,83 +1,58 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'user_role_enum.dart';
+
+part 'user_model.freezed.dart';
+part 'user_model.g.dart';
 
 /// The authenticated user plus the bearer token that identifies the session.
 ///
 /// The token is part of the model on purpose: it is what `AuthCubit.token`
-/// hands to the Dio interceptor and to the FCM registration call.
-class UserModel extends Equatable {
-  final int id;
-  final String name;
-  final String? email;
-  final String? phone;
-  final UserRole role;
-  final bool isActive;
-  final String token;
-
-  const UserModel({
-    required this.id,
-    required this.name,
-    required this.role,
-    required this.token,
-    this.email,
-    this.phone,
-    this.isActive = true,
-  });
-
-  /// [token] is passed separately because the login response carries it
-  /// beside the user object, not inside it.
-  factory UserModel.fromJson(
-    Map<String, dynamic> json, {
-    required String token,
-  }) {
-    return UserModel(
-      id: _asInt(json['id']) ?? 0,
-      name: (json['name'] ?? '').toString(),
-      email: json['email']?.toString(),
-      phone: json['phone']?.toString(),
-      role: UserRole.fromApi(
-        json['type']?.toString() ?? json['role']?.toString(),
-      ),
-      isActive: json['is_active'] == true || json['is_active'] == 1,
-      token: token,
-    );
-  }
-
-  UserModel copyWith({
-    String? name,
+/// hands to the Dio interceptor and to the FCM registration call. It is not
+/// part of the user JSON, so it is excluded from `fromJson` and attached with
+/// `copyWith(token: ...)` after parsing.
+@freezed
+abstract class UserModel with _$UserModel {
+  const factory UserModel({
+    // Laravel can serialise an id as a string depending on the driver, so the
+    // parse is deliberate rather than a plain `as num` cast.
+    @JsonKey(fromJson: _idFromJson) required int id,
+    required String name,
     String? email,
     String? phone,
-    UserRole? role,
-    bool? isActive,
-  }) {
-    return UserModel(
-      id: id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      role: role ?? this.role,
-      isActive: isActive ?? this.isActive,
-      token: token,
-    );
-  }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'type': role.apiValue,
-    'is_active': isActive,
-  };
+    /// Maps the backend `users.type` enum. Serialized as citizen/staff/admin.
+    @JsonKey(name: 'type', unknownEnumValue: UserRole.citizen)
+    required UserRole role,
 
-  static int? _asInt(dynamic value) {
-    if (value is int) return value;
-    if (value is num) return value.toInt();
-    if (value is String) return int.tryParse(value);
-    return null;
-  }
+    @Default(true) @JsonKey(name: 'is_active') bool isActive,
 
-  @override
-  List<Object?> get props => [id, name, email, phone, role, isActive, token];
+    // Login-attempt fields backing the "account locked" screen.
+    @JsonKey(name: 'last_login_at') DateTime? lastLoginAt,
+    @JsonKey(name: 'failed_login_attempts') int? failedLoginAttempts,
+    @JsonKey(name: 'locked_until') DateTime? lockedUntil,
+
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    @Default('')
+    String token,
+  }) = _UserModel;
+
+  const UserModel._();
+
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
+
+  /// True while the backend is still refusing logins for this account.
+  bool get isLocked =>
+      lockedUntil != null && lockedUntil!.isAfter(DateTime.now());
+}
+
+int _idFromJson(dynamic value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value) ?? 0;
+  return 0;
 }

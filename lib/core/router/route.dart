@@ -4,7 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/admin/presentation/view/agency/admin_agencies_list_screen.dart';
+import '../../features/admin_analytics/presentation/screens/admin_statistics_screen.dart';
+import '../../features/admin_analytics/presentation/screens/system_performance_screen.dart';
+import '../../features/admin_reports/presentation/screens/admin_reports_screen.dart';
+import '../../features/admin_users/presentation/screens/admin_user_detail_screen.dart';
+import '../../features/admin/presentation/view/agency/admin_agency_details_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
+import '../../features/admin/presentation/view/staff/admin_staff_management_form_screen.dart';
+import '../../features/admin/presentation/view/user/user_management_screen.dart';
 import '../../features/auth/data/models/user_model.dart';
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
@@ -114,7 +122,13 @@ final GoRouter routes = GoRouter(
         ),
         GoRoute(
           path: RoutePaths.users,
-          builder: (context, state) => const AdminUsersListScreen(),
+          builder: (context, state) => const AdminUsersManagementScreen(),
+        ),
+        GoRoute(
+          path: RoutePaths.user,
+          builder: (context, state) => AdminUserDetailScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
         ),
         GoRoute(
           path: RoutePaths.agencies,
@@ -129,6 +143,29 @@ final GoRouter routes = GoRouter(
           builder: (context, state) => AdminAgencyFormScreen(
             id: int.parse(state.pathParameters['id']!),
           ),
+        ),
+        GoRoute(
+          path: RoutePaths.agency,
+          builder: (context, state) => AdminAgencyDetailsScreen(
+            id: int.parse(state.pathParameters['id']!),
+          ),
+        ),
+        GoRoute(
+          path: RoutePaths.addStaff,
+          builder: (context, state) => AdminStaffManagementFormScreen(
+            agencyId: int.parse(state.pathParameters['id']!),
+          ),
+        ),
+        GoRoute(
+          path: RoutePaths.updateStaff,
+          builder: (context, state) => AdminStaffManagementFormScreen(
+            agencyId: int.parse(state.pathParameters['id']!),
+            staff: state.extra as UserModel?,
+          ),
+        ),
+        GoRoute(
+          path: RoutePaths.performance,
+          builder: (context, state) => const SystemPerformanceScreen(),
         ),
         GoRoute(
           path: RoutePaths.reports,

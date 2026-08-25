@@ -79,6 +79,51 @@ class LocaleKeys {
   static const back = 'back';
   static const continueAction = 'continueAction';
 
+  // Analytics
+  static const performance = 'performance';
+  static const insufficientData = 'insufficientData';
+  static const insufficientDataHint = 'insufficientDataHint';
+  static const totalComplaints = 'totalComplaints';
+  static const resolvedCount = 'resolvedCount';
+  static const resolutionRate = 'resolutionRate';
+  static const avgResolution = 'avgResolution';
+  static const byStatus = 'byStatus';
+  static const byPriority = 'byPriority';
+  static const agencyPerformance = 'agencyPerformance';
+  static const timeSeries = 'timeSeries';
+  static const totalOperations = 'totalOperations';
+  static const avgDuration = 'avgDuration';
+  static const errorRate = 'errorRate';
+  static const byLayer = 'byLayer';
+
+  // Complaint status and priority, as returned by the API
+  static const statusNew = 'statusNew';
+  static const statusInProgress = 'statusInProgress';
+  static const statusResolved = 'statusResolved';
+  static const statusRejected = 'statusRejected';
+  static const priorityLow = 'priorityLow';
+  static const priorityMedium = 'priorityMedium';
+  static const priorityHigh = 'priorityHigh';
+
+  // Reports
+  static const reportsHint = 'reportsHint';
+  static const downloadComplaintsCsv = 'downloadComplaintsCsv';
+  static const downloadStatisticsCsv = 'downloadStatisticsCsv';
+  static const downloadComplaintsPdf = 'downloadComplaintsPdf';
+  static const downloadStarted = 'downloadStarted';
+
+  // Admin user detail
+  static const role = 'role';
+  static const editUser = 'editUser';
+  static const save = 'save';
+  static const deleteUser = 'deleteUser';
+  static const deleteUserConfirm = 'deleteUserConfirm';
+  static const userUpdated = 'userUpdated';
+  static const userDeleted = 'userDeleted';
+  static const cannotEditSelf = 'cannotEditSelf';
+  static const neverLoggedIn = 'neverLoggedIn';
+  static const usersEmpty = 'usersEmpty';
+
   // Shared
   static const genericError = 'genericError';
   static const notImplementedYet = 'notImplementedYet';

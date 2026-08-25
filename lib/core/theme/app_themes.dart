@@ -22,12 +22,12 @@ class AppTheme {
       onSurface: AppColors.onSurface,
       surfaceContainerHighest: AppColors.surfaceVariant,
       onSurfaceVariant: AppColors.onSurfaceVariant,
-      // Add these extras for a polished look
+
       outline: Colors.grey.shade400,
       shadow: Colors.black12,
     ),
-    // ---- Typography ----
-    fontFamily: 'Cairo', // Use your custom font or remove this line
+
+    fontFamily: 'Cairo',
     textTheme: const TextTheme(
       headlineMedium: TextStyle(
         fontWeight: FontWeight.bold,
@@ -40,14 +40,14 @@ class AppTheme {
       bodyLarge: TextStyle(color: AppColors.onSurface),
       bodyMedium: TextStyle(color: AppColors.onSurfaceVariant),
     ),
-    // ---- AppBar ----
+
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.onPrimary,
       elevation: 0,
       centerTitle: true,
     ),
-    // ---- Buttons ----
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
@@ -65,13 +65,13 @@ class AppTheme {
         side: const BorderSide(color: AppColors.primary),
       ),
     ),
-    // ---- Cards ----
+
     cardTheme: CardThemeData(
       color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
-    // ---- Snackbar ----
+
     snackBarTheme: const SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       backgroundColor: AppColors.onSurface,
@@ -79,7 +79,7 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white, // or AppColors.surface
+      fillColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
