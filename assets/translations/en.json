@@ -17,5 +17,6 @@
   "language": "Language",
   "theme": "Theme",
   "light": "Light",
-  "dark": "Dark"
+  "dark": "Dark",
+  "noComplaintsFound": " no Complaints Found"
 }
