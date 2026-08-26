@@ -8,17 +8,12 @@ import '../../domain/entities/attachment_entity.dart';
 class AttachmentGallery extends StatelessWidget {
   final List<AttachmentEntity> attachments;
 
-  const AttachmentGallery({
-    super.key,
-    required this.attachments,
-  });
+  const AttachmentGallery({super.key, required this.attachments});
 
   @override
   Widget build(BuildContext context) {
     if (attachments.isEmpty) {
-      return const Center(
-        child: Text('لا توجد مرفقات'),
-      );
+      return const Center(child: Text('لا توجد مرفقات'));
     }
 
     return ListView.separated(
@@ -31,20 +26,14 @@ class AttachmentGallery extends StatelessWidget {
         final attachment = attachments[index];
 
         if (attachment.isImage) {
-          return _ImageAttachmentCard(
-            attachment: attachment,
-          );
+          return _ImageAttachmentCard(attachment: attachment);
         }
 
         if (attachment.isPdf) {
-          return _PdfAttachmentCard(
-            attachment: attachment,
-          );
+          return _PdfAttachmentCard(attachment: attachment);
         }
 
-        return _UnknownAttachmentCard(
-          attachment: attachment,
-        );
+        return _UnknownAttachmentCard(attachment: attachment);
       },
     );
   }
@@ -53,9 +42,7 @@ class AttachmentGallery extends StatelessWidget {
 class _ImageAttachmentCard extends StatelessWidget {
   final AttachmentEntity attachment;
 
-  const _ImageAttachmentCard({
-    required this.attachment,
-  });
+  const _ImageAttachmentCard({required this.attachment});
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +52,7 @@ class _ImageAttachmentCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => AttachmentImageViewer(
-              path: attachment.filePath,
-            ),
+            builder: (_) => AttachmentImageViewer(path: attachment.filePath),
           ),
         );
       },
@@ -82,9 +67,7 @@ class _ImageAttachmentCard extends StatelessWidget {
                 child: SizedBox(
                   height: 180,
                   width: double.infinity,
-                  child: CachedAttachmentImage(
-                    path: attachment.filePath,
-                  ),
+                  child: CachedAttachmentImage(path: attachment.filePath),
                 ),
               ),
               const SizedBox(height: 8),
@@ -104,18 +87,13 @@ class _ImageAttachmentCard extends StatelessWidget {
 class _PdfAttachmentCard extends StatelessWidget {
   final AttachmentEntity attachment;
 
-  const _PdfAttachmentCard({
-    required this.attachment,
-  });
+  const _PdfAttachmentCard({required this.attachment});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(
-          Icons.picture_as_pdf_outlined,
-          size: 36,
-        ),
+        leading: const Icon(Icons.picture_as_pdf_outlined, size: 36),
         title: Text(
           attachment.fileName,
           maxLines: 1,
@@ -127,9 +105,7 @@ class _PdfAttachmentCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => AttachmentPdfViewer(
-                path: attachment.filePath,
-              ),
+              builder: (_) => AttachmentPdfViewer(path: attachment.filePath),
             ),
           );
         },
@@ -141,25 +117,19 @@ class _PdfAttachmentCard extends StatelessWidget {
 class _UnknownAttachmentCard extends StatelessWidget {
   final AttachmentEntity attachment;
 
-  const _UnknownAttachmentCard({
-    required this.attachment,
-  });
+  const _UnknownAttachmentCard({required this.attachment});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(
-          Icons.insert_drive_file_outlined,
-        ),
+        leading: const Icon(Icons.insert_drive_file_outlined),
         title: Text(
           attachment.fileName,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        subtitle: const Text(
-          'نوع ملف غير مدعوم للمعاينة',
-        ),
+        subtitle: const Text('نوع ملف غير مدعوم للمعاينة'),
       ),
     );
   }

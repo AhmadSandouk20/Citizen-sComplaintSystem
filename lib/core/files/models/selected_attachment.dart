@@ -22,12 +22,7 @@ class SelectedAttachment {
   }
 
   bool get isImage {
-    return [
-      'jpg',
-      'jpeg',
-      'png',
-      'webp',
-    ].contains(extension);
+    return ['jpg', 'jpeg', 'png', 'webp'].contains(extension);
   }
 
   bool get isPdf => extension == 'pdf';

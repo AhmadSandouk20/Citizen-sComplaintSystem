@@ -7,34 +7,16 @@ import 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;
 
-  ProfileCubit(this.repository)
-      : super(const ProfileState());
+  ProfileCubit(this.repository) : super(const ProfileState());
 
-  Future<void> getProfile({
-    required String token,
-  }) async {
-    emit(
-      state.copyWith(
-        status: ProfileStatus.loading,
-        errorMessage: null,
-      ),
-    );
+  Future<void> getProfile({required String token}) async {
+    emit(state.copyWith(status: ProfileStatus.loading, errorMessage: null));
 
     try {
-      final profile = await repository.getProfile(
-        token: token,
-      );
+      final profile = await repository.getProfile(token: token);
 
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          profile: profile,
-        ),
-      );
+      emit(state.copyWith(status: ProfileStatus.success, profile: profile));
     } on DioException catch (e) {
-      print('STATUS CODE: ${e.response?.statusCode}');
-      print('RESPONSE DATA: ${e.response?.data}');
-      print('DIO MESSAGE: ${e.message}');
       emit(
         state.copyWith(
           status: ProfileStatus.error,
@@ -43,10 +25,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     } catch (e) {
       emit(
-        state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: e.toString(),
-        ),
+        state.copyWith(status: ProfileStatus.error, errorMessage: e.toString()),
       );
     }
   }
@@ -56,12 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String name,
     required String phone,
   }) async {
-    emit(
-      state.copyWith(
-        status: ProfileStatus.updating,
-        errorMessage: null,
-      ),
-    );
+    emit(state.copyWith(status: ProfileStatus.updating, errorMessage: null));
 
     try {
       final profile = await repository.updateProfile(
@@ -70,12 +44,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         phone: phone,
       );
 
-      emit(
-        state.copyWith(
-          status: ProfileStatus.updated,
-          profile: profile,
-        ),
-      );
+      emit(state.copyWith(status: ProfileStatus.updated, profile: profile));
     } on DioException catch (e) {
       emit(
         state.copyWith(
@@ -85,34 +54,18 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     } catch (e) {
       emit(
-        state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: e.toString(),
-        ),
+        state.copyWith(status: ProfileStatus.error, errorMessage: e.toString()),
       );
     }
   }
 
-  Future<void> deleteProfile({
-    required String token,
-  }) async {
-    emit(
-      state.copyWith(
-        status: ProfileStatus.deleting,
-        errorMessage: null,
-      ),
-    );
+  Future<void> deleteProfile({required String token}) async {
+    emit(state.copyWith(status: ProfileStatus.deleting, errorMessage: null));
 
     try {
-      await repository.deleteProfile(
-        token: token,
-      );
+      await repository.deleteProfile(token: token);
 
-      emit(
-        state.copyWith(
-          status: ProfileStatus.deleted,
-        ),
-      );
+      emit(state.copyWith(status: ProfileStatus.deleted));
     } on DioException catch (e) {
       emit(
         state.copyWith(
@@ -122,10 +75,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
     } catch (e) {
       emit(
-        state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: e.toString(),
-        ),
+        state.copyWith(status: ProfileStatus.error, errorMessage: e.toString()),
       );
     }
   }

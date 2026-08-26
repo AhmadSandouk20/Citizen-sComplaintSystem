@@ -14,19 +14,13 @@ class MultipartUploadService {
     Map<String, dynamic>? fields,
     String fieldName = 'attachments[]',
     CancelToken? cancelToken,
-    void Function(int sent, int total)?
-    onSendProgress,
+    void Function(int sent, int total)? onSendProgress,
   }) async {
     final formData = FormData();
 
     if (fields != null) {
       for (final entry in fields.entries) {
-        formData.fields.add(
-          MapEntry(
-            entry.key,
-            entry.value.toString(),
-          ),
-        );
+        formData.fields.add(MapEntry(entry.key, entry.value.toString()));
       }
     }
 

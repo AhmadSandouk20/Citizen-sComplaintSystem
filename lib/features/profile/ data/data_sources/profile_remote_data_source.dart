@@ -8,9 +8,7 @@ class ProfileRemoteDataSource {
 
   ProfileRemoteDataSource(this.dio);
 
-  Future<ProfileModel> getProfile({
-    required String token,
-  }) async {
+  Future<ProfileModel> getProfile({required String token}) async {
     final response = await dio.get(
       '${AppConfig.apiBaseUrl}/auth/profile',
       options: Options(
@@ -34,10 +32,7 @@ class ProfileRemoteDataSource {
   }) async {
     final response = await dio.put(
       '${AppConfig.apiBaseUrl}/auth/profile',
-      data: {
-        'name': name,
-        'phone': phone,
-      },
+      data: {'name': name, 'phone': phone},
       options: Options(
         headers: {
           'Accept': 'application/json',
@@ -52,9 +47,7 @@ class ProfileRemoteDataSource {
     return ProfileModel.fromJson(user);
   }
 
-  Future<void> deleteProfile({
-    required String token,
-  }) async {
+  Future<void> deleteProfile({required String token}) async {
     await dio.delete(
       '${AppConfig.apiBaseUrl}/auth/profile',
       options: Options(

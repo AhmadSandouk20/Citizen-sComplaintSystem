@@ -7,13 +7,7 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        CircleAvatar(
-          radius: 45,
-          child: Icon(
-            Icons.person,
-            size: 45,
-          ),
-        ),
+        CircleAvatar(radius: 45, child: Icon(Icons.person, size: 45)),
         SizedBox(height: 24),
       ],
     );

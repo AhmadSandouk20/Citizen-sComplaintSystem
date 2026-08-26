@@ -1,9 +1,7 @@
 import '../entities/profile_entity.dart';
 
 abstract class ProfileRepository {
-  Future<ProfileEntity> getProfile({
-    required String token,
-  });
+  Future<ProfileEntity> getProfile({required String token});
 
   Future<ProfileEntity> updateProfile({
     required String token,
@@ -11,7 +9,5 @@ abstract class ProfileRepository {
     required String phone,
   });
 
-  Future<void> deleteProfile({
-    required String token,
-  });
+  Future<void> deleteProfile({required String token});
 }

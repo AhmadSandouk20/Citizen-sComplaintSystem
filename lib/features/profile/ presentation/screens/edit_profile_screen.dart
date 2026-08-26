@@ -11,14 +11,10 @@ import '../widgets/edit_profile_form.dart';
 class EditProfileScreen extends StatefulWidget {
   final ProfileEntity profile;
 
-  const EditProfileScreen({
-    super.key,
-    required this.profile,
-  });
+  const EditProfileScreen({super.key, required this.profile});
 
   @override
-  State<EditProfileScreen> createState() =>
-      _EditProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -30,13 +26,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
 
-    _nameController = TextEditingController(
-      text: widget.profile.name,
-    );
+    _nameController = TextEditingController(text: widget.profile.name);
 
-    _phoneController = TextEditingController(
-      text: widget.profile.phone ?? '',
-    );
+    _phoneController = TextEditingController(text: widget.profile.phone ?? '');
   }
 
   void _save() {
@@ -58,18 +50,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('.تعديل الملف الشخصي '),
-      ),
+      appBar: AppBar(title: const Text('.تعديل الملف الشخصي ')),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state.status == ProfileStatus.updated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  '.تم تعديل الملف الشخصي بنجاح',
-                ),
-              ),
+              const SnackBar(content: Text('.تم تعديل الملف الشخصي بنجاح')),
             );
 
             Navigator.pop(context);
@@ -79,8 +65,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  state.errorMessage ??
-                      'حدث خطأ، يرجى المحاولة مرة أخرى',
+                  state.errorMessage ?? 'حدث خطأ، يرجى المحاولة مرة أخرى',
                 ),
               ),
             );

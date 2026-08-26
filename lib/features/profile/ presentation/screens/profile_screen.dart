@@ -31,9 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authState = context.read<AuthCubit>().state;
 
     if (authState is LoginSuccessState) {
-      context.read<ProfileCubit>().getProfile(
-        token: authState.user.token,
-      );
+      context.read<ProfileCubit>().getProfile(token: authState.user.token);
     }
   }
 
@@ -44,21 +42,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('الملف الشخصي'),
-      ),
+      appBar: AppBar(title: const Text('الملف الشخصي')),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state.status == ProfileStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state.status == ProfileStatus.error) {
             return ProfileErrorView(
-              message:
-              state.errorMessage ?? 'حدث خطأ، يرجى المحاولة مرة أخرى',
+              message: state.errorMessage ?? 'حدث خطأ، يرجى المحاولة مرة أخرى',
               onRetry: _loadProfile,
             );
           }
@@ -66,9 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final profile = state.profile;
 
           if (profile == null) {
-            return const Center(
-              child: Text('لا توجد بيانات للملف الشخصي'),
-            );
+            return const Center(child: Text('لا توجد بيانات للملف الشخصي'));
           }
 
           return ProfileBody(
@@ -80,9 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
                     value: context.read<ProfileCubit>(),
-                    child: EditProfileScreen(
-                      profile: profile,
-                    ),
+                    child: EditProfileScreen(profile: profile),
                   ),
                 ),
               );

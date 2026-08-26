@@ -3,122 +3,36 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/router/route_paths.dart';
 
+// ======================================================
+// AUTH
+// ======================================================
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Login')));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Login')));
+  }
 }
 
-// ----------------Profile-------------------
-// class ProfileScreen extends StatelessWidget {
-//   const ProfileScreen({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final themeCubit = context.read<ThemeCubit>();
-//     final localeCubit = context.read<LocaleCubit>();
-//
-//     final currentTheme = context.watch<ThemeCubit>().state;
-//     final currentLocale = context.watch<LocaleCubit>().state;
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Profile (Test Center)'),
-//         centerTitle: true,
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(24.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: [
-//             Card(
-//               elevation: 4,
-//               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(16),
-//               ),
-//               child: Padding(
-//                 padding: const EdgeInsets.all(20.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       '${LocaleKeys.theme.tr()}: ${currentTheme.themeMode == ThemeMode.dark ? LocaleKeys.dark.tr() : LocaleKeys.light.tr()}',
-//                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 16),
-//                     ElevatedButton.icon(
-//                       onPressed: () => themeCubit.toggleThemeMode(),
-//                       icon: Icon(
-//                         currentTheme.themeMode == ThemeMode.dark
-//                             ? Icons.light_mode
-//                             : Icons.dark_mode,
-//                       ),
-//                       label: Text(
-//                         currentTheme.themeMode == ThemeMode.dark
-//                             ? 'Switch to Light'
-//                             : 'Switch to Dark',
-//                       ),
-//                       style: ElevatedButton.styleFrom(
-//                         minimumSize: const Size(double.infinity, 48),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//
-//             const SizedBox(height: 24),
-//
-//             Card(
-//               elevation: 4,
-//               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(16),
-//               ),
-//               child: Padding(
-//                 padding: const EdgeInsets.all(20.0),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       '${LocaleKeys.language.tr()}: ${currentLocale.locale.languageCode == 'en' ? 'English' : 'العربية'}',
-//                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                     const SizedBox(height: 16),
-//                     ElevatedButton.icon(
-//                       onPressed: () =>
-//                           localeCubit.toggleLanguage(context), // YOUR method
-//                       icon: Icon(
-//                         currentLocale.locale.languageCode == 'en'
-//                             ? Icons.translate
-//                             : Icons.translate,
-//                       ),
-//                       label: Text(
-//                         currentLocale.locale.languageCode == 'en'
-//                             ? 'Switch to العربية'
-//                             : 'Switch to English',
-//                       ),
-//                       style: ElevatedButton.styleFrom(
-//                         minimumSize: const Size(double.infinity, 48),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//
-//             const SizedBox(height: 32),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+// ======================================================
+// PROFILE STUB
+// يستخدمه Admin و Staff فقط
+// ======================================================
+
+class ProfileStubScreen extends StatelessWidget {
+  const ProfileStubScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Profile')));
+  }
+}
+
+// ======================================================
+// CITIZEN
+// ======================================================
 
 class CitizenHomeScreen extends StatelessWidget {
   const CitizenHomeScreen({super.key});
@@ -127,35 +41,67 @@ class CitizenHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Citizen Dashboard')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text('Welcome!', style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 16),
-            // Quick action cards
-            Wrap(
-              spacing: 16,
-              children: [
-                _QuickActionCard(
-                  title: 'Submit Complaint',
-                  icon: Icons.add_circle,
-                  onTap: () => context.go(RoutePaths.submit),
-                ),
-                _QuickActionCard(
-                  title: 'Track a Complaint',
-                  icon: Icons.search,
-                  onTap: () => context.go(RoutePaths.cTrackEntry),
-                ),
-                _QuickActionCard(
-                  title: 'My Complaints',
-                  icon: Icons.list,
-                  onTap: () => context.go(RoutePaths.cComplaints),
-                ),
-              ],
+
+            const SizedBox(height: 24),
+
+            const Text(
+              'إجراءات سريعة',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            // Summary stats (unresolved, total, etc.) goes here later
+
+            const SizedBox(height: 16),
+
+            _CitizenActionButton(
+              title: 'تقديم شكوى',
+              icon: Icons.add_circle_outline,
+              onTap: () {
+                context.push(RoutePaths.submit);
+              },
+            ),
+
+            const SizedBox(height: 12),
+
+            _CitizenActionButton(
+              title: 'شكاواي',
+              icon: Icons.list_alt_outlined,
+              onTap: () {
+                context.push(RoutePaths.cComplaints);
+              },
+            ),
+
+            const SizedBox(height: 12),
+
+            _CitizenActionButton(
+              title: 'تتبع شكوى',
+              icon: Icons.search,
+              onTap: () {
+                context.push(RoutePaths.cTrackEntry);
+              },
+            ),
+
+            const SizedBox(height: 12),
+
+            _CitizenActionButton(
+              title: 'الملف الشخصي',
+              icon: Icons.person_outline,
+              onTap: () {
+                context.push(RoutePaths.cProfile);
+              },
+            ),
+
+            const SizedBox(height: 24),
+
+            // يمكن إضافة ملخص الشكاوى هنا لاحقًا:
+            // - إجمالي الشكاوى
+            // - الشكاوى الجديدة
+            // - قيد المعالجة
+            // - المحلولة
           ],
         ),
       ),
@@ -163,27 +109,42 @@ class CitizenHomeScreen extends StatelessWidget {
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
+class _CitizenActionButton extends StatelessWidget {
   final String title;
   final IconData icon;
   final VoidCallback onTap;
-  const _QuickActionCard({
+
+  const _CitizenActionButton({
     required this.title,
     required this.icon,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
+        borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
+          padding: const EdgeInsets.all(18),
+          child: Row(
             children: [
-              Icon(icon, size: 48),
-              const SizedBox(height: 8),
-              Text(title),
+              Icon(icon, size: 32),
+
+              const SizedBox(width: 16),
+
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+
+              const Icon(Icons.arrow_forward_ios, size: 18),
             ],
           ),
         ),
@@ -192,81 +153,55 @@ class _QuickActionCard extends StatelessWidget {
   }
 }
 
-// ----- CITIZEN -----
-class CitizenComplaintListScreen extends StatelessWidget {
-  const CitizenComplaintListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('My Complaints')));
-}
+// ======================================================
+// STAFF
+// ======================================================
 
-class SubmitComplaintScreen extends StatelessWidget {
-  const SubmitComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Submit Complaint')));
-}
-
-// ----- STAFF -----
 class StaffComplainsQueueScreen extends StatelessWidget {
   const StaffComplainsQueueScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Staff Queue')));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Staff Queue')));
+  }
 }
 
-// ----- ADMIN -----
+// ======================================================
+// ADMIN
+// ======================================================
+
 class AdminStatisticsScreen extends StatelessWidget {
   const AdminStatisticsScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Statistics')));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Statistics')));
+  }
 }
 
 class AdminUsersListScreen extends StatelessWidget {
   const AdminUsersListScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Users List')));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Users List')));
+  }
 }
 
 class AdminAgenciesListScreen extends StatelessWidget {
   const AdminAgenciesListScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-       Scaffold(body: Column(
-         mainAxisAlignment: MainAxisAlignment.center,
-         children: [
-           Text('Agencies List'),
-
-           ElevatedButton(
-             onPressed: () {
-               context.go(
-                 RoutePaths.citizenAttachments(2),
-               );
-             },
-             child: const Text('اختبار المرفقات'),
-           ),
-
-           SizedBox(
-             height: 20,
-           ),
-
-           ElevatedButton(
-             onPressed: () {
-               context.go(
-                 RoutePaths.citizenAttachmentGallery(2),
-               );
-             },
-             child: const Text('اختبار معرض المرفقات'),
-           ),
-         ],
-       ),);
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Agencies List')));
+  }
 }
 
 class AdminReportsScreen extends StatelessWidget {
   const AdminReportsScreen({super.key});
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Reports')));
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Reports')));
+  }
 }

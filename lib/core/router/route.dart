@@ -4,246 +4,226 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/agencies/presentation/cubit/agency_cubit.dart';
+
 import '../../features/attachments/presentation/cubit/attachment_cubit.dart';
-import '../../features/attachments/presentation/cubit/attachment_gallery_cubit.dart';
-import '../../features/attachments/presentation/screens/attachment_gallery_test_screen.dart';
-import '../../features/attachments/presentation/screens/attachments_screen.dart';
+
 import '../../features/auth/data/models/user_role_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
+
+import '../../features/complaints/domain/entities/complaint_entity.dart';
+
+import '../../features/complaints/presentation/cubit/complaint_details_cubit.dart';
+import '../../features/complaints/presentation/cubit/create_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/my_complaints_cubit.dart';
+import '../../features/complaints/presentation/cubit/status_history_cubit.dart';
+import '../../features/complaints/presentation/cubit/track_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/update_complaint_cubit.dart';
+
+import '../../features/complaints/presentation/screens/complaint_details_screen.dart';
+import '../../features/complaints/presentation/screens/my_complaints_screen.dart';
+import '../../features/complaints/presentation/screens/submit_complaint_screen.dart';
+import '../../features/complaints/presentation/screens/track_complaint_entry_screen.dart';
+import '../../features/complaints/presentation/screens/track_complaint_screen.dart';
+import '../../features/complaints/presentation/screens/update_complaint_screen.dart';
+
 import '../../features/profile/ presentation/cubit/profile_cubit.dart';
 import '../../features/profile/ presentation/screens/profile_screen.dart';
+
 import '../../features/screens_stub/screens_stubs.dart';
+
+import '../di/injector.dart';
 import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
 import 'route_paths.dart';
-import '../di/injector.dart';
 
 GoRouter routes = GoRouter(
   navigatorKey: navigatorKey,
-  initialLocation: RoutePaths.login,
-  routes: [
-    /*
-    GoRoute(
-      path: RoutePaths.splashScreen,
-      builder: (context, state) => SplashScreen(),
-    ),
-    */
+  initialLocation: RoutePaths.cHome,
 
-    // --------------------AUTH--------------------
-    GoRoute(path: RoutePaths.login, builder: (context, state) => LoginScreen()),
-    /*
+  routes: [
+    // ==================================================
+    // AUTH
+    // ==================================================
+
     GoRoute(
-      path: RoutePaths.signup,
-      builder: (context, state) => SignupScreen(),
+      path: RoutePaths.login,
+      builder: (context, state) => const LoginScreen(),
     ),
-    GoRoute(
-      path: RoutePaths.aLocked,
-      builder: (context, state) => AccountLockedScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.verifyOTP,
-      builder: (context, state) => VerifyOtpScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.resendOTP,
-      builder: (context, state) => ResendOtpScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.forgotPassword,
-      builder: (context, state) => ForgotPasswordScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.resetPassword,
-      builder: (context, state) => ResetPasswordScreen(),
-    ),
+
+    // ==================================================
+    // PUBLIC COMPLAINT TRACKING
+    // لا يحتاج تسجيل دخول
+    // ==================================================
     GoRoute(
       path: RoutePaths.cTrackEntry,
-      builder: (context, state) => TrackEntryScreen(),
+      builder: (context, state) {
+        return const TrackComplaintEntryScreen();
+      },
     ),
+
     GoRoute(
       path: RoutePaths.cTrackCode,
-      builder: (context, state) =>
-          TrackComplaintScreen(code: state.pathParameters['code']!),
+      builder: (context, state) {
+        final referenceCode = state.pathParameters['code']!;
+
+        return BlocProvider(
+          create: (_) => getIt<TrackComplaintCubit>(),
+          child: TrackComplaintScreen(referenceCode: referenceCode),
+        );
+      },
     ),
-    */
-    // ----------------------------------------
+
+    // ==================================================
+    // AUTHENTICATED SHELL
+    // ==================================================
     ShellRoute(
       builder: (context, state, child) {
-        final state = context.read<AuthCubit>().state;
+        final authState = context.read<AuthCubit>().state;
+
         UserModel? user;
-        if (state is LoginSuccessState) {
-          user = state.user;
+
+        if (authState is LoginSuccessState) {
+          user = authState.user;
         }
+
         final role = user?.role ?? UserRole.citizen;
 
         return AdaptiveShellBuilder(currentChild: child, role: role);
       },
+
       routes: [
-        /*
-        GoRoute(
-          path: RoutePaths.submissionSuccess,
-          builder: (context, state) => SubmissionSuccessScreen(),
-        ),
-        */
-        // All logged-in users)
-        //profile
+        // ==================================================
+        // PROFILE
+        // ==================================================
+
+        // Admin / Staff profile placeholder
         GoRoute(
           path: RoutePaths.profile,
+          builder: (context, state) {
+            return const ProfileStubScreen();
+          },
+        ),
+
+        // Citizen real profile
+        GoRoute(
+          path: RoutePaths.cProfile,
           builder: (context, state) {
             return BlocProvider(
               create: (_) => getIt<ProfileCubit>(),
               child: const ProfileScreen(),
             );
           },
-        ),// GET/PUT/DELETE /api/auth/profile
-        /*
-        GoRoute(
-          path: RoutePaths.notifications,
-          builder: (context, state) => NotificationsScreen(),
         ),
-        */
-        // ----------------------------------------
-        // CITIZEN ( /api/complaints)
-        // ----------------------------------------
-        GoRoute(
-          path: RoutePaths.cComplaints,
-          builder: (context, state) => CitizenComplaintListScreen(),
-        ), // GET /api/complaints
-        /*
-        GoRoute(
-          path: RoutePaths.cComplaintDetails,
-          builder: (context, state) => CitizenComplaintDetailScreen(),
-        ),
-        */
-        GoRoute(
-          path: RoutePaths.submit,
-          builder: (context, state) => SubmitComplaintScreen(),
-        ), // POST /api/complaints (multipart)
 
-        // GoRoute(
-        //   path: RoutePaths.cUpdate,
-        //   builder: (context, state) => UpdateComplaintScreen(),
-        // ),
-        //Attachments
-        GoRoute(
-          path: RoutePaths.cAttachments,
-          builder: (context, state) {
-            final complaintId = int.parse(
-              state.pathParameters['id']!,
-            );
-
-            return BlocProvider(
-              create: (_) => getIt<AttachmentCubit>(),
-              child: AttachmentsScreen(
-                complaintId: complaintId,
-              ),
-            );
-          },
-        ),
-        // ----------------------------------------
-        // Staff ( /api/agency/ )
-        // ----------------------------------------
-        GoRoute(
-          path: RoutePaths.sComplaints,
-          builder: (context, state) => StaffComplainsQueueScreen(),
-        ),
-        // test attachment
-        GoRoute(
-          path: RoutePaths.cAttachmentGallery,
-          builder: (context, state) {
-            final complaintId = int.parse(
-              state.pathParameters['id']!,
-            );
-
-            return BlocProvider(
-              create: (_) =>
-                  getIt<AttachmentGalleryCubit>(),
-              child:
-              AttachmentGalleryTestScreen(
-                complaintId: complaintId,
-              ),
-            );
-          },
-        ),
-        // GET /api/agency/complaints
-        /*
-        GoRoute(
-          path: RoutePaths.sComplaint,
-          builder: (context, state) => StaffComplaintDetailScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.updateComplaint,
-          builder: (context, state) => StaffUpdateComplaintScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintLock,
-          builder: (context, state) => StaffLockComplaintScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintUnlock,
-          builder: (context, state) => StaffUnlockComplaintScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintRevisions,
-          builder: (context, state) => StaffRevisionsScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintStatusHistory,
-          builder: (context, state) => StaffStatusHistoryScreen(),
-        ),
-        */
-        // ----------------------------------------
-        // ADMIN ( /api/admin, /api/statistics, /api/agencies)
-        // ----------------------------------------
-        GoRoute(
-          path: RoutePaths.statistics,
-          builder: (context, state) => AdminStatisticsScreen(),
-        ), // GET /api/statistics/overall, /by-agency, /by-date, /performance
-        GoRoute(
-          path: RoutePaths.users,
-          builder: (context, state) => AdminUsersListScreen(),
-        ), // GET /api/admin/users
-        /*
-        GoRoute(
-          path: RoutePaths.performance,
-          builder: (context, state) => SystemPerformanceScreen(),
-        ),
-        */
+        // ==================================================
+        // CITIZEN
+        // ==================================================
         GoRoute(
           path: RoutePaths.cHome,
           builder: (context, state) => const CitizenHomeScreen(),
         ),
-        /*
+
+        // --------------------------------------------------
+        // My Complaints
+        // --------------------------------------------------
         GoRoute(
-          path: RoutePaths.user,
-          builder: (context, state) => AdminUserDetailScreen(),
+          path: RoutePaths.cComplaints,
+          builder: (context, state) {
+            return BlocProvider(
+              create: (_) => getIt<MyComplaintsCubit>(),
+              child: const MyComplaintsScreen(),
+            );
+          },
         ),
-        */
+
+        // --------------------------------------------------
+        // Complaint Details
+        // --------------------------------------------------
+        GoRoute(
+          path: RoutePaths.cComplaintDetails,
+          builder: (context, state) {
+            final complaintId = int.parse(state.pathParameters['id']!);
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<ComplaintDetailsCubit>()),
+                BlocProvider(create: (_) => getIt<StatusHistoryCubit>()),
+              ],
+              child: ComplaintDetailsScreen(complaintId: complaintId),
+            );
+          },
+        ),
+
+        // --------------------------------------------------
+        // Update Complaint
+        // --------------------------------------------------
+        GoRoute(
+          path: RoutePaths.cUpdate,
+          builder: (context, state) {
+            final complaint = state.extra as ComplaintEntity;
+
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<AgencyCubit>()),
+                BlocProvider(create: (_) => getIt<UpdateComplaintCubit>()),
+                BlocProvider(create: (_) => getIt<AttachmentCubit>()),
+              ],
+              child: UpdateComplaintScreen(complaint: complaint),
+            );
+          },
+        ),
+
+        // --------------------------------------------------
+        // Create Complaint
+        // --------------------------------------------------
+        GoRoute(
+          path: RoutePaths.submit,
+          builder: (context, state) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => getIt<AgencyCubit>()),
+                BlocProvider(create: (_) => getIt<CreateComplaintCubit>()),
+              ],
+              child: const SubmitComplaintScreen(),
+            );
+          },
+        ),
+
+        // ==================================================
+        // STAFF
+        // ==================================================
+        GoRoute(
+          path: RoutePaths.sComplaints,
+          builder: (context, state) => const StaffComplainsQueueScreen(),
+        ),
+
+        // ==================================================
+        // ADMIN
+        // ==================================================
+        GoRoute(
+          path: RoutePaths.statistics,
+          builder: (context, state) => const AdminStatisticsScreen(),
+        ),
+
+        GoRoute(
+          path: RoutePaths.users,
+          builder: (context, state) => const AdminUsersListScreen(),
+        ),
+
         GoRoute(
           path: RoutePaths.agencies,
-          builder: (context, state) => AdminAgenciesListScreen(),
-        ), // GET /api/agencies, POST /api/agencies
-        /*
-        GoRoute(
-          path: RoutePaths.agency,
-          builder: (context, state) => AdminAgencyDetailScreen(),
+          builder: (context, state) => const AdminAgenciesListScreen(),
         ),
-        GoRoute(
-          path: RoutePaths.agencyUsers,
-          builder: (context, state) => AdminAgencyUsersListScreen(),
-        ),
-        GoRoute(
-          path: RoutePaths.agencyUser,
-          builder: (context, state) => AdminAgencyUserDetailScreen(),
-        ),
-        */
+
         GoRoute(
           path: RoutePaths.reports,
-          builder: (context, state) => AdminReportsScreen(),
-        ), // GET /api/reports/complaints/csv, /pdf, /statistics/csv
+          builder: (context, state) => const AdminReportsScreen(),
+        ),
       ],
     ),
   ],
+
   redirect: (context, state) => _redirectContent(context, state),
 );
 
@@ -251,48 +231,79 @@ String _getHomePath(UserRole role) {
   switch (role) {
     case UserRole.admin:
       return RoutePaths.statistics;
+
     case UserRole.staff:
       return RoutePaths.sComplaints;
+
     case UserRole.citizen:
       return RoutePaths.cHome;
   }
 }
 
-_redirectContent(BuildContext context, GoRouterState state) {
+String? _redirectContent(BuildContext context, GoRouterState state) {
   final authState = context.read<AuthCubit>().state;
+
   UserModel? user;
+
   if (authState is LoginSuccessState) {
     user = authState.user;
   }
 
   final location = state.matchedLocation;
+
+  // ==================================================
+  // PUBLIC ROUTES
+  // ==================================================
+
   final bool isPublicRoute =
       location == RoutePaths.cTrackEntry ||
-      location == RoutePaths.cTrackCode ||
+      location.startsWith('/citizen/track/') ||
       location == RoutePaths.aLocked ||
       location == RoutePaths.splashScreen;
-  // Auth Guard
-  final isAuthRoute =
+
+  // ==================================================
+  // AUTH ROUTES
+  // ==================================================
+
+  final bool isAuthRoute =
       location == RoutePaths.login ||
       location == RoutePaths.signup ||
       location == RoutePaths.verifyOTP ||
       location == RoutePaths.resendOTP;
 
-  if (user == null && !isAuthRoute && !isPublicRoute) return RoutePaths.login;
-  if (user != null && isAuthRoute) return _getHomePath(user.role);
+  // ==================================================
+  // AUTH GUARD
+  // ==================================================
 
-  // Role Guard
+  if (user == null && !isAuthRoute && !isPublicRoute) {
+    return RoutePaths.login;
+  }
+
+  if (user != null && isAuthRoute) {
+    return _getHomePath(user.role);
+  }
+
+  // ==================================================
+  // ROLE GUARD
+  // ==================================================
+
   if (user != null) {
     final isAdminRoute = location.startsWith('/admin');
+
     final isStaffRoute = location.startsWith('/staff');
 
     if (user.role == UserRole.citizen && (isStaffRoute || isAdminRoute)) {
       return RoutePaths.cHome;
     }
+
     if (user.role == UserRole.staff && isAdminRoute) {
       return RoutePaths.sComplaints;
     }
   }
+
+  // ==================================================
+  // ROOT
+  // ==================================================
 
   if (user != null && location == '/') {
     return _getHomePath(user.role);

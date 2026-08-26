@@ -48,7 +48,7 @@ class ProfileBody extends StatelessWidget {
 
           ProfileInfoTile(
             title: 'نوع الحساب',
-            value:  _getRoleName(profile.type),
+            value: _getRoleName(profile.type),
             icon: Icons.badge_outlined,
           ),
 
@@ -59,14 +59,12 @@ class ProfileBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          ProfileActions(
-            onEdit: onEdit,
-            onDelete: onDelete,
-          ),
+          ProfileActions(onEdit: onEdit, onDelete: onDelete),
         ],
       ),
     );
   }
+
   String _getRoleName(String type) {
     switch (type.toLowerCase()) {
       case 'citizen':

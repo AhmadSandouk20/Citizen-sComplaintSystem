@@ -84,12 +84,10 @@ class EditProfileForm extends StatelessWidget {
             onPressed: isLoading ? null : onSave,
             child: isLoading
                 ? const SizedBox(
-              width: 22,
-              height: 22,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-              ),
-            )
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
                 : const Text('حفظ التعديلات'),
           ),
         ],

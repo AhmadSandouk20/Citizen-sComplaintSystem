@@ -8,12 +8,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<ProfileEntity> getProfile({
-    required String token,
-  }) {
-    return remoteDataSource.getProfile(
-      token: token,
-    );
+  Future<ProfileEntity> getProfile({required String token}) {
+    return remoteDataSource.getProfile(token: token);
   }
 
   @override
@@ -30,11 +26,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
-  Future<void> deleteProfile({
-    required String token,
-  }) {
-    return remoteDataSource.deleteProfile(
-      token: token,
-    );
+  Future<void> deleteProfile({required String token}) {
+    return remoteDataSource.deleteProfile(token: token);
   }
 }

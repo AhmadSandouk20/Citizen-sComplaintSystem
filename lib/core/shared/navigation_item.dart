@@ -35,7 +35,7 @@ List<NavItem> getNavItemsForRole(UserRole role) {
         NavItem(
           label: LocaleKeys.profile.tr(),
           icon: Icons.person,
-          route: RoutePaths.profile,
+          route: RoutePaths.cProfile,
         ),
       ];
 

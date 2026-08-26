@@ -7,9 +7,7 @@ class AttachmentModel extends AttachmentEntity {
     required super.fileType,
   });
 
-  factory AttachmentModel.fromJson(
-      Map<String, dynamic> json,
-      ) {
+  factory AttachmentModel.fromJson(Map<String, dynamic> json) {
     return AttachmentModel(
       id: json['id'] as int,
       filePath: json['file_path'] as String? ?? '',

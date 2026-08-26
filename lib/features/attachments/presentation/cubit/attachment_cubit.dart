@@ -13,17 +13,12 @@ class AttachmentCubit extends Cubit<AttachmentState> {
 
   CancelToken? _cancelToken;
 
-  AttachmentCubit({
-    required this.pickerService,
-    required this.uploadService,
-  }) : super(const AttachmentState());
+  AttachmentCubit({required this.pickerService, required this.uploadService})
+    : super(const AttachmentState());
 
   Future<void> pickFiles() async {
     emit(
-      state.copyWith(
-        status: AttachmentStatus.selecting,
-        errorMessage: null,
-      ),
+      state.copyWith(status: AttachmentStatus.selecting, errorMessage: null),
     );
 
     try {
@@ -53,10 +48,7 @@ class AttachmentCubit extends Cubit<AttachmentState> {
 
   Future<void> pickImagesFromGallery() async {
     emit(
-      state.copyWith(
-        status: AttachmentStatus.selecting,
-        errorMessage: null,
-      ),
+      state.copyWith(status: AttachmentStatus.selecting, errorMessage: null),
     );
 
     try {
@@ -103,13 +95,8 @@ class AttachmentCubit extends Cubit<AttachmentState> {
     }
   }
 
-  void _addFiles(
-      List<SelectedAttachment> newFiles,
-      ) {
-    final updatedFiles = [
-      ...state.files,
-      ...newFiles,
-    ];
+  void _addFiles(List<SelectedAttachment> newFiles) {
+    final updatedFiles = [...state.files, ...newFiles];
 
     emit(
       state.copyWith(
@@ -121,13 +108,9 @@ class AttachmentCubit extends Cubit<AttachmentState> {
     );
   }
 
-  void removeFile(
-      SelectedAttachment attachment,
-      ) {
-    final updatedFiles =
-    List<SelectedAttachment>.from(
-      state.files,
-    )..remove(attachment);
+  void removeFile(SelectedAttachment attachment) {
+    final updatedFiles = List<SelectedAttachment>.from(state.files)
+      ..remove(attachment);
 
     emit(
       state.copyWith(
@@ -148,8 +131,7 @@ class AttachmentCubit extends Cubit<AttachmentState> {
       emit(
         state.copyWith(
           status: AttachmentStatus.error,
-          errorMessage:
-          'يرجى اختيار مرفق واحد على الأقل',
+          errorMessage: 'يرجى اختيار مرفق واحد على الأقل',
         ),
       );
       return;
@@ -168,8 +150,7 @@ class AttachmentCubit extends Cubit<AttachmentState> {
 
     try {
       await uploadService.upload(
-        url:
-        '${AppConfig.apiBaseUrl}/complaints/$complaintId/attachments',
+        url: '${AppConfig.apiBaseUrl}/complaints/$complaintId/attachments',
         token: token,
         files: state.files,
         cancelToken: _cancelToken,
@@ -223,11 +204,8 @@ class AttachmentCubit extends Cubit<AttachmentState> {
   }
 
   void cancelUpload() {
-    if (_cancelToken != null &&
-        !_cancelToken!.isCancelled) {
-      _cancelToken!.cancel(
-        'تم إلغاء رفع المرفقات',
-      );
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
+      _cancelToken!.cancel('تم إلغاء رفع المرفقات');
     }
   }
 
@@ -235,23 +213,16 @@ class AttachmentCubit extends Cubit<AttachmentState> {
     required int complaintId,
     required String token,
   }) async {
-    await uploadAttachments(
-      complaintId: complaintId,
-      token: token,
-    );
+    await uploadAttachments(complaintId: complaintId, token: token);
   }
 
   void clear() {
     _cancelToken = null;
 
-    emit(
-      const AttachmentState(),
-    );
+    emit(const AttachmentState());
   }
 
-  String _getDioErrorMessage(
-      DioException e,
-      ) {
+  String _getDioErrorMessage(DioException e) {
     final statusCode = e.response?.statusCode;
     final data = e.response?.data;
 
@@ -277,8 +248,7 @@ class AttachmentCubit extends Cubit<AttachmentState> {
 
         if (errors is Map) {
           for (final value in errors.values) {
-            if (value is List &&
-                value.isNotEmpty) {
+            if (value is List && value.isNotEmpty) {
               return value.first.toString();
             }
           }
@@ -288,21 +258,17 @@ class AttachmentCubit extends Cubit<AttachmentState> {
       return 'بعض بيانات المرفقات غير صحيحة';
     }
 
-    if (statusCode != null &&
-        statusCode >= 500) {
+    if (statusCode != null && statusCode >= 500) {
       return 'حدث خطأ في الخادم، يرجى المحاولة لاحقًا';
     }
 
-    if (e.type ==
-        DioExceptionType.connectionError) {
+    if (e.type == DioExceptionType.connectionError) {
       return 'تعذر الاتصال بالخادم، تحقق من اتصال الشبكة';
     }
 
-    if (e.type ==
-        DioExceptionType.connectionTimeout ||
+    if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.sendTimeout ||
-        e.type ==
-            DioExceptionType.receiveTimeout) {
+        e.type == DioExceptionType.receiveTimeout) {
       return 'انتهت مهلة الاتصال، يرجى إعادة المحاولة';
     }
 
@@ -314,18 +280,12 @@ class AttachmentCubit extends Cubit<AttachmentState> {
   }
 
   String _cleanError(Object error) {
-    return error
-        .toString()
-        .replaceFirst(
-      'Exception: ',
-      '',
-    );
+    return error.toString().replaceFirst('Exception: ', '');
   }
 
   @override
   Future<void> close() {
-    if (_cancelToken != null &&
-        !_cancelToken!.isCancelled) {
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
       _cancelToken!.cancel();
     }
 

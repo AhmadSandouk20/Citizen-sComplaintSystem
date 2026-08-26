@@ -44,11 +44,5 @@ class AttachmentState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    status,
-    files,
-    progress,
-    message,
-    errorMessage,
-  ];
+  List<Object?> get props => [status, files, progress, message, errorMessage];
 }

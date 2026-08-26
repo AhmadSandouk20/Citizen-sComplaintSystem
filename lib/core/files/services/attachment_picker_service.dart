@@ -16,13 +16,7 @@ class AttachmentPickerService {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
-      allowedExtensions: [
-        'jpg',
-        'jpeg',
-        'png',
-        'webp',
-        'pdf',
-      ],
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
     );
 
     if (result == null) {
@@ -38,9 +32,7 @@ class AttachmentPickerService {
         continue;
       }
 
-      final attachment = await _prepareFile(
-        File(path),
-      );
+      final attachment = await _prepareFile(File(path));
 
       attachments.add(attachment);
     }
@@ -48,10 +40,8 @@ class AttachmentPickerService {
     return attachments;
   }
 
-  Future<List<SelectedAttachment>>
-  pickImagesFromGallery() async {
-    final images =
-    await _imagePicker.pickMultiImage();
+  Future<List<SelectedAttachment>> pickImagesFromGallery() async {
+    final images = await _imagePicker.pickMultiImage();
 
     if (images.isEmpty) {
       return [];
@@ -60,9 +50,7 @@ class AttachmentPickerService {
     final attachments = <SelectedAttachment>[];
 
     for (final image in images) {
-      final attachment = await _prepareFile(
-        File(image.path),
-      );
+      final attachment = await _prepareFile(File(image.path));
 
       attachments.add(attachment);
     }
@@ -71,22 +59,16 @@ class AttachmentPickerService {
   }
 
   Future<SelectedAttachment?> takePhoto() async {
-    final image = await _imagePicker.pickImage(
-      source: ImageSource.camera,
-    );
+    final image = await _imagePicker.pickImage(source: ImageSource.camera);
 
     if (image == null) {
       return null;
     }
 
-    return _prepareFile(
-      File(image.path),
-    );
+    return _prepareFile(File(image.path));
   }
 
-  Future<SelectedAttachment> _prepareFile(
-      File file,
-      ) async {
+  Future<SelectedAttachment> _prepareFile(File file) async {
     File preparedFile = file;
 
     if (_isImage(file.path)) {
@@ -95,11 +77,8 @@ class AttachmentPickerService {
 
     final size = await preparedFile.length();
 
-    if (size >
-        AppConfig.maxAttachmentSizeInBytes) {
-      throw Exception(
-        'حجم الملف يجب ألا يتجاوز 10 ميغابايت',
-      );
+    if (size > AppConfig.maxAttachmentSizeInBytes) {
+      throw Exception('حجم الملف يجب ألا يتجاوز 10 ميغابايت');
     }
 
     return SelectedAttachment(
@@ -110,20 +89,17 @@ class AttachmentPickerService {
   }
 
   Future<File> _compressImage(File file) async {
-    final temporaryDirectory =
-    await getTemporaryDirectory();
+    final temporaryDirectory = await getTemporaryDirectory();
 
-    final extension =
-    p.extension(file.path).toLowerCase();
+    final extension = p.extension(file.path).toLowerCase();
 
     final targetPath = p.join(
       temporaryDirectory.path,
       '${DateTime.now().microsecondsSinceEpoch}'
-          '_compressed$extension',
+      '_compressed$extension',
     );
 
-    final compressed =
-    await FlutterImageCompress.compressAndGetFile(
+    final compressed = await FlutterImageCompress.compressAndGetFile(
       file.path,
       targetPath,
       quality: AppConfig.imageQuality,
@@ -137,14 +113,8 @@ class AttachmentPickerService {
   }
 
   bool _isImage(String path) {
-    final extension =
-    p.extension(path).toLowerCase();
+    final extension = p.extension(path).toLowerCase();
 
-    return [
-      '.jpg',
-      '.jpeg',
-      '.png',
-      '.webp',
-    ].contains(extension);
+    return ['.jpg', '.jpeg', '.png', '.webp'].contains(extension);
   }
 }

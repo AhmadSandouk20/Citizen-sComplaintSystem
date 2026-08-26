@@ -24,9 +24,5 @@ class AttachmentEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    id,
-    filePath,
-    fileType,
-  ];
+  List<Object?> get props => [id, filePath, fileType];
 }
