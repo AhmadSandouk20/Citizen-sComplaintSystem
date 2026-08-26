@@ -115,6 +115,7 @@ GoRouter routes = GoRouter(
           path: RoutePaths.cHome,
           builder: (context, state) => const CitizenHomeScreen(),
         ),
+
         /*
         GoRoute(
           path: RoutePaths.cComplaintDetails,
@@ -123,11 +124,6 @@ GoRouter routes = GoRouter(
           ),
         ),
         */
-        GoRoute(
-          path: '/admin-dashboard',
-          name: 'adminDashboard',
-          builder: (context, state) => const AdminDashboardScreen(),
-        ),
         GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),
