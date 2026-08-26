@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:final_flutter/features/admin/domain/agency_complaints_repository.dart';
-import '../../../../../../core/error/app_exception.dart';
-import '../../../../data/model/agency/agency_complaints/agency_complaint_model/agency_complaint_model.dart';
+import '../../../../../../../core/error/app_exception.dart';
+import '../../../../../data/model/agency/agency_complaints/agency_complaint_model/agency_complaint_model.dart';
 import 'admin_agency_complaints_state.dart';
 
 class AdminAgenciesComplaintCubit extends Cubit<AdminAgencyComplaintsState> {

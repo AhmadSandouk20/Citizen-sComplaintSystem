@@ -18,4 +18,5 @@ class LocaleKeys {
   static const theme = "theme";
   static const dark = "dark";
   static const light = "light";
+  static const noComplaintsFound = "No Complaints Found";
 }

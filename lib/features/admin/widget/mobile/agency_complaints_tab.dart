@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/localization/local_keys.dart';
 import '../../../../core/widget/empty_state.dart';
-import '../../presentation/bloc/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
-import '../../presentation/bloc/agency/agency_complaints_cubit/admin_agency_complaints_state.dart';
+import '../../presentation/bloc/mobile/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
+import '../../presentation/bloc/mobile/agency/agency_complaints_cubit/admin_agency_complaints_state.dart';
 
 class AgencyComplaintsTab extends StatefulWidget {
   final int agencyId;
@@ -42,7 +44,7 @@ class _AgencyComplaintsTabState extends State<AgencyComplaintsTab> {
         if (state is AdminAgencyComplaintsLoaded) {
           final complaints = state.complaints;
           if (complaints.isEmpty) {
-            return const EmptyState(message: 'No complaints found.');
+            return EmptyState(message: LocaleKeys.noComplaintsFound.tr());
           }
           return NotificationListener<ScrollNotification>(
             onNotification: (scrollInfo) {

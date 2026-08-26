@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../data/model/agency/agency_complaints/agency_complaint_model/agency_complaint_model.dart';
+import '../../../../../data/model/agency/agency_complaints/agency_complaint_model/agency_complaint_model.dart';
 
 abstract class AdminAgencyComplaintsState extends Equatable {
   const AdminAgencyComplaintsState();

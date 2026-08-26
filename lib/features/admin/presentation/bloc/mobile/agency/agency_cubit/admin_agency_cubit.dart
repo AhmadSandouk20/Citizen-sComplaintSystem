@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../../../../core/error/app_exception.dart';
-import '../../../../data/model/agency/agency_model/agency_model.dart';
-import '../../../../data/model/agency/paginated_agencies_model/paginated_agencies_model.dart';
-import '../../../../domain/agency_repository.dart';
+import '../../../../../../../core/error/app_exception.dart';
+import '../../../../../data/model/agency/agency_model/agency_model.dart';
+import '../../../../../data/model/agency/paginated_agencies_model/paginated_agencies_model.dart';
+import '../../../../../domain/agency_repository.dart';
 import 'admin_agency_state.dart';
 
 class AdminAgenciesCubit extends Cubit<AdminAgenciesState> {

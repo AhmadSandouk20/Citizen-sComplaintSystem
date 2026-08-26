@@ -6,8 +6,8 @@ import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/core/widget/error_view.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/admin/data/model/agency/agency_model/agency_model.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/staff/staff_management_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/staff/staff_management_state.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/staff/staff_management_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/staff/staff_management_state.dart';
 import 'package:final_flutter/core/router/route_paths.dart';
 
 class AgencyStaffTab extends StatefulWidget {

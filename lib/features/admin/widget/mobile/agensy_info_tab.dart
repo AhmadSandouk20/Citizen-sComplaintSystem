@@ -1,7 +1,7 @@
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/core/widget/error_view.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_cubit/admin_agency_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_cubit/admin_agency_state.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

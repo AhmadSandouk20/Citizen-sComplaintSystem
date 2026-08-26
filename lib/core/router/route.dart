@@ -1,21 +1,22 @@
 import 'package:final_flutter/core/di/injector.dart';
-import 'package:final_flutter/features/admin/presentation/view/staff/admin_staff_management_form_screen.dart';
-import 'package:final_flutter/features/admin/presentation/view/user/user_management_screen.dart';
+import 'package:final_flutter/features/admin/presentation/view/mobile/staff/admin_staff_management_form_screen.dart';
+import 'package:final_flutter/features/admin/presentation/view/mobile/user/user_management_screen.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/admin/presentation/bloc/user/user_management_cubit.dart';
-import '../../features/admin/presentation/view/agency/admin_agencies_list_screen.dart';
-import '../../features/admin/presentation/view/agency/admin_agency_details_screen.dart';
-import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
+import '../../features/admin/presentation/bloc/mobile/user/user_management_cubit.dart';
+import '../../features/admin/presentation/view/mobile/agency/admin_agencies_list_screen.dart';
+import '../../features/admin/presentation/view/mobile/agency/admin_agency_details_screen.dart';
+import '../../features/admin/presentation/view/mobile/agency/admin_agency_form_screen.dart';
+import '../../features/admin/presentation/view/web/admin_dashboard_screen.dart';
 import '../../features/auth/data/models/user_type_enum.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/screens_stub/screens_stubs.dart';
-import '../widget/adaptive_shell_builder.dart';
+import '../shared/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
 import 'route_paths.dart';
 
@@ -122,6 +123,11 @@ GoRouter routes = GoRouter(
           ),
         ),
         */
+        GoRoute(
+          path: '/admin-dashboard',
+          name: 'adminDashboard',
+          builder: (context, state) => const AdminDashboardScreen(),
+        ),
         GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),

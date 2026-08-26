@@ -1,5 +1,5 @@
-import '../../../../auth/data/models/user_model.dart';
-import '../../../data/model/agency/agency_model/agency_model.dart';
+import '../../../../../auth/data/models/user_model.dart';
+import '../../../../data/model/agency/agency_model/agency_model.dart';
 
 abstract class StaffManagementState {}
 

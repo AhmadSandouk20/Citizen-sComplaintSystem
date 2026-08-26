@@ -1,17 +1,17 @@
 import 'package:final_flutter/core/di/injector.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/agency/agency_cubit/admin_agency_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/staff/staff_management_cubit.dart';
-import 'package:final_flutter/features/admin/widget/details/agency_complaints_tab.dart';
-import 'package:final_flutter/features/admin/widget/details/agency_staff_tab.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/staff/staff_management_cubit.dart';
+import 'package:final_flutter/features/admin/widget/mobile/agency_complaints_tab.dart';
+import 'package:final_flutter/features/admin/widget/mobile/agency_staff_tab.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/agency_repository.dart';
-import '../../../domain/staff_management_repository.dart';
-import '../../../domain/agency_complaints_repository.dart';
-import '../../../widget/details/agensy_info_tab.dart';
+import '../../../../domain/agency_repository.dart';
+import '../../../../domain/staff_management_repository.dart';
+import '../../../../domain/agency_complaints_repository.dart';
+import '../../../../widget/mobile/agensy_info_tab.dart';
 
 class AdminAgencyDetailsScreen extends StatelessWidget {
   const AdminAgencyDetailsScreen({super.key, required this.id});

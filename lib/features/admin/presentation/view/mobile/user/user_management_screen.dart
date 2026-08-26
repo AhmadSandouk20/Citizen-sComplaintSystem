@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:final_flutter/core/widget/admin_crud_scaffold.dart';
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/user/user_management_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/user/user_management_state.dart';
-import 'package:final_flutter/features/admin/widget/user/user_card.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/user/user_management_cubit.dart';
+import 'package:final_flutter/features/admin/presentation/bloc/mobile/user/user_management_state.dart';
+import 'package:final_flutter/features/admin/widget/user_card.dart';
 
 class AdminUsersManagementScreen extends StatelessWidget {
   const AdminUsersManagementScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../../auth/data/models/user_model.dart';
+import '../../../../../auth/data/models/user_model.dart';
 
 sealed class UserManagementState extends Equatable {
   const UserManagementState();
