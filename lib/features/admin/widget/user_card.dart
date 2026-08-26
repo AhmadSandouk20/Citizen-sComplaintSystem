@@ -65,15 +65,6 @@ class UserCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (!isAdmin)
-                  Center(
-                    child: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      iconSize: 60,
-                      tooltip: 'Delete',
-                      onPressed: onDelete,
-                    ),
-                  ),
               ],
             ),
             const SizedBox(height: 20),
@@ -134,7 +125,6 @@ class UserCard extends StatelessWidget {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-
                   children: [
                     Row(
                       children: [
@@ -154,7 +144,7 @@ class UserCard extends StatelessWidget {
                         Text(user.type.name, style: textTheme.bodyLarge),
                       ],
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 20),
                     PopupMenuButton<UserType>(
                       icon: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -181,7 +171,7 @@ class UserCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 50),
+                const SizedBox(width: 50),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,6 +200,18 @@ class UserCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (!isAdmin)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    iconSize: 60,
+                    tooltip: 'Delete',
+                    onPressed: onDelete,
+                  ),
+                ],
+              ),
             if (isAdmin)
               Padding(
                 padding: const EdgeInsets.only(top: 12),

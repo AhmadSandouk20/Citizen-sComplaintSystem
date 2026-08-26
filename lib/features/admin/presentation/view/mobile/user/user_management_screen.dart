@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:final_flutter/core/widget/admin_crud_scaffold.dart';
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
@@ -44,7 +45,6 @@ class AdminUsersManagementScreen extends StatelessWidget {
               onChangeRole: (newRole) =>
                   context.read<UserManagementCubit>().changeRole(user, newRole),
             ),
-
             onAdd: null,
             onEdit: null,
             onDelete: (user) => _confirmDelete(context, user),
@@ -72,12 +72,12 @@ class AdminUsersManagementScreen extends StatelessWidget {
         content: Text('Are you sure you want to delete "${user.name}"?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
+            onPressed: () => context.pop(),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(dialogContext);
+              context.pop();
               context.read<UserManagementCubit>().deleteUser(user.id);
             },
             child: const Text('Delete'),

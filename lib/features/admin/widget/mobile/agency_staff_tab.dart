@@ -64,7 +64,7 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
               return AlertDialog(
                 title: Text('Transfer ${user.name}'),
                 content: DropdownButtonFormField<int>(
-                  value: null,
+                  initialValue: null,
                   hint: const Text('Select new agency'),
                   items: agencies
                       .where((agency) => agency.id != widget.agencyId)
@@ -78,13 +78,13 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
                   onChanged: (value) {
                     if (value != null) {
                       _cubit.transferStaff(user.id, value);
-                      Navigator.pop(dialogContext);
+                      context.pop();
                     }
                   },
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () => Navigator.pop(dialogContext),
+                    onPressed: () => context.pop(),
                     child: const Text('Cancel'),
                   ),
                 ],
@@ -104,11 +104,11 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
         content: Text('Are you sure you want to remove ${user.name}?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
+            onPressed: () => context.pop(false),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
+            onPressed: () => context.pop(true),
             child: const Text('Remove'),
           ),
         ],
