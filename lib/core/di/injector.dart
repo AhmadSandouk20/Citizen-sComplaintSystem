@@ -26,6 +26,16 @@ import '../../features/admin_users/data/datasources/admin_users_remote_datasourc
 import '../../features/admin_users/data/repositories/admin_users_repository_impl.dart';
 import '../../features/admin_users/domain/repositories/admin_users_repository.dart';
 import '../../features/admin_users/presentation/bloc/admin_user_detail_cubit.dart';
+// `AgencyRepository` exists twice: the admin track owns agency CRUD, the
+// citizen track only needs the public list for the complaint form. Aliased
+// so both can be registered.
+import '../../features/agencies/data/data_sources/agency_remote_data_source.dart';
+import '../../features/agencies/data/repositories/agency_repository_impl.dart'
+    as citizen_agencies;
+import '../../features/agencies/domain/repositories/agency_repository.dart'
+    as citizen_agencies_domain;
+import '../../features/agencies/presentation/cubit/agency_cubit.dart';
+import '../../features/attachments/presentation/cubit/attachment_cubit.dart';
 import '../../features/auth/data/auth_repository_implementation.dart';
 import '../../features/auth/domain/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
@@ -40,9 +50,20 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/theme/presentation/bloc/theme_cubit.dart';
+import '../../features/complaints/data/data_sources/complaint_remote_data_source.dart';
+import '../../features/complaints/data/repositories/complaint_repository_impl.dart';
+import '../../features/complaints/domain/repositories/complaint_repository.dart';
+import '../../features/complaints/presentation/cubit/complaint_details_cubit.dart';
+import '../../features/complaints/presentation/cubit/create_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/my_complaints_cubit.dart';
+import '../../features/complaints/presentation/cubit/status_history_cubit.dart';
+import '../../features/complaints/presentation/cubit/track_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/update_complaint_cubit.dart';
+import '../../features/location/data/services/reverse_geocoding_service.dart';
 import '../api/api_service.dart';
+import '../files/services/attachment_picker_service.dart';
+import '../files/services/multipart_upload_service.dart';
 import '../network/dio_client.dart';
-import '../services/file_service.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -172,7 +193,75 @@ void setupDependencies() {
   );
 
   // ---------------------------- Attachments ---------------------------------
-  getIt.registerLazySingleton(() => FileService());
+  // Replaces the earlier FileService: works on web (bytes, not dart:io paths)
+  // and separates picking from uploading.
+  getIt.registerLazySingleton<AttachmentPickerService>(
+    () => AttachmentPickerService(),
+  );
+  getIt.registerLazySingleton<MultipartUploadService>(
+    () => MultipartUploadService(getIt<Dio>()),
+  );
+  getIt.registerFactory<AttachmentCubit>(
+    () => AttachmentCubit(
+      pickerService: getIt<AttachmentPickerService>(),
+      uploadService: getIt<MultipartUploadService>(),
+    ),
+  );
+
+  // ------------------------- Citizen complaints -----------------------------
+  getIt.registerLazySingleton<ComplaintRemoteDataSource>(
+    () => ComplaintRemoteDataSource(
+      dio: getIt<Dio>(),
+      uploadService: getIt<MultipartUploadService>(),
+    ),
+  );
+  getIt.registerLazySingleton<ComplaintRepository>(
+    () => ComplaintRepositoryImpl(
+      remoteDataSource: getIt<ComplaintRemoteDataSource>(),
+    ),
+  );
+
+  // Factories: each complaint screen owns its own form or list state.
+  getIt.registerFactory<CreateComplaintCubit>(
+    () => CreateComplaintCubit(repository: getIt<ComplaintRepository>()),
+  );
+  getIt.registerFactory<MyComplaintsCubit>(
+    () => MyComplaintsCubit(repository: getIt<ComplaintRepository>()),
+  );
+  getIt.registerFactory<ComplaintDetailsCubit>(
+    () => ComplaintDetailsCubit(repository: getIt<ComplaintRepository>()),
+  );
+  getIt.registerFactory<UpdateComplaintCubit>(
+    () => UpdateComplaintCubit(repository: getIt<ComplaintRepository>()),
+  );
+  getIt.registerFactory<StatusHistoryCubit>(
+    () => StatusHistoryCubit(repository: getIt<ComplaintRepository>()),
+  );
+  getIt.registerFactory<TrackComplaintCubit>(
+    () => TrackComplaintCubit(repository: getIt<ComplaintRepository>()),
+  );
+
+  // Public agency list, used by the complaint form's agency picker.
+  getIt.registerLazySingleton<AgencyRemoteDataSource>(
+    () => AgencyRemoteDataSource(dio: getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<citizen_agencies_domain.AgencyRepository>(
+    () => citizen_agencies.AgencyRepositoryImpl(
+      remoteDataSource: getIt<AgencyRemoteDataSource>(),
+    ),
+  );
+  getIt.registerFactory<AgencyCubit>(
+    () => AgencyCubit(
+      repository: getIt<citizen_agencies_domain.AgencyRepository>(),
+    ),
+  );
+
+  // ------------------------------ Location ----------------------------------
+  // Turns a picked map point into the free-text address the API stores in
+  // complaints.location_text; the backend has no lat/lng columns.
+  getIt.registerLazySingleton<ReverseGeocodingService>(
+    () => ReverseGeocodingService(dio: getIt<Dio>()),
+  );
 
   // ------------------------------- Shell ------------------------------------
   getIt.registerLazySingleton(() => ThemeCubit());

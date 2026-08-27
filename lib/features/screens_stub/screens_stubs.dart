@@ -11,17 +11,15 @@ import '../../core/router/route_paths.dart';
 /// be exercised end to end. Delete a stub the moment its owner pushes the real
 /// screen â€” do not build features in here.
 ///
-/// Still owned elsewhere:
-///   Ibrahim â€” citizen complaints (list, submit, details, track)
-///   Leen    â€” staff workspace (queue, details, lock, revisions)
-///   Ahmad   â€” agencies and agency staff
-///   Joly    â€” statistics, reports, users
+/// Only the staff workspace is still outstanding (Leen): the inbox,
+/// complaint details, the lock mechanism, revisions and request-info.
 class _Stub extends StatelessWidget {
-  const _Stub(this.title, {this.detail, this.icon = Icons.construction_outlined});
+  const _Stub(this.title, {this.detail});
 
   final String title;
   final String? detail;
-  final IconData icon;
+
+  static const IconData icon = Icons.construction_outlined;
 
   @override
   Widget build(BuildContext context) {
@@ -119,58 +117,6 @@ class _QuickActionCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class CitizenComplaintListScreen extends StatelessWidget {
-  const CitizenComplaintListScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.complaints.tr(), detail: 'GET /api/complaints');
-}
-
-class SubmitComplaintScreen extends StatelessWidget {
-  const SubmitComplaintScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) =>
-      _Stub(LocaleKeys.submit.tr(), detail: 'POST /api/complaints');
-}
-
-class CitizenComplaintDetailScreen extends StatelessWidget {
-  const CitizenComplaintDetailScreen({super.key, required this.id});
-
-  final int id;
-
-  @override
-  Widget build(BuildContext context) => _Stub(
-    LocaleKeys.complaints.tr(),
-    detail: 'GET /api/complaints/$id',
-  );
-}
-
-class TrackEntryScreen extends StatelessWidget {
-  const TrackEntryScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) => _Stub(
-    LocaleKeys.track.tr(),
-    detail: 'GET /api/complaints/track/{reference_code}',
-    icon: Icons.search,
-  );
-}
-
-class TrackComplaintScreen extends StatelessWidget {
-  const TrackComplaintScreen({super.key, required this.code});
-
-  final String code;
-
-  @override
-  Widget build(BuildContext context) => _Stub(
-    LocaleKeys.track.tr(),
-    detail: 'GET /api/complaints/track/$code',
-    icon: Icons.search,
-  );
 }
 
 // -------------------------------- STAFF -------------------------------------

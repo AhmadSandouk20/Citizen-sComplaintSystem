@@ -62,9 +62,77 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  /// POST /auth/register — sends an OTP; does not sign the user in.
+  Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+    String? phone,
+  }) => _run(
+    () => _repository.register(
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
+    ),
+  );
+
+  /// POST /auth/verify-otp — activates the account.
+  Future<void> verifyOtp({
+    required String contact,
+    required String code,
+  }) async {
+    emit(const AuthLoadingState());
+    try {
+      await _repository.verifyOtp(contact: contact, code: code);
+      emit(const OtpVerifiedState());
+    } on AppException catch (e) {
+      emit(LoginFailState(e.message, fieldErrors: e.fieldErrors));
+    } catch (e) {
+      emit(LoginFailState(e.toString()));
+    }
+  }
+
+  /// POST /auth/resend-otp — codes are valid for 300 seconds.
+  Future<void> resendOtp(String contact) =>
+      _run(() => _repository.resendOtp(contact));
+
+  /// POST /auth/forgot-password
+  Future<void> forgotPassword(String identifier) =>
+      _run(() => _repository.forgotPassword(identifier));
+
+  /// POST /auth/reset-password
+  Future<void> resetPassword({
+    required String contact,
+    required String code,
+    required String password,
+    required String passwordConfirmation,
+  }) => _run(
+    () => _repository.resetPassword(
+      contact: contact,
+      code: code,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    ),
+  );
+
   Future<void> logout() async {
     await _repository.logout();
     emit(const AuthInitState());
+  }
+
+  /// Shared shape for the session-less actions: loading, then success or a
+  /// failure carrying the server's message.
+  Future<void> _run(Future<void> Function() action) async {
+    emit(const AuthLoadingState());
+    try {
+      await action();
+      emit(const AuthActionSuccessState());
+    } on AppException catch (e) {
+      emit(LoginFailState(e.message, fieldErrors: e.fieldErrors));
+    } catch (e) {
+      emit(LoginFailState(e.toString()));
+    }
   }
 
   /// Drops the session locally without calling the API.

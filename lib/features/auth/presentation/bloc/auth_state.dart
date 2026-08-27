@@ -24,6 +24,18 @@ class AuthLoadingState extends AuthState {
   const AuthLoadingState();
 }
 
+/// The account was activated by a valid OTP. The user still has to sign in —
+/// verification does not create a session.
+class OtpVerifiedState extends AuthState {
+  const OtpVerifiedState();
+}
+
+/// A one-off action succeeded (register, resend, forgot, reset) and the screen
+/// should move on. Carries no session.
+class AuthActionSuccessState extends AuthState {
+  const AuthActionSuccessState();
+}
+
 class LoginSuccessState extends AuthState {
   final UserModel user;
 
