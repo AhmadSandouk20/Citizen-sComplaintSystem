@@ -1,14 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:final_flutter/core/di/injector.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/core/widget/app_button.dart';
 import 'package:final_flutter/core/widget/app_text_field.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/admin/domain/staff_management_repository.dart';
 import 'package:final_flutter/features/admin/domain/user_management_repository.dart';
-
-import '../../../../../../core/error/app_exception.dart';
+import 'package:final_flutter/core/error/app_exception.dart';
 
 class AdminStaffManagementFormScreen extends StatefulWidget {
   final int agencyId;
@@ -84,9 +84,9 @@ class _AdminStaffManagementFormScreenState
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Something went wrong')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(LocaleKeys.somethingWWrong.tr())),
+        );
       }
     }
   }
@@ -95,7 +95,11 @@ class _AdminStaffManagementFormScreenState
   Widget build(BuildContext context) {
     final isEdit = widget.staff != null;
     return Scaffold(
-      appBar: AppBar(title: Text(isEdit ? 'Edit Staff' : 'Add Staff')),
+      appBar: AppBar(
+        title: Text(
+          isEdit ? LocaleKeys.editStaff.tr() : LocaleKeys.addStaff.tr(),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -107,38 +111,38 @@ class _AdminStaffManagementFormScreenState
                   child: ListView(
                     children: [
                       AppTextField(
-                        label: "Name",
+                        label: LocaleKeys.name.tr(),
                         controller: _nameController,
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                            ? 'Name is required'
+                            ? LocaleKeys.requiredField.tr()
                             : null,
                       ),
                       const SizedBox(height: 12),
                       AppTextField(
-                        label: "Email",
+                        label: LocaleKeys.email.tr(),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) =>
                             value == null || value.trim().isEmpty
-                            ? 'Email is required'
+                            ? LocaleKeys.requiredField.tr()
                             : null,
                       ),
                       const SizedBox(height: 12),
                       AppTextField(
-                        label: "Phone",
+                        label: LocaleKeys.phone.tr(),
                         controller: _phoneController,
                         keyboardType: TextInputType.phone,
                       ),
                       if (!isEdit) ...[
                         const SizedBox(height: 12),
                         AppTextField(
-                          label: "Password",
+                          label: LocaleKeys.password.tr(),
                           controller: _passwordController,
                           obscureText: true,
                           validator: (value) =>
                               value == null || value.length < 6
-                              ? 'Password must be at least 6 characters'
+                              ? LocaleKeys.passwordMinLength.tr()
                               : null,
                         ),
                       ],
@@ -147,7 +151,10 @@ class _AdminStaffManagementFormScreenState
                 ),
               ),
               const SizedBox(height: 16),
-              AppButton(label: isEdit ? "Update" : "Add", onPressed: _save),
+              AppButton(
+                label: isEdit ? LocaleKeys.update.tr() : LocaleKeys.add.tr(),
+                onPressed: _save,
+              ),
             ],
           ),
         ),

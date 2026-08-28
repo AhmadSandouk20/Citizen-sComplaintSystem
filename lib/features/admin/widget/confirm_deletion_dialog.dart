@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import '../../../core/localization/local_keys.dart';
 import '../data/model/agency/agency_model/agency_model.dart';
 
 Future<bool> confirmDeleteAgency(
@@ -9,17 +11,17 @@ Future<bool> confirmDeleteAgency(
   return await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Delete Agency'),
+          title: Text(LocaleKeys.deleteAgency.tr()),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Are you sure you want to delete "${agency.name}"?'),
+              Text('${LocaleKeys.sureToDelete.tr()} "${agency.name}"?'),
               const SizedBox(height: 8),
-              const Text(
-                '⚠️ This will also delete all complaints associated with this agency.',
+              Text(
+                '⚠️ ${LocaleKeys.deleteAllAgencyComplaints.tr()}',
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Theme.of(context).colorScheme.error,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -27,13 +29,15 @@ Future<bool> confirmDeleteAgency(
           ),
           actions: [
             TextButton(
-              onPressed: () => context.pop(false),
-              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(LocaleKeys.cancel.tr()),
             ),
             ElevatedButton(
-              onPressed: () => context.pop(true),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Delete'),
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: Text(LocaleKeys.delete.tr()),
             ),
           ],
         ),

@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/localization/local_keys.dart';
-import '../../../../core/widget/empty_state.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
+import 'package:final_flutter/core/widget/empty_state.dart';
+
+import '../../../../core/widget/status_chip.dart';
 import '../../presentation/bloc/mobile/agency/agency_complaints_cubit/admin_agency_complaints_cubit.dart';
 import '../../presentation/bloc/mobile/agency/agency_complaints_cubit/admin_agency_complaints_state.dart';
 
@@ -67,28 +69,23 @@ class _AgencyComplaintsTabState extends State<AgencyComplaintsTab> {
                 }
                 final complaint = complaints[index];
                 return Card(
-                  elevation: 1,
                   margin: const EdgeInsets.symmetric(vertical: 4),
                   child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: _priorityColor(complaint.priority),
-                      child: Text(
-                        complaint.priority.substring(0, 1).toUpperCase(),
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                    leading: PriorityChip(
+                      priority: complaint.priority,
+                      dense: true,
                     ),
                     title: Text(complaint.title),
-                    subtitle: Text(
-                      'Status: ${complaint.status}\nRef: ${complaint.referenceCode}',
+                    subtitle: Row(
+                      children: [
+                        StatusChip(status: complaint.status, dense: true),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${LocaleKeys.referenceCode.tr()}: ${complaint.referenceCode}',
+                        ),
+                      ],
                     ),
-                    isThreeLine: true,
-                    trailing: Text(
-                      complaint.priority,
-                      style: TextStyle(
-                        color: _priorityColor(complaint.priority),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    isThreeLine: false,
                   ),
                 );
               },
@@ -98,18 +95,5 @@ class _AgencyComplaintsTabState extends State<AgencyComplaintsTab> {
         return const SizedBox.shrink();
       },
     );
-  }
-
-  Color _priorityColor(String priority) {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return Colors.red;
-      case 'medium':
-        return Colors.orange;
-      case 'low':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
   }
 }

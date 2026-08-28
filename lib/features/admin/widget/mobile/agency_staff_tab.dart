@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/core/widget/admin_crud_scaffold.dart';
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/core/widget/error_view.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/admin/data/model/agency/agency_model/agency_model.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/mobile/staff/staff_management_cubit.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/mobile/staff/staff_management_state.dart';
+
 import 'package:final_flutter/core/router/route_paths.dart';
+
+import '../../presentation/bloc/mobile/staff/staff_management_cubit.dart';
+import '../../presentation/bloc/mobile/staff/staff_management_state.dart';
 
 class AgencyStaffTab extends StatefulWidget {
   final int agencyId;
@@ -62,10 +66,10 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
                   ? state.agencies
                   : const <AgencyModel>[];
               return AlertDialog(
-                title: Text('Transfer ${user.name}'),
+                title: Text('${LocaleKeys.transfer.tr()} ${user.name}'),
                 content: DropdownButtonFormField<int>(
                   initialValue: null,
-                  hint: const Text('Select new agency'),
+                  hint: Text(LocaleKeys.selectAgency.tr()),
                   items: agencies
                       .where((agency) => agency.id != widget.agencyId)
                       .map(
@@ -85,7 +89,7 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
                 actions: [
                   TextButton(
                     onPressed: () => context.pop(),
-                    child: const Text('Cancel'),
+                    child: Text(LocaleKeys.cancel.tr()),
                   ),
                 ],
               );
@@ -100,16 +104,16 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Remove Staff'),
-        content: Text('Are you sure you want to remove ${user.name}?'),
+        title: Text(LocaleKeys.remove.tr()),
+        content: Text('${LocaleKeys.removeConfirmPrefix.tr()} ${user.name}?'),
         actions: [
           TextButton(
             onPressed: () => context.pop(false),
-            child: const Text('Cancel'),
+            child: Text(LocaleKeys.cancel.tr()),
           ),
           ElevatedButton(
             onPressed: () => context.pop(true),
-            child: const Text('Remove'),
+            child: Text(LocaleKeys.remove.tr()),
           ),
         ],
       ),
@@ -136,19 +140,22 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
             isLoading: false,
             itemBuilder: (context, user) => ListTile(
               title: Text(user.name),
-              subtitle: Text(user.email ?? 'No email'),
+              subtitle: Text(user.email ?? LocaleKeys.noEmail.tr()),
             ),
             onAdd: _navigateToAddStaff,
             onEdit: _navigateToEditStaff,
             onDelete: _confirmRemove,
             extraActions: (context, user) => [
               IconButton(
-                icon: const Icon(Icons.swap_horiz, color: Colors.orange),
-                tooltip: 'Transfer',
+                icon: Icon(
+                  Icons.swap_horiz,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+                tooltip: LocaleKeys.transfer.tr(),
                 onPressed: () => _showTransferDialog(user),
               ),
             ],
-            emptyState: const EmptyState(message: 'No staff found.'),
+            emptyState: EmptyState(message: LocaleKeys.noStaffFound.tr()),
           );
         }
         return const SizedBox.shrink();
