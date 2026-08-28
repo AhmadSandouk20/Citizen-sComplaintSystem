@@ -125,6 +125,11 @@ GoRouter routes = GoRouter(
         ),
         */
         GoRoute(
+          path: '/admin-dashboard',
+          name: 'adminDashboard',
+          builder: (context, state) => const AdminDashboardScreen(),
+        ),
+        GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => SubmitComplaintScreen(),
         ), // POST /api/complaints (multipart)
