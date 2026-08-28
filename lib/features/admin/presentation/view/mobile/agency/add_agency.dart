@@ -1,11 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/core/widget/app_button.dart';
 import 'package:final_flutter/core/widget/app_text_field.dart';
 import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddAgency extends StatefulWidget {
-  AddAgency({super.key});
+  const AddAgency({super.key});
 
   @override
   State<AddAgency> createState() => _AddAgencyState();
@@ -15,23 +17,19 @@ class _AddAgencyState extends State<AddAgency> {
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
-
   final cityController = TextEditingController();
-
   final phoneController = TextEditingController();
-
   final addressController = TextEditingController();
-
   final categoryController = TextEditingController();
 
   @override
   void dispose() {
-    super.dispose();
-    addressController.dispose();
-    categoryController.dispose();
+    nameController.dispose();
     cityController.dispose();
     phoneController.dispose();
-    nameController.dispose();
+    addressController.dispose();
+    categoryController.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,31 +41,37 @@ class _AddAgencyState extends State<AddAgency> {
             key: _formKey,
             child: Column(
               children: [
-                AppTextField(label: "Agency Name", controller: nameController),
-                SizedBox(height: 10),
                 AppTextField(
-                  label: "Agency Category",
+                  label: LocaleKeys.name.tr(),
                   controller: nameController,
                 ),
-                SizedBox(height: 10),
-                AppTextField(label: "Agency City", controller: nameController),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 AppTextField(
-                  label: "Agency address",
-                  controller: nameController,
+                  label: LocaleKeys.category.tr(),
+                  controller: categoryController,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 AppTextField(
-                  label: "Agency phone",
-                  controller: nameController,
-                  keyboardType: TextInputType.number,
+                  label: LocaleKeys.city.tr(),
+                  controller: cityController,
+                ),
+                const SizedBox(height: 10),
+                AppTextField(
+                  label: LocaleKeys.address.tr(),
+                  controller: addressController,
+                ),
+                const SizedBox(height: 10),
+                AppTextField(
+                  label: LocaleKeys.phone.tr(),
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
                 ),
               ],
             ),
           ),
-          Expanded(child: SizedBox()),
+          Expanded(child: const SizedBox()),
           AppButton(
-            label: "Add",
+            label: LocaleKeys.add.tr(),
             onPressed: () {
               final isValid = _formKey.currentState?.validate() ?? false;
               if (isValid) {

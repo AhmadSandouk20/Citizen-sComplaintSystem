@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/core/widget/admin_crud_scaffold.dart';
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
@@ -17,7 +19,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
       builder: (context, state) {
         if (state is UserManagementLoading) {
           return AdminCrudScaffold<UserModel>(
-            title: 'Users',
+            title: LocaleKeys.users.tr(),
             items: const [],
             isLoading: true,
             itemBuilder: (_, __) => const SizedBox.shrink(),
@@ -25,7 +27,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
         }
         if (state is UserManagementError && state is! UserManagementLoaded) {
           return AdminCrudScaffold<UserModel>(
-            title: 'Users',
+            title: LocaleKeys.users.tr(),
             items: const [],
             errorMessage: state.message,
             itemBuilder: (_, __) => const SizedBox.shrink(),
@@ -33,7 +35,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
         }
         if (state is UserManagementLoaded) {
           return AdminCrudScaffold<UserModel>(
-            title: 'Users',
+            title: LocaleKeys.users.tr(),
             items: state.users,
             isLoading: state.isLoadingMore,
             itemBuilder: (context, user) => UserCard(
@@ -49,8 +51,8 @@ class AdminUsersManagementScreen extends StatelessWidget {
             onEdit: null,
             onDelete: (user) => _confirmDelete(context, user),
             emptyState: EmptyState(
-              message: 'No users found.',
-              buttonText: 'Refresh',
+              message: LocaleKeys.usersEmpty.tr(),
+              buttonText: LocaleKeys.retry.tr(),
               onAction: () =>
                   context.read<UserManagementCubit>().loadUsers(refresh: true),
             ),
@@ -68,19 +70,19 @@ class AdminUsersManagementScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete User'),
-        content: Text('Are you sure you want to delete "${user.name}"?'),
+        title: Text(LocaleKeys.delete.tr()),
+        content: Text('${LocaleKeys.deleteConfirmPrefix.tr()} "${user.name}"?'),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Cancel'),
+            child: Text(LocaleKeys.cancel.tr()),
           ),
           TextButton(
             onPressed: () {
               context.pop();
               context.read<UserManagementCubit>().deleteUser(user.id);
             },
-            child: const Text('Delete'),
+            child: Text(LocaleKeys.delete.tr()),
           ),
         ],
       ),

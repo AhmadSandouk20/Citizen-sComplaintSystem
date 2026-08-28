@@ -1,13 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:final_flutter/core/di/injector.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/core/widget/app_button.dart';
 import 'package:final_flutter/core/widget/app_text_field.dart';
 import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_cubit.dart';
 import 'package:final_flutter/features/admin/presentation/bloc/mobile/agency/agency_cubit/admin_agency_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../../../../core/error/app_exception.dart';
+import 'package:final_flutter/core/error/app_exception.dart';
 
 class AdminAgencyFormScreen extends StatefulWidget {
   final int? id;
@@ -63,7 +64,11 @@ class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text(widget.id == null ? 'Add Agency' : 'Edit Agency'),
+            title: Text(
+              widget.id == null
+                  ? LocaleKeys.addAgency.tr()
+                  : LocaleKeys.editAgency.tr(),
+            ),
           ),
           body: SafeArea(
             child: Padding(
@@ -76,27 +81,27 @@ class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
                       child: ListView(
                         children: [
                           AppTextField(
-                            label: "Agency Name",
+                            label: LocaleKeys.name.tr(),
                             controller: nameController,
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
-                            label: "Agency Category",
+                            label: LocaleKeys.category.tr(),
                             controller: categoryController,
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
-                            label: "Agency City",
+                            label: LocaleKeys.city.tr(),
                             controller: cityController,
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
-                            label: "Agency Address",
+                            label: LocaleKeys.address.tr(),
                             controller: addressController,
                           ),
                           const SizedBox(height: 12),
                           AppTextField(
-                            label: "Agency Phone",
+                            label: LocaleKeys.phone.tr(),
                             controller: phoneController,
                             keyboardType: TextInputType.phone,
                           ),
@@ -106,7 +111,9 @@ class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
                   ),
                   const SizedBox(height: 16),
                   AppButton(
-                    label: widget.id == null ? "Add" : "Update",
+                    label: widget.id == null
+                        ? LocaleKeys.add.tr()
+                        : LocaleKeys.update.tr(),
                     onPressed: () async {
                       if (_formKey.currentState?.validate() ?? false) {
                         if (widget.id == null) {
@@ -127,8 +134,10 @@ class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
                           } catch (e) {
                             if (mounted && context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Something went wrong'),
+                                SnackBar(
+                                  content: Text(
+                                    LocaleKeys.somethingWWrong.tr(),
+                                  ),
                                 ),
                               );
                             }
@@ -152,8 +161,10 @@ class _AdminAgencyFormScreenState extends State<AdminAgencyFormScreen> {
                           } catch (e) {
                             if (mounted && context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Something went wrong'),
+                                SnackBar(
+                                  content: Text(
+                                    LocaleKeys.somethingWWrong.tr(),
+                                  ),
                                 ),
                               );
                             }

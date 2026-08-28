@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
 import 'package:final_flutter/features/auth/data/models/user_type_enum.dart';
 
@@ -19,7 +21,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAdmin = user.type == UserType.admin;
-    final colorScheme = Theme.of(context).colorScheme;
+    final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -33,11 +35,11 @@ class UserCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 34,
-                  backgroundColor: colorScheme.primaryContainer,
+                  backgroundColor: scheme.primaryContainer,
                   child: Text(
                     user.name.isNotEmpty ? user.name[0].toUpperCase() : '?',
                     style: textTheme.headlineSmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
+                      color: scheme.onPrimaryContainer,
                     ),
                   ),
                 ),
@@ -50,14 +52,15 @@ class UserCard extends StatelessWidget {
                         user.name,
                         style: textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: scheme.onSurface,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                       Text(
-                        user.email ?? 'No email',
+                        user.email ?? LocaleKeys.noEmail.tr(),
                         style: textTheme.titleSmall?.copyWith(
-                          color: colorScheme.onSurface,
+                          color: scheme.onSurfaceVariant,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -79,17 +82,23 @@ class UserCard extends StatelessWidget {
                           Icon(
                             Icons.phone,
                             size: 20,
-                            color: colorScheme.primaryContainer,
+                            color: scheme.primaryContainer,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Phone:',
+                            '${LocaleKeys.phone.tr()}:',
                             style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: scheme.onSurface,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Text(user.phone ?? 'N/A', style: textTheme.bodyLarge),
+                          Text(
+                            user.phone ?? LocaleKeys.none.tr(),
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: scheme.onSurface,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -98,13 +107,14 @@ class UserCard extends StatelessWidget {
                           Icon(
                             Icons.lock_clock,
                             size: 20,
-                            color: colorScheme.primaryContainer,
+                            color: scheme.primaryContainer,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Last Login:',
+                            '${LocaleKeys.lastLogin.tr()}:',
                             style: textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: scheme.onSurface,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -112,8 +122,10 @@ class UserCard extends StatelessWidget {
                             child: Text(
                               user.lastLoginAt != null
                                   ? user.lastLoginAt!.toLocal().toString()
-                                  : 'Never',
-                              style: textTheme.bodyLarge,
+                                  : LocaleKeys.never.tr(),
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: scheme.onSurface,
+                              ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
@@ -131,17 +143,23 @@ class UserCard extends StatelessWidget {
                         Icon(
                           Icons.badge,
                           size: 20,
-                          color: colorScheme.primaryContainer,
+                          color: scheme.primaryContainer,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Role:',
+                          '${LocaleKeys.role.tr()}:',
                           style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
+                            color: scheme.onSurface,
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text(user.type.name, style: textTheme.bodyLarge),
+                        Text(
+                          user.type.name,
+                          style: textTheme.bodyLarge?.copyWith(
+                            color: scheme.onSurface,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(width: 20),
@@ -153,19 +171,19 @@ class UserCard extends StatelessWidget {
                           Icon(Icons.arrow_drop_down, size: 28),
                         ],
                       ),
-                      tooltip: 'Change Role',
+                      tooltip: LocaleKeys.changeRole.tr(),
                       onSelected: onChangeRole,
                       position: PopupMenuPosition.under,
                       itemBuilder: (context) => [
                         if (user.type != UserType.citizen)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: UserType.citizen,
-                            child: Text(' Citizen'),
+                            child: Text(LocaleKeys.citizen.tr()),
                           ),
                         if (user.type != UserType.staff)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: UserType.staff,
-                            child: Text(' Staff'),
+                            child: Text(LocaleKeys.staff.tr()),
                           ),
                       ],
                     ),
@@ -182,16 +200,24 @@ class UserCard extends StatelessWidget {
                           IconButton(
                             icon: Icon(
                               user.isActive ? Icons.check_circle : Icons.cancel,
-                              color: user.isActive ? Colors.green : Colors.grey,
+                              color: user.isActive
+                                  ? scheme.primary
+                                  : scheme.outline,
                               size: 32,
                             ),
                             onPressed: onToggleActive,
-                            tooltip: user.isActive ? 'Deactivate' : 'Activate',
+                            tooltip: user.isActive
+                                ? LocaleKeys.deactivate.tr()
+                                : LocaleKeys.activate.tr(),
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            user.isActive ? 'Active' : 'Inactive',
-                            style: textTheme.bodyLarge,
+                            user.isActive
+                                ? LocaleKeys.active.tr()
+                                : LocaleKeys.inactive.tr(),
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: scheme.onSurface,
+                            ),
                           ),
                         ],
                       ),
@@ -205,9 +231,12 @@ class UserCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: Icon(
+                      Icons.delete,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                     iconSize: 60,
-                    tooltip: 'Delete',
+                    tooltip: LocaleKeys.delete.tr(),
                     onPressed: onDelete,
                   ),
                 ],
@@ -216,10 +245,10 @@ class UserCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Chip(
-                  label: const Text('Admin (protected)'),
-                  backgroundColor: colorScheme.primaryContainer,
+                  label: Text(LocaleKeys.adminProtected.tr()),
+                  backgroundColor: scheme.primaryContainer,
                   labelStyle: textTheme.labelLarge?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
+                    color: scheme.onPrimaryContainer,
                   ),
                 ),
               ),
