@@ -79,9 +79,5 @@
   "statusRejected": "مرفوض",
   "priorityLow": "منخفض",
   "priorityMedium": "متوسط",
-<<<<<<< HEAD
   "priorityHigh": "مرتفع"
-=======
-  "priorityHigh": "مرتفع",
->>>>>>> origin/dev/admin_dashboard
 }
