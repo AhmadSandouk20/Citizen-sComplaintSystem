@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../../../core/widget/centered_form_body.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_cubit.dart';
@@ -26,8 +27,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('نسيت كلمة المرور')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: CenteredFormBody(
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is LoginFailState) {

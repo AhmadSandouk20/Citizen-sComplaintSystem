@@ -15,11 +15,19 @@ class AuthCubit extends Cubit<AuthState> {
 
   final AuthRepository _repository;
 
+  /// The bearer token, held apart from the state machine.
+  ///
+  /// It cannot be derived from [state]: during [restoreSession] the state is
+  /// `AuthRestoringState`, so a state-derived getter returns null exactly when
+  /// the profile request needs the token — the request then goes out
+  /// unauthenticated, 401s, and the session is wiped on every cold start.
+  String? _token;
+
   UserModel? get user => state is LoginSuccessState
       ? (state as LoginSuccessState).user
       : null;
 
-  String? get token => user?.token;
+  String? get token => _token;
 
   UserRole? get role => user?.role;
 
@@ -33,16 +41,20 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> restoreSession() async {
     final stored = await _repository.readStoredToken();
     if (stored == null || stored.isEmpty) {
+      _token = null;
       emit(const AuthInitState());
       return;
     }
 
+    // Set before the request so the interceptor can attach it.
+    _token = stored;
     emit(const AuthRestoringState());
     try {
       emit(LoginSuccessState(await _repository.getProfile(stored)));
     } catch (_) {
       // Expired or revoked token — start clean rather than showing an error
       // the user cannot act on at launch.
+      _token = null;
       await _repository.clearStoredToken();
       emit(const AuthInitState());
     }
@@ -54,7 +66,9 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(const AuthLoadingState());
     try {
-      emit(LoginSuccessState(await _repository.login(identifier, password)));
+      final user = await _repository.login(identifier, password);
+      _token = user.token;
+      emit(LoginSuccessState(user));
     } on AppException catch (e) {
       emit(LoginFailState(e.message, fieldErrors: e.fieldErrors));
     } catch (e) {
@@ -118,6 +132,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     await _repository.logout();
+    _token = null;
     emit(const AuthInitState());
   }
 
@@ -140,12 +155,16 @@ class AuthCubit extends Cubit<AuthState> {
   /// Used by the 401 interceptor (the token is already invalid, so calling
   /// `/auth/logout` would just 401 again) and after account deletion.
   Future<void> clearSession() async {
+    _token = null;
     await _repository.clearStoredToken();
     if (state is! AuthInitState) emit(const AuthInitState());
   }
 
   /// Keeps the cached user in sync after a profile edit.
   void updateUser(UserModel updated) {
-    if (state is LoginSuccessState) emit(LoginSuccessState(updated));
+    if (state is! LoginSuccessState) return;
+    // A profile edit must never drop the session: carry the live token onto
+    // the updated user rather than trusting whatever the caller passed.
+    emit(LoginSuccessState(updated.copyWith(token: _token ?? updated.token)));
   }
 }

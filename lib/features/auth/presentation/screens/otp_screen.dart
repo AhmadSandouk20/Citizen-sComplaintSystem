@@ -1,4 +1,5 @@
-﻿import 'dart:async';
+﻿import '../../../../core/widget/centered_form_body.dart';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,8 +55,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('تحقق من الرمز')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: CenteredFormBody(
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is LoginFailState) {

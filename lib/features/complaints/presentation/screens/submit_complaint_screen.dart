@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/route_paths.dart';
 import 'package:final_flutter/core/di/injector.dart';
 import 'package:final_flutter/core/files/models/selected_attachment.dart';
 import 'package:final_flutter/core/files/services/attachment_picker_service.dart';
@@ -70,17 +72,12 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
             return;
           }
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إرسال الشكوى بنجاح')),
-          );
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => _ComplaintSuccessScreen(
-                complaintId: result.complaintId,
-                referenceCode: result.referenceCode,
-              ),
+          // go, not Navigator: the success screen is a real route, so the
+          // form is left behind properly instead of sitting underneath it.
+          context.go(
+            RoutePaths.submissionSuccessPath(
+              result.referenceCode,
+              id: result.complaintId,
             ),
           );
         }
@@ -455,57 +452,3 @@ class _SubmitComplaintScreenState extends State<SubmitComplaintScreen> {
   }
 }
 
-class _ComplaintSuccessScreen extends StatelessWidget {
-  final int complaintId;
-  final String referenceCode;
-
-  const _ComplaintSuccessScreen({
-    required this.complaintId,
-    required this.referenceCode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('تم إرسال الشكوى'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.check_circle_outline, size: 80),
-              const SizedBox(height: 24),
-              const Text(
-                'تم إرسال شكواك بنجاح',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              const Text('رمز التتبع'),
-              const SizedBox(height: 8),
-              SelectableText(
-                referenceCode,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text('رقم الشكوى: $complaintId'),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('تم'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

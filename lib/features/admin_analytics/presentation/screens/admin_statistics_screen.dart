@@ -416,7 +416,7 @@ class _TimeSeriesChart extends StatelessWidget {
                     for (var i = 0; i < points.length; i++)
                       FlSpot(i.toDouble(), points[i].resolved.toDouble()),
                   ],
-                  color: AppColors.secondary,
+                  color: AppColors.success,
                   isCurved: true,
                   dotData: const FlDotData(show: false),
                 ),

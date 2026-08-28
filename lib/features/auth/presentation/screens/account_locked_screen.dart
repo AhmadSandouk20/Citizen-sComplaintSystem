@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿import '../../../../core/widget/centered_form_body.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_paths.dart';
 
@@ -8,8 +9,7 @@ class AccountLockedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: CenteredFormBody(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

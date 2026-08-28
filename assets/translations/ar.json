@@ -18,7 +18,6 @@
   "theme": "الثيم",
   "light": "فاتح",
   "dark": "داكن",
-
   "notifications": "الإشعارات",
   "notificationsEmpty": "لا توجد إشعارات بعد",
   "notificationsEmptyHint": "ستظهر هنا تحديثات الشكاوى.",
@@ -27,7 +26,6 @@
   "justNow": "الآن",
   "minutesAgo": "منذ {} دقيقة",
   "hoursAgo": "منذ {} ساعة",
-
   "signIn": "دخول",
   "identifier": "البريد الإلكتروني أو رقم الهاتف",
   "identifierRequired": "أدخل البريد الإلكتروني أو رقم الهاتف",
@@ -36,7 +34,6 @@
   "showPassword": "إظهار كلمة المرور",
   "hidePassword": "إخفاء كلمة المرور",
   "signInSubtitle": "سجّل دخولك لمتابعة شكاواك",
-
   "name": "الاسم",
   "phone": "رقم الهاتف",
   "accountType": "نوع الحساب",
@@ -46,7 +43,6 @@
   "roleCitizen": "مواطن",
   "roleStaff": "موظف جهة",
   "roleAdmin": "مدير النظام",
-
   "editProfile": "تعديل الملف الشخصي",
   "saveChanges": "حفظ التعديلات",
   "profileUpdated": "تم تعديل الملف الشخصي بنجاح",
@@ -55,7 +51,6 @@
   "nameLettersOnly": "يجب أن يحتوي الاسم على أحرف",
   "phoneRequired": "رقم الهاتف مطلوب",
   "phoneInvalid": "أدخل رقم هاتف صحيحاً",
-
   "deleteAccount": "حذف الحساب",
   "deleteAccountWarning": "حذف الحساب يزيل شكاواك ولا يمكن التراجع عنه.",
   "deleteAccountConfirmTitle": "حذف الحساب؟",
@@ -66,7 +61,6 @@
   "cancel": "إلغاء",
   "back": "تراجع",
   "continueAction": "متابعة",
-
   "performance": "أداء النظام",
   "insufficientData": "لا توجد بيانات كافية",
   "insufficientDataHint": "ستظهر الأرقام هنا بعد تسجيل شكاوى ومعالجتها.",
@@ -82,7 +76,6 @@
   "avgDuration": "متوسط الزمن",
   "errorRate": "نسبة الأخطاء",
   "byLayer": "حسب الطبقة",
-
   "statusNew": "جديدة",
   "statusInProgress": "قيد المعالجة",
   "statusResolved": "محلولة",
@@ -90,13 +83,11 @@
   "priorityLow": "منخفضة",
   "priorityMedium": "متوسطة",
   "priorityHigh": "عالية",
-
   "reportsHint": "نزّل بيانات الشكاوى والإحصائيات بصيغة CSV أو PDF.",
   "downloadComplaintsCsv": "تنزيل الشكاوى CSV",
   "downloadStatisticsCsv": "تنزيل الإحصائيات CSV",
   "downloadComplaintsPdf": "تنزيل الشكاوى PDF",
   "downloadStarted": "بدأ التنزيل",
-
   "role": "الدور",
   "editUser": "تعديل المستخدم",
   "save": "حفظ",
@@ -107,7 +98,25 @@
   "cannotEditSelf": "لا يمكنك تعديل حسابك من هنا",
   "neverLoggedIn": "لم يسجّل دخوله بعد",
   "usersEmpty": "لا يوجد مستخدمون",
-
   "genericError": "حدث خطأ، يرجى المحاولة مرة أخرى",
-  "notImplementedYet": "هذه الشاشة لم تُبنَ بعد"
+  "notImplementedYet": "هذه الشاشة لم تُبنَ بعد",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "noAccount": "ليس لديك حساب؟",
+  "createAccount": "إنشاء حساب",
+  "trackWithoutLogin": "تتبّع شكوى دون تسجيل دخول",
+  "welcome": "أهلاً",
+  "quickActions": "إجراءات سريعة",
+  "newComplaint": "شكوى جديدة",
+  "myComplaintsShort": "شكاواي",
+  "viewAll": "عرض الكل",
+  "recentComplaints": "أحدث شكاواك",
+  "complaintSubmitted": "تم إرسال شكواك بنجاح",
+  "submittedHint": "احتفظ برمز التتبّع — تستطيع متابعة شكواك به دون تسجيل دخول.",
+  "trackingCode": "رمز التتبّع",
+  "copyCode": "نسخ الرمز",
+  "codeCopied": "تم نسخ الرمز",
+  "done": "تم",
+  "viewComplaint": "عرض الشكوى",
+  "complaintNumber": "رقم الشكوى",
+  "noComplaintsFound": "لا توجد شكاوى"
 }

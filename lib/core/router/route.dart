@@ -30,6 +30,7 @@ import '../../features/complaints/presentation/cubit/status_history_cubit.dart';
 import '../../features/complaints/presentation/cubit/track_complaint_cubit.dart';
 import '../../features/complaints/presentation/cubit/update_complaint_cubit.dart';
 import '../../features/complaints/presentation/screens/complaint_details_screen.dart';
+import '../../features/complaints/presentation/screens/complaint_submitted_screen.dart';
 import '../../features/complaints/presentation/screens/my_complaints_screen.dart';
 import '../../features/complaints/presentation/screens/submit_complaint_screen.dart';
 import '../../features/complaints/presentation/screens/track_complaint_entry_screen.dart';
@@ -176,6 +177,15 @@ final GoRouter routes = GoRouter(
           ),
         ),
         GoRoute(
+          path: RoutePaths.submissionSuccess,
+          builder: (context, state) => ComplaintSubmittedScreen(
+            referenceCode: state.uri.queryParameters['code'] ?? '',
+            complaintId: int.tryParse(
+              state.uri.queryParameters['id'] ?? '',
+            ),
+          ),
+        ),
+        GoRoute(
           path: RoutePaths.submit,
           builder: (context, state) => MultiBlocProvider(
             providers: [
@@ -211,7 +221,9 @@ final GoRouter routes = GoRouter(
         GoRoute(
           path: RoutePaths.users,
           builder: (context, state) => BlocProvider(
-            create: (_) => getIt<UserManagementCubit>(),
+            // The screen is stateless and has no initState, so the first
+            // fetch has to be kicked off where the cubit is created.
+            create: (_) => getIt<UserManagementCubit>()..loadUsers(),
             child: const AdminUsersManagementScreen(),
           ),
         ),
@@ -219,7 +231,10 @@ final GoRouter routes = GoRouter(
           path: RoutePaths.user,
           builder: (context, state) => MultiBlocProvider(
             providers: [
-              BlocProvider(create: (_) => getIt<AdminUserDetailCubit>()),
+              BlocProvider(
+                create: (_) => getIt<AdminUserDetailCubit>()
+                  ..load(int.parse(state.pathParameters['id']!)),
+              ),
               // The detail screen refreshes the list after a save or delete.
               BlocProvider(create: (_) => getIt<UserManagementCubit>()),
             ],
@@ -264,7 +279,7 @@ final GoRouter routes = GoRouter(
         GoRoute(
           path: RoutePaths.performance,
           builder: (context, state) => BlocProvider(
-            create: (_) => getIt<PerformanceCubit>(),
+            create: (_) => getIt<PerformanceCubit>()..load(),
             child: const SystemPerformanceScreen(),
           ),
         ),

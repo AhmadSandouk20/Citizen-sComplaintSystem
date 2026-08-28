@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Single source of truth for environment values.
 ///
 /// Nothing in the app may hardcode a host, a port or a limit — everything
@@ -23,23 +21,24 @@ class AppConfig {
     return api.endsWith('/api') ? api.substring(0, api.length - 4) : api;
   }
 
-  /// Base URL of the API, resolved per platform.
+  /// Base URL of the API.
   ///
-  /// The Android emulator cannot reach the host machine on `127.0.0.1`;
-  /// it must use `10.0.2.2`. A physical device needs the LAN address,
-  /// which is what the `--dart-define` override is for.
-  static String get apiBaseUrl {
-    if (_envBaseUrl.isNotEmpty) return _envBaseUrl;
-
-    if (kIsWeb) return 'http://127.0.0.1:8000/api';
-
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return 'http://10.0.2.2:8000/api';
-      default:
-        return 'http://127.0.0.1:8000/api';
-    }
-  }
+  /// `127.0.0.1` is the default on Android too, which is deliberate: it works
+  /// on a USB-connected phone once the port is forwarded with
+  ///
+  ///   adb reverse tcp:8000 tcp:8000
+  ///
+  /// That tunnel needs no WiFi, no LAN address and no firewall rule, so it is
+  /// the same command for every developer on the team.
+  ///
+  /// Two cases need the override instead:
+  ///   * the Android emulator, which reaches the host only on `10.0.2.2`
+  ///   * a phone on WiFi with no USB cable, which needs the laptop's LAN IP
+  ///
+  ///   flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000/api
+  ///   flutter run --dart-define=API_BASE_URL=http://192.168.1.3:8000/api
+  static String get apiBaseUrl =>
+      _envBaseUrl.isNotEmpty ? _envBaseUrl : 'http://127.0.0.1:8000/api';
 
   static const Duration connectTimeout = Duration(seconds: 20);
   static const Duration receiveTimeout = Duration(seconds: 20);

@@ -1,23 +1,33 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/widget/status_chip.dart';
 import '../../domain/entities/complaint_entity.dart';
 
+/// One complaint in a list.
+///
+/// The old card stacked five icon+label rows of equal weight, so nothing read
+/// first. This version has a clear hierarchy: title, then the metadata that
+/// distinguishes one complaint from another (agency, date, attachments) as a
+/// single quiet footer line, with status and priority as chips.
 class ComplaintCard extends StatelessWidget {
-  final ComplaintEntity complaint;
-  final VoidCallback onTap;
-
   const ComplaintCard({
     super.key,
     required this.complaint,
     required this.onTap,
   });
 
+  final ComplaintEntity complaint;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -25,117 +35,100 @@ class ComplaintCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Text(
                       complaint.title,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  _StatusChip(status: complaint.status),
+                  const SizedBox(width: 10),
+                  StatusChip(status: complaint.status, dense: true),
                 ],
               ),
+
               const SizedBox(height: 10),
 
+              // The reference code is what a citizen reads out on the phone,
+              // so it gets monospace-ish emphasis rather than being one more
+              // grey row.
               Row(
                 children: [
-                  const Icon(Icons.confirmation_number_outlined, size: 18),
+                  Icon(
+                    Icons.confirmation_number_outlined,
+                    size: 15,
+                    color: scheme.primary,
+                  ),
                   const SizedBox(width: 6),
-                  Expanded(child: Text(complaint.referenceCode)),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              Row(
-                children: [
-                  const Icon(Icons.account_balance_outlined, size: 18),
-                  const SizedBox(width: 6),
-                  Expanded(child: Text(complaint.agencyName)),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              Row(
-                children: [
-                  const Icon(Icons.flag_outlined, size: 18),
-                  const SizedBox(width: 6),
-                  Text(_priorityLabel(complaint.priority)),
+                  Text(
+                    complaint.referenceCode,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: scheme.primary,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                  const Spacer(),
+                  PriorityChip(priority: complaint.priority, dense: true),
                 ],
               ),
 
-              if (complaint.createdAt != null) ...[
-                const SizedBox(height: 8),
-                Row(
+              const SizedBox(height: 12),
+              Divider(height: 1, color: scheme.outline),
+              const SizedBox(height: 10),
+
+              // One quiet metadata line instead of four stacked rows.
+              DefaultTextStyle.merge(
+                style: theme.textTheme.bodySmall!,
+                child: Row(
                   children: [
-                    const Icon(Icons.calendar_today_outlined, size: 18),
-                    const SizedBox(width: 6),
-                    Text(_formatDate(complaint.createdAt!)),
+                    Icon(
+                      Icons.account_balance_outlined,
+                      size: 14,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        complaint.agencyName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (complaint.attachments.isNotEmpty) ...[
+                      const SizedBox(width: 10),
+                      Icon(
+                        Icons.attach_file,
+                        size: 14,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 3),
+                      Text('${complaint.attachments.length}'),
+                    ],
+                    if (complaint.createdAt != null) ...[
+                      const SizedBox(width: 10),
+                      Icon(
+                        Icons.schedule,
+                        size: 14,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        DateFormat(
+                          'd MMM y',
+                          context.locale.languageCode,
+                        ).format(complaint.createdAt!.toLocal()),
+                      ),
+                    ],
                   ],
                 ),
-              ],
-
-              if (complaint.attachments.isNotEmpty) ...[
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.attach_file, size: 18),
-                    const SizedBox(width: 4),
-                    Text('${complaint.attachments.length} مرفق'),
-                  ],
-                ),
-              ],
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _priorityLabel(String priority) {
-    switch (priority) {
-      case 'low':
-        return 'منخفضة';
-      case 'high':
-        return 'مرتفعة';
-      case 'medium':
-      default:
-        return 'متوسطة';
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      label: Text(_label(status)),
-      visualDensity: VisualDensity.compact,
-    );
-  }
-
-  String _label(String status) {
-    switch (status) {
-      case 'in_progress':
-        return 'قيد المعالجة';
-      case 'resolved':
-        return 'تم الحل';
-      case 'rejected':
-        return 'مرفوضة';
-      case 'new':
-      default:
-        return 'جديدة';
-    }
   }
 }

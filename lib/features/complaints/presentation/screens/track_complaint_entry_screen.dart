@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/route_paths.dart';
+import '../../../../core/widget/adaptive_back_button.dart';
 
 class TrackComplaintEntryScreen extends StatefulWidget {
   const TrackComplaintEntryScreen({super.key});
@@ -31,7 +32,10 @@ class _TrackComplaintEntryScreenState extends State<TrackComplaintEntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('تتبع شكوى')),
+      appBar: AppBar(
+        leading: const AdaptiveBackButton(),
+        title: const Text('تتبع شكوى'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),

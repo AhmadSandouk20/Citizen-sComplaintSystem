@@ -124,6 +124,30 @@ class LocaleKeys {
   static const neverLoggedIn = 'neverLoggedIn';
   static const usersEmpty = 'usersEmpty';
 
+  // Login / home
+  static const forgotPassword = 'forgotPassword';
+  static const noAccount = 'noAccount';
+  static const createAccount = 'createAccount';
+  static const trackWithoutLogin = 'trackWithoutLogin';
+  static const welcome = 'welcome';
+  static const quickActions = 'quickActions';
+  static const newComplaint = 'newComplaint';
+  static const myComplaintsShort = 'myComplaintsShort';
+  static const viewAll = 'viewAll';
+  static const recentComplaints = 'recentComplaints';
+
+  // Complaint submitted
+  static const complaintSubmitted = 'complaintSubmitted';
+  static const submittedHint = 'submittedHint';
+  static const trackingCode = 'trackingCode';
+  static const copyCode = 'copyCode';
+  static const codeCopied = 'codeCopied';
+  static const done = 'done';
+  static const viewComplaint = 'viewComplaint';
+  static const complaintNumber = 'complaintNumber';
+
+  static const noComplaintsFound = 'noComplaintsFound';
+
   // Shared
   static const genericError = 'genericError';
   static const notImplementedYet = 'notImplementedYet';

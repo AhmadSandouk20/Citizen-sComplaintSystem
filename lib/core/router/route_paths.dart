@@ -22,7 +22,18 @@ class RoutePaths {
 
   // -------------------------------- Citizen ---------------------------------
   static const String cHome = '/citizen/home';
-  static const String submissionSuccess = '/Submission-Success';
+  static const String submissionSuccess = '/citizen/submitted';
+
+  /// The reference code travels in the query string, not in `extra`, so the
+  /// screen survives a reload and can be linked to directly.
+  static String submissionSuccessPath(String referenceCode, {int? id}) =>
+      Uri(
+        path: submissionSuccess,
+        queryParameters: {
+          'code': referenceCode,
+          if (id != null) 'id': '$id',
+        },
+      ).toString();
   static const String cComplaints = '/citizen/complaints';
   static const String cComplaintDetails = '/citizen/complaints/:id';
   static const String submit = '/citizen/submit';
