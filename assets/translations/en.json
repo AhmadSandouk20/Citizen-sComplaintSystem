@@ -70,10 +70,13 @@
   "priorityMedium": "Medium",
   "priorityHigh": "High",
   "agenciesQueue": "Agencies Queue",
+<<<<<<< HEAD
   "language": "Language",
   "theme": "Theme",
   "light": "Light",
   "dark": "Dark",
+=======
+>>>>>>> origin/dev/admin_dashboard
   "track": "Track",
   "submit": "Submit"
 }
