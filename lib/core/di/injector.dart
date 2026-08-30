@@ -65,6 +65,12 @@ import '../files/services/attachment_picker_service.dart';
 import '../files/services/multipart_upload_service.dart';
 import '../network/dio_client.dart';
 
+import '../../features/agency_workspace/data/data_sources/staff_complaints_remote_data_source.dart';
+import '../../features/agency_workspace/data/repositories/staff_complaints_repository_impl.dart';
+import '../../features/agency_workspace/domain/repositories/staff_complaints_repository.dart';
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_cubit.dart';
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_details_cubit.dart';
+
 final GetIt getIt = GetIt.instance;
 
 /// Wires the object graph. Called once from `main()` before `runApp`.
@@ -168,9 +174,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(
     () => StatisticsCubit(getIt<StatisticsRepository>()),
   );
-  getIt.registerFactory(
-    () => PerformanceCubit(getIt<StatisticsRepository>()),
-  );
+  getIt.registerFactory(() => PerformanceCubit(getIt<StatisticsRepository>()));
 
   getIt.registerLazySingleton(
     () => ReportsRemoteDataSource(getIt<DioClient>()),
@@ -266,4 +270,26 @@ void setupDependencies() {
   // ------------------------------- Shell ------------------------------------
   getIt.registerLazySingleton(() => ThemeCubit());
   getIt.registerLazySingleton(() => LocaleCubit());
+
+  //-------------------------------staff----------------------------------
+
+  getIt.registerLazySingleton<StaffComplaintsRemoteDataSource>(
+    () => StaffComplaintsRemoteDataSource(dio: getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<StaffComplaintsRepository>(
+    () => StaffComplaintsRepositoryImpl(
+      remoteDataSource: getIt<StaffComplaintsRemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerFactory<StaffComplaintsCubit>(
+    () => StaffComplaintsCubit(repository: getIt<StaffComplaintsRepository>()),
+  );
+
+  getIt.registerFactory<StaffComplaintDetailsCubit>(
+    () => StaffComplaintDetailsCubit(
+      repository: getIt<StaffComplaintsRepository>(),
+    ),
+  );
 }

@@ -1,0 +1,492 @@
+import 'package:final_flutter/features/agency_workspace/presentation/widgets/request_info_section.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/di/injector.dart';
+import '../../../../core/widget/app_button.dart';
+import '../../../../core/widget/app_text_field.dart';
+import '../../../../core/widget/error_view.dart';
+import '../../../../core/widget/status_chip.dart';
+import '../../../auth/presentation/bloc/auth_cubit.dart';
+import '../../domain/entities/staff_complaint_entity.dart';
+import '../cubit/staff_complaints_details_cubit.dart';
+import '../cubit/staff_complaints_details_state.dart';
+import '../widgets/revisions_section.dart';
+import '../widgets/status_history_section.dart';
+
+class StaffComplaintDetailsScreen extends StatefulWidget {
+  final int complaintId;
+
+  const StaffComplaintDetailsScreen({super.key, required this.complaintId});
+
+  @override
+  State<StaffComplaintDetailsScreen> createState() =>
+      _StaffComplaintDetailsScreenState();
+}
+
+class _StaffComplaintDetailsScreenState
+    extends State<StaffComplaintDetailsScreen> {
+  final TextEditingController _internalNoteController = TextEditingController();
+  final TextEditingController _requestInfoController = TextEditingController();
+
+  String? _selectedStatus;
+  String? _selectedPriority;
+
+  @override
+  void dispose() {
+    _internalNoteController.dispose();
+    _requestInfoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<StaffComplaintDetailsCubit, StaffComplaintDetailsState>(
+      listener: (context, state) {
+        if (state.successMessage != null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.successMessage!)));
+        }
+
+        if (state.errorMessage != null && state.complaint != null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+        }
+      },
+      builder: (context, state) {
+        if (state.status == StaffComplaintDetailsStatus.loading &&
+            state.complaint == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (state.status == StaffComplaintDetailsStatus.error &&
+            state.complaint == null) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: ErrorView(
+              message: state.errorMessage ?? 'تعذر تحميل تفاصيل الشكوى',
+              buttonText: 'إعادة المحاولة',
+              onRetry: () {
+                context.read<StaffComplaintDetailsCubit>().loadComplaint(
+                  widget.complaintId,
+                );
+              },
+            ),
+          );
+        }
+
+        final complaint = state.complaint;
+
+        if (complaint == null) {
+          return const Scaffold(body: SizedBox.shrink());
+        }
+
+        _selectedStatus ??= complaint.status;
+        _selectedPriority ??= complaint.priority;
+
+        final currentUserId = getIt<AuthCubit>().user?.id;
+
+        final lockedByMe =
+            currentUserId != null && complaint.isLockedByMe(currentUserId);
+
+        final lockedByAnother =
+            currentUserId != null && complaint.isLockedByAnother(currentUserId);
+
+        final canEdit = lockedByMe && !lockedByAnother;
+
+        return Scaffold(
+          appBar: AppBar(title: Text(complaint.referenceCode)),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _ComplaintHeader(complaint: complaint),
+
+                    const SizedBox(height: 24),
+
+                    _sectionTitle(context, 'تفاصيل الشكوى'),
+
+                    const SizedBox(height: 12),
+
+                    _InfoCard(
+                      children: [
+                        _InfoRow(label: 'العنوان', value: complaint.title),
+                        _InfoRow(label: 'الوصف', value: complaint.description),
+                        _InfoRow(
+                          label: 'الموقع',
+                          value: complaint.locationText ?? '-',
+                        ),
+                        _InfoRow(label: 'الجهة', value: complaint.agency.name),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    _sectionTitle(context, 'بيانات المواطن'),
+
+                    const SizedBox(height: 12),
+
+                    _InfoCard(
+                      children: [
+                        _InfoRow(label: 'الاسم', value: complaint.user.name),
+                        _InfoRow(
+                          label: 'البريد الإلكتروني',
+                          value: complaint.user.email ?? '-',
+                        ),
+                        _InfoRow(
+                          label: 'رقم الهاتف',
+                          value: complaint.user.phone ?? '-',
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    if (lockedByAnother)
+                      _LockedWarning(staffName: complaint.lockedByName),
+
+                    if (lockedByAnother) const SizedBox(height: 20),
+
+                    _buildLockSection(
+                      context,
+                      complaint,
+                      lockedByMe,
+                      lockedByAnother,
+                      state.isActionLoading,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    _sectionTitle(context, 'تحديث الشكوى'),
+
+                    const SizedBox(height: 12),
+
+                    _buildUpdateSection(
+                      context,
+                      complaint,
+                      canEdit,
+                      state.isActionLoading,
+                    ),
+                    const SizedBox(height: 16),
+
+                    RequestInfoSection(
+                      controller: _requestInfoController,
+                      isLoading: state.isActionLoading,
+                      enabled: !complaint.isLockedByAnother(currentUserId!),
+                      onSend: () async {
+                        final success = await context
+                            .read<StaffComplaintDetailsCubit>()
+                            .requestMoreInfo(
+                              complaintId: complaint.id,
+                              message: _requestInfoController.text,
+                            );
+
+                        if (success) {
+                          _requestInfoController.clear();
+                        }
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    StatusHistorySection(history: state.statusHistory),
+
+                    const SizedBox(height: 16),
+
+                    RevisionsSection(revisions: state.revisions),
+                    const SizedBox(height: 16),
+
+                    StatusHistorySection(history: state.statusHistory),
+
+                    const SizedBox(height: 16),
+
+                    RevisionsSection(revisions: state.revisions),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLockSection(
+    BuildContext context,
+    StaffComplaintEntity complaint,
+    bool lockedByMe,
+    bool lockedByAnother,
+    bool loading,
+  ) {
+    if (!complaint.isLocked) {
+      return AppButton(
+        label: 'قفل الشكوى للمعالجة',
+        icon: Icons.lock_outline,
+        isLoading: loading,
+        onPressed: loading
+            ? null
+            : () {
+                context.read<StaffComplaintDetailsCubit>().lockComplaint(
+                  complaint.id,
+                );
+              },
+      );
+    }
+
+    if (lockedByMe) {
+      return AppButton(
+        label: 'فك قفل الشكوى',
+        icon: Icons.lock_open_outlined,
+        variant: AppButtonVariant.outlined,
+        isLoading: loading,
+        onPressed: loading
+            ? null
+            : () {
+                context.read<StaffComplaintDetailsCubit>().unlockComplaint(
+                  complaint.id,
+                );
+              },
+      );
+    }
+
+    return Text(
+      'هذه الشكوى مقفلة بواسطة ${complaint.lockedByName ?? 'موظف آخر'}',
+    );
+  }
+
+  Widget _buildUpdateSection(
+    BuildContext context,
+    StaffComplaintEntity complaint,
+    bool canEdit,
+    bool loading,
+  ) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              initialValue: _selectedStatus,
+              decoration: const InputDecoration(labelText: 'الحالة'),
+              items: const [
+                DropdownMenuItem(value: 'new', child: Text('جديدة')),
+                DropdownMenuItem(
+                  value: 'in_progress',
+                  child: Text('قيد المعالجة'),
+                ),
+                DropdownMenuItem(value: 'resolved', child: Text('تم الحل')),
+                DropdownMenuItem(value: 'rejected', child: Text('مرفوضة')),
+              ],
+              onChanged: canEdit
+                  ? (value) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    }
+                  : null,
+            ),
+
+            const SizedBox(height: 16),
+
+            DropdownButtonFormField<String>(
+              initialValue: _selectedPriority,
+              decoration: const InputDecoration(labelText: 'الأولوية'),
+              items: const [
+                DropdownMenuItem(value: 'low', child: Text('منخفضة')),
+                DropdownMenuItem(value: 'medium', child: Text('متوسطة')),
+                DropdownMenuItem(value: 'high', child: Text('عالية')),
+              ],
+              onChanged: canEdit
+                  ? (value) {
+                      setState(() {
+                        _selectedPriority = value;
+                      });
+                    }
+                  : null,
+            ),
+
+            const SizedBox(height: 16),
+
+            IgnorePointer(
+              ignoring: !canEdit,
+              child: Opacity(
+                opacity: canEdit ? 1 : 0.55,
+                child: AppTextField(
+                  controller: _internalNoteController,
+                  label: 'ملاحظة داخلية',
+                  hint: 'اكتب ملاحظة للموظفين...',
+                  maxLines: 4,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            AppButton(
+              label: 'حفظ التعديلات',
+              icon: Icons.save_outlined,
+              isLoading: loading,
+              onPressed: !canEdit || loading
+                  ? null
+                  : () {
+                      context
+                          .read<StaffComplaintDetailsCubit>()
+                          .updateComplaint(
+                            complaintId: complaint.id,
+                            status: _selectedStatus ?? complaint.status,
+                            priority: _selectedPriority ?? complaint.priority,
+                            internalNote: _internalNoteController.text,
+                          );
+                    },
+            ),
+
+            if (!canEdit) ...[
+              const SizedBox(height: 12),
+              Text(
+                complaint.isLocked
+                    ? 'يجب أن تكون الشكوى مقفلة بواسطتك لتتمكن من تعديلها.'
+                    : 'قم بقفل الشكوى أولاً قبل تعديلها.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(
+        context,
+      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
+}
+
+class _ComplaintHeader extends StatelessWidget {
+  final StaffComplaintEntity complaint;
+
+  const _ComplaintHeader({required this.complaint});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(complaint.referenceCode, style: theme.textTheme.labelLarge),
+
+            const SizedBox(height: 8),
+
+            Text(
+              complaint.title,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                StatusChip(status: complaint.status),
+                PriorityChip(priority: complaint.priority),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  final List<Widget> children;
+
+  const _InfoCard({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(children: children),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+}
+
+class _LockedWarning extends StatelessWidget {
+  final String? staffName;
+
+  const _LockedWarning({this.staffName});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.lock_outline, color: scheme.error),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'الشكوى مقفلة بواسطة ${staffName ?? 'موظف آخر'} ولا يمكنك تعديلها حالياً.',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
