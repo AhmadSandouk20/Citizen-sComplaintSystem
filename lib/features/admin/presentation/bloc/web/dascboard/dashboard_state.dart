@@ -1,26 +1,20 @@
 import 'package:equatable/equatable.dart';
 
-enum DashboardNavItem { statistics, agencies, users, reports, profile }
-
+/// State of the wide-screen agencies view: which agency is open in the
+/// details pane.
+///
+/// This used to also carry a `DashboardNavItem` for an internal navigation
+/// rail, but that rail duplicated the admin sidebar exactly — statistics,
+/// agencies and users each had two entry points leading to different screens.
+/// Navigation belongs to the shell; this view owns only its own selection.
 class DashboardState extends Equatable {
-  final DashboardNavItem selectedNavItem;
+  const DashboardState({this.selectedAgencyId});
+
   final int? selectedAgencyId;
 
-  const DashboardState({
-    this.selectedNavItem = DashboardNavItem.agencies,
-    this.selectedAgencyId,
-  });
-
-  DashboardState copyWith({
-    DashboardNavItem? selectedNavItem,
-    int? selectedAgencyId,
-  }) {
-    return DashboardState(
-      selectedNavItem: selectedNavItem ?? this.selectedNavItem,
-      selectedAgencyId: selectedAgencyId ?? this.selectedAgencyId,
-    );
-  }
+  DashboardState copyWith({int? selectedAgencyId}) =>
+      DashboardState(selectedAgencyId: selectedAgencyId ?? this.selectedAgencyId);
 
   @override
-  List<Object?> get props => [selectedNavItem, selectedAgencyId];
+  List<Object?> get props => [selectedAgencyId];
 }

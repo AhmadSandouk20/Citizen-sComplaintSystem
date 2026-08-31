@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/localization/local_keys.dart';
 import '../../domain/entities/profile_entity.dart';
+import 'app_settings_card.dart';
 import 'profile_actions.dart';
 import 'profile_header.dart';
 import 'profile_info_tile.dart';
@@ -63,6 +64,8 @@ class ProfileBody extends StatelessWidget {
                     : LocaleKeys.inactive.tr(),
                 icon: Icons.verified_user_outlined,
               ),
+              const SizedBox(height: 20),
+              const AppSettingsCard(),
               const SizedBox(height: 24),
               ProfileActions(onEdit: onEdit, onDelete: onDelete),
             ],

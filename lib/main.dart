@@ -12,6 +12,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  // easy_localization logs every build, delegate init and asset load. That
+  // noise buries the request logs we actually read while debugging, so keep
+  // only warnings and errors.
+  EasyLocalization.logger.enableBuildModes = [];
+
   // Loads the symbols DateFormat needs for non-English locales. Without this
   // any Arabic date format throws at runtime rather than at build time.
   await initializeDateFormatting();

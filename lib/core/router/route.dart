@@ -225,12 +225,6 @@ final GoRouter routes = GoRouter(
         ),
 
         // ----- Admin (/api/admin, /api/statistics, /api/agencies) -----
-        // The web control panel. It provides its own DashboardCubit, so the
-        // route only has to point at it.
-        GoRoute(
-          path: RoutePaths.adminDashboard,
-          builder: (context, state) => const AdminDashboardScreen(),
-        ),
         GoRoute(
           path: RoutePaths.statistics,
           builder: (context, state) => BlocProvider(
@@ -266,7 +260,13 @@ final GoRouter routes = GoRouter(
         ),
         GoRoute(
           path: RoutePaths.agencies,
-          builder: (context, state) => const AdminAgenciesListScreen(),
+          // One destination, two layouts: a two-pane view where there is room
+          // for it, the plain list where there is not.
+          builder: (context, state) => LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 900
+                ? const AdminAgenciesWebView()
+                : const AdminAgenciesListScreen(),
+          ),
         ),
         GoRoute(
           path: RoutePaths.addAgency,

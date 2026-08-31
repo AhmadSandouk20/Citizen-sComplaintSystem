@@ -50,8 +50,6 @@ class RoutePaths {
   static const String staffRequestInfo = '/staff/complaints/:id/request-info';
 
   // --------------------------------- Admin ----------------------------------
-  /// The web control panel: agencies, staff and users in one shell.
-  static const String adminDashboard = '/admin/dashboard';
   static const String statistics = '/admin/statistics';
   static const String users = '/admin/users';
   static const String user = '/admin/users/:id';

@@ -232,7 +232,6 @@ class LocaleKeys {
   static const transfer = 'transfer';
   static const update = 'update';
 
-  static const controlPanel = 'controlPanel';
 
   // Shared
   static const genericError = 'genericError';

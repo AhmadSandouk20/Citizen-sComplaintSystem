@@ -71,11 +71,6 @@ List<NavItem> getNavItemsForRole(UserRole role, {int unreadCount = 0}) {
     case UserRole.admin:
       return [
         NavItem(
-          label: LocaleKeys.controlPanel.tr(),
-          icon: Icons.space_dashboard_outlined,
-          route: RoutePaths.adminDashboard,
-        ),
-        NavItem(
           label: LocaleKeys.statistics.tr(),
           icon: Icons.dashboard,
           route: RoutePaths.statistics,
