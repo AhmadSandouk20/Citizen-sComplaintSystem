@@ -206,6 +206,34 @@ class LocaleKeys {
   static const lockedBy = 'lockedBy';
   static const lockedByCannotEdit = 'lockedByCannotEdit';
 
+  // Admin web dashboard
+  static const add = 'add';
+  static const addAgency = 'addAgency';
+  static const addStaff = 'addStaff';
+  static const address = 'address';
+  static const agencyDetails = 'agencyDetails';
+  static const category = 'category';
+  static const city = 'city';
+  static const editAgency = 'editAgency';
+  static const editStaff = 'editStaff';
+  static const error = 'error';
+  static const loading = 'loading';
+  static const noAgenciesFound = 'noAgenciesFound';
+  static const noEmail = 'noEmail';
+  static const noOtherAgencies = 'noOtherAgencies';
+  static const noStaffFound = 'noStaffFound';
+  static const passwordMinLength = 'passwordMinLength';
+  static const remove = 'remove';
+  static const removeConfirm = 'removeConfirm';
+  static const requiredField = 'requiredField';
+  static const selectAgency = 'selectAgency';
+  static const selectAgencyRequired = 'selectAgencyRequired';
+  static const selectNewAgency = 'selectNewAgency';
+  static const transfer = 'transfer';
+  static const update = 'update';
+
+  static const controlPanel = 'controlPanel';
+
   // Shared
   static const genericError = 'genericError';
   static const notImplementedYet = 'notImplementedYet';

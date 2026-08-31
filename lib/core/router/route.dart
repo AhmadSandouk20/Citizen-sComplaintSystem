@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/admin/presentation/bloc/user/user_management_cubit.dart';
+import '../../features/admin/presentation/view/web/admin_dashboard_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agencies_list_screen.dart';
 import '../../features/admin_analytics/presentation/bloc/performance_cubit.dart';
 import '../../features/admin_analytics/presentation/bloc/statistics_cubit.dart';
@@ -224,6 +225,12 @@ final GoRouter routes = GoRouter(
         ),
 
         // ----- Admin (/api/admin, /api/statistics, /api/agencies) -----
+        // The web control panel. It provides its own DashboardCubit, so the
+        // route only has to point at it.
+        GoRoute(
+          path: RoutePaths.adminDashboard,
+          builder: (context, state) => const AdminDashboardScreen(),
+        ),
         GoRoute(
           path: RoutePaths.statistics,
           builder: (context, state) => BlocProvider(
