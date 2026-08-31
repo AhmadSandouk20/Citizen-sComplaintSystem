@@ -54,6 +54,11 @@ import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
 import 'route_paths.dart';
 
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_cubit.dart';
+import '../../features/agency_workspace/presentation/screens/staff_complaint_screen.dart';
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_details_cubit.dart';
+import '../../features/agency_workspace/presentation/screens/staff_complaint_details_screen.dart';
+
 final GoRouter routes = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: RoutePaths.login,
@@ -180,9 +185,7 @@ final GoRouter routes = GoRouter(
           path: RoutePaths.submissionSuccess,
           builder: (context, state) => ComplaintSubmittedScreen(
             referenceCode: state.uri.queryParameters['code'] ?? '',
-            complaintId: int.tryParse(
-              state.uri.queryParameters['id'] ?? '',
-            ),
+            complaintId: int.tryParse(state.uri.queryParameters['id'] ?? ''),
           ),
         ),
         GoRoute(
@@ -201,13 +204,23 @@ final GoRouter routes = GoRouter(
         // ----- Staff (/api/agency/*) — also served to admins -----
         GoRoute(
           path: RoutePaths.sComplaints,
-          builder: (context, state) => const StaffComplainsQueueScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<StaffComplaintsCubit>()..loadComplaints(),
+            child: const StaffComplaintsScreen(),
+          ),
         ),
         GoRoute(
           path: RoutePaths.sComplaint,
-          builder: (context, state) => StaffComplaintDetailScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
+          builder: (context, state) {
+            final complaintId = int.parse(state.pathParameters['id']!);
+
+            return BlocProvider(
+              create: (_) =>
+                  getIt<StaffComplaintDetailsCubit>()
+                    ..loadComplaint(complaintId),
+              child: StaffComplaintDetailsScreen(complaintId: complaintId),
+            );
+          },
         ),
 
         // ----- Admin (/api/admin, /api/statistics, /api/agencies) -----
@@ -232,8 +245,9 @@ final GoRouter routes = GoRouter(
           builder: (context, state) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => getIt<AdminUserDetailCubit>()
-                  ..load(int.parse(state.pathParameters['id']!)),
+                create: (_) =>
+                    getIt<AdminUserDetailCubit>()
+                      ..load(int.parse(state.pathParameters['id']!)),
               ),
               // The detail screen refreshes the list after a save or delete.
               BlocProvider(create: (_) => getIt<UserManagementCubit>()),
@@ -253,9 +267,8 @@ final GoRouter routes = GoRouter(
         ),
         GoRoute(
           path: RoutePaths.updateAgency,
-          builder: (context, state) => AdminAgencyFormScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
+          builder: (context, state) =>
+              AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
         ),
         GoRoute(
           path: RoutePaths.agency,
@@ -305,7 +318,9 @@ String? _redirect(BuildContext context, GoRouterState state) {
   // location rather than flashing the login screen and redirecting back.
   if (authState is AuthRestoringState) return null;
 
-  final UserModel? user = authState is LoginSuccessState ? authState.user : null;
+  final UserModel? user = authState is LoginSuccessState
+      ? authState.user
+      : null;
   final location = state.matchedLocation;
 
   // --- Auth guard ---

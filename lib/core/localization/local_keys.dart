@@ -148,6 +148,64 @@ class LocaleKeys {
 
   static const noComplaintsFound = 'noComplaintsFound';
 
+  // Agency workspace (staff)
+  static const status = 'status';
+  static const priority = 'priority';
+  static const agency = 'agency';
+  static const complaintTitle = 'complaintTitle';
+  static const referenceNumber = 'referenceNumber';
+  static const lockState = 'lockState';
+  static const lockAvailable = 'lockAvailable';
+  static const view = 'view';
+  static const apply = 'apply';
+  static const clearFilters = 'clearFilters';
+  static const allStatuses = 'allStatuses';
+  static const allPriorities = 'allPriorities';
+  static const noMatchingResults = 'noMatchingResults';
+  static const totalCount = 'totalCount';
+  static const changedBy = 'changedBy';
+  static const requestInfo = 'requestInfo';
+  static const revisions = 'revisions';
+  static const statusHistory = 'statusHistory';
+
+  // Agency workspace — messages
+  static const complaintDetails = 'complaintDetails';
+  static const citizenInfo = 'citizenInfo';
+  static const description = 'description';
+  static const location = 'location';
+  static const message = 'message';
+  static const internalNote = 'internalNote';
+  static const updateComplaintAction = 'updateComplaintAction';
+  static const viewDetails = 'viewDetails';
+  static const lockComplaint = 'lockComplaint';
+  static const unlockComplaint = 'unlockComplaint';
+  static const locked = 'locked';
+  static const sendRequest = 'sendRequest';
+  static const dateFrom = 'dateFrom';
+  static const dateTo = 'dateTo';
+  static const before = 'before';
+  static const after = 'after';
+  static const firstVersion = 'firstVersion';
+  static const noVisibleChanges = 'noVisibleChanges';
+  static const requestInfoHint = 'requestInfoHint';
+  static const requestInfoPlaceholder = 'requestInfoPlaceholder';
+  static const internalNotePlaceholder = 'internalNotePlaceholder';
+  static const lockBeforeEditing = 'lockBeforeEditing';
+  static const mustHoldLock = 'mustHoldLock';
+  static const messageRequired = 'messageRequired';
+  static const lockedOk = 'lockedOk';
+  static const unlockedOk = 'unlockedOk';
+  static const complaintUpdated = 'complaintUpdated';
+  static const requestInfoSent = 'requestInfoSent';
+  static const loadComplaintsFailed = 'loadComplaintsFailed';
+  static const loadDetailsFailed = 'loadDetailsFailed';
+  static const requestInfoFailed = 'requestInfoFailed';
+  static const versionNumber = 'versionNumber';
+
+  static const anotherStaff = 'anotherStaff';
+  static const lockedBy = 'lockedBy';
+  static const lockedByCannotEdit = 'lockedByCannotEdit';
+
   // Shared
   static const genericError = 'genericError';
   static const notImplementedYet = 'notImplementedYet';
