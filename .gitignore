@@ -58,10 +58,12 @@ ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 ios/Flutter/engine/
 
-# FIREBASE (CRITICAL: DO NOT COMMIT)
+# FIREBASE
+# android/app/google-services.json is tracked so the team can build Android FCM.
 google-services.json
 GoogleService-Info.plist
 *.p8
+!android/app/google-services.json
 
 # --------------------------------------------------------------
 #  ENVIRONMENT & SECRETS (CRITICAL: DO NOT COMMIT)
