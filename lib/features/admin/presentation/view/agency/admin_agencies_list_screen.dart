@@ -38,7 +38,7 @@ class _AdminAgenciesListScreenState extends State<AdminAgenciesListScreen> {
               title: 'Agencies',
               items: const [],
               isLoading: true,
-              itemBuilder: (_, __) => const SizedBox.shrink(),
+              itemBuilder: (_, _) => const SizedBox.shrink(),
             );
           }
 
@@ -47,7 +47,7 @@ class _AdminAgenciesListScreenState extends State<AdminAgenciesListScreen> {
               title: 'Agencies',
               items: const [],
               errorMessage: state.message,
-              itemBuilder: (_, __) => const SizedBox.shrink(),
+              itemBuilder: (_, _) => const SizedBox.shrink(),
             );
           }
 

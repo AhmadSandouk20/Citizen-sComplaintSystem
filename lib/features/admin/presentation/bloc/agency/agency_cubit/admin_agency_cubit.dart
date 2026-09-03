@@ -14,25 +14,35 @@ class AdminAgenciesCubit extends Cubit<AdminAgenciesState> {
   AdminAgenciesCubit(this._repository) : super(AgenciesInitial());
 
   Future<void> loadAgencies({bool refresh = false}) async {
-    List<AgencyModel> currentList = [];
-    if (!refresh && state is AgenciesLoaded) {
-      currentList = (state as AgenciesLoaded).agencies;
-    }
-
     if (refresh) {
       _currentPage = 1;
       _hasReachedEnd = false;
-      currentList = [];
+      emit(AgenciesLoading());
+    } else if (_hasReachedEnd) {
+      return;
     }
-    emit(AgenciesLoading());
+
+    // If not refreshing, we are loading more
+    final bool isLoadingMore = !refresh && state is AgenciesLoaded;
+    if (isLoadingMore) {
+      emit((state as AgenciesLoaded).copyWith(isLoadingMore: true));
+    } else if (!refresh) {
+      // First page load (not refresh, not loading more)
+      emit(AgenciesLoading());
+    }
 
     try {
       final PaginatedAgencies result = await _repository.getAgencies(
         page: _currentPage,
       );
       final newAgencies = result.agencies;
-      final updatedList = [...currentList, ...newAgencies];
 
+      final List<AgencyModel> currentList =
+          (state is AgenciesLoaded && !refresh)
+          ? (state as AgenciesLoaded).agencies
+          : [];
+
+      final updatedList = [...currentList, ...newAgencies];
       _hasReachedEnd = _currentPage >= result.lastPage;
       _currentPage++;
 
@@ -41,17 +51,24 @@ class AdminAgenciesCubit extends Cubit<AdminAgenciesState> {
           agencies: updatedList,
           hasReachedEnd: _hasReachedEnd,
           total: result.total,
+          isLoadingMore: false,
         ),
       );
     } catch (e) {
-      emit(AgenciesError(e.toString()));
+      if (state is AgenciesLoaded) {
+        // Revert loadingMore state
+        emit((state as AgenciesLoaded).copyWith(isLoadingMore: false));
+      } else {
+        emit(AgenciesError(e.toString()));
+      }
     }
   }
 
   Future<void> loadMore() async {
-    if (!_hasReachedEnd && state is! AgenciesLoading) {
-      await loadAgencies();
-    }
+    if (_hasReachedEnd) return;
+    if (state is AgenciesLoaded && (state as AgenciesLoaded).isLoadingMore)
+      return;
+    await loadAgencies(refresh: false);
   }
 
   Future<void> getAgencyDetails(int id) async {

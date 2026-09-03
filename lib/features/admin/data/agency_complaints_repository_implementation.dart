@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:final_flutter/core/api/endpoints/api_endpoints.dart';
 import 'package:final_flutter/features/admin/domain/agency_complaints_repository.dart';
 
@@ -22,7 +22,7 @@ class AgencyComplaintsRepositoryImplementation
   }) async {
     try {
       final Response response = await _apiService.getData(
-        path: APIEndpoints.AGENCY_COMPLAINTS(agencyId),
+        path: APIEndpoints.agencyComplaints(agencyId),
         queryParameters: {'page': page, 'per_page': perPage},
       );
 

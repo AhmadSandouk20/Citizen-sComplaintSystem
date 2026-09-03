@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:final_flutter/core/api/api_service.dart';
 import 'package:final_flutter/core/api/endpoints/api_endpoints.dart';
 import 'package:final_flutter/features/admin/data/model/users/paginated_users/paginated_users_model.dart';
@@ -21,7 +21,7 @@ class UserManagementRepositoryImplementation
   }) async {
     try {
       final response = await _apiService.getData(
-        path: APIEndpoints.ALL_USERS,
+        path: APIEndpoints.allUsers,
         queryParameters: {'page': page, 'per_page': perPage},
       );
 
@@ -38,7 +38,7 @@ class UserManagementRepositoryImplementation
   Future<UserModel> updateUser(int id, Map<String, dynamic> data) async {
     try {
       final response = await _apiService.putData(
-        APIEndpoints.UPDATE_OR_DELETE_USER(id),
+        APIEndpoints.updateOrDeleteUser(id),
         bodyData: data,
       );
 
@@ -58,7 +58,7 @@ class UserManagementRepositoryImplementation
   Future<void> deleteUser(int id) async {
     try {
       await _apiService.deleteData(
-        path: APIEndpoints.UPDATE_OR_DELETE_USER(id),
+        path: APIEndpoints.updateOrDeleteUser(id),
       );
     } on DioException catch (e) {
       throw ErrorHandler.fromDioException(e);

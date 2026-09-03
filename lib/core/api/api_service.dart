@@ -1,13 +1,13 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 
 class APIService {
   final Dio _dio;
 
   APIService(this._dio);
 
-  static const String _POST = "POST";
-  static const String _PATCH = "PATCH";
-  static const String _PUT = "PUT";
+  static const String _post = "POST";
+  static const String _patch = "PATCH";
+  static const String _put = "PUT";
 
   Future<Response> _sendWithBody({
     required String method,
@@ -36,13 +36,13 @@ class APIService {
     })
     dioMethod;
     switch (method) {
-      case (_POST):
+      case (_post):
         dioMethod = _dio.post;
         break;
-      case (_PUT):
+      case (_put):
         dioMethod = _dio.put;
         break;
-      case (_PATCH):
+      case (_patch):
         dioMethod = _dio.patch;
         break;
       default:
@@ -64,7 +64,7 @@ class APIService {
     Map<String, dynamic>? headers,
     bool isFormData = false,
   }) => _sendWithBody(
-    method: _POST,
+    method: _post,
     path: path,
     bodyData: bodyData,
     isFormData: isFormData,
@@ -78,7 +78,7 @@ class APIService {
     Map<String, dynamic>? headers,
     bool isFormData = false,
   }) => _sendWithBody(
-    method: _PUT,
+    method: _put,
     path: path,
     bodyData: bodyData,
     isFormData: isFormData,
@@ -92,7 +92,7 @@ class APIService {
     Map<String, dynamic>? headers,
     bool isFormData = false,
   }) => _sendWithBody(
-    method: _PATCH,
+    method: _patch,
     path: path,
     bodyData: bodyData,
     isFormData: isFormData,

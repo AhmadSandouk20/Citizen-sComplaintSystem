@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/localization/local_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/widget/empty_state.dart';
@@ -42,7 +44,7 @@ class _AgencyComplaintsTabState extends State<AgencyComplaintsTab> {
         if (state is AdminAgencyComplaintsLoaded) {
           final complaints = state.complaints;
           if (complaints.isEmpty) {
-            return const EmptyState(message: 'No complaints found.');
+            return EmptyState(message: LocaleKeys.noComplaintsFound.tr());
           }
           return NotificationListener<ScrollNotification>(
             onNotification: (scrollInfo) {

@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 
 import '../../../core/api/api_service.dart';
 import '../../../core/api/endpoints/api_endpoints.dart';
@@ -21,7 +21,7 @@ class AgencyRepositoryImplementation extends AgencyRepository {
   }) async {
     try {
       final Response agenciesJson = await _apiService.getData(
-        path: APIEndpoints.ALL_AGENCIES,
+        path: APIEndpoints.allAgencies,
         queryParameters: {'page': page, 'per_page': perPage},
       );
 
@@ -37,7 +37,7 @@ class AgencyRepositoryImplementation extends AgencyRepository {
   Future<AgencyModel> getAgencyDetails(int id) async {
     try {
       final Response agenciesJson = await _apiService.getData(
-        path: APIEndpoints.AGENCY_DETAILS(id),
+        path: APIEndpoints.agencyDetails(id),
       );
       return AgencyModel.fromJson(agenciesJson.data);
     } on DioException catch (e) {
@@ -51,7 +51,7 @@ class AgencyRepositoryImplementation extends AgencyRepository {
   Future<AgencyModel> addAgency(AgencyModel newAgency) async {
     try {
       final Response agenciesJson = await _apiService.postData(
-        APIEndpoints.ADD_AGENCY,
+        APIEndpoints.addAgency,
         bodyData: newAgency.toJson(),
       );
       return AgencyModel.fromJson(agenciesJson.data['agency']);
@@ -66,7 +66,7 @@ class AgencyRepositoryImplementation extends AgencyRepository {
   Future<AgencyModel> updateAgency(int id, AgencyModel updatedModel) async {
     try {
       final Response agenciesJson = await _apiService.putData(
-        APIEndpoints.UPDATE_AGENCY(id),
+        APIEndpoints.updateAgency(id),
         bodyData: updatedModel.toJson(),
       );
       return AgencyModel.fromJson(agenciesJson.data['agency']);
@@ -80,7 +80,7 @@ class AgencyRepositoryImplementation extends AgencyRepository {
   @override
   Future<void> deleteAgency(int id) async {
     try {
-      await _apiService.deleteData(path: APIEndpoints.DELETE_AGENCY(id));
+      await _apiService.deleteData(path: APIEndpoints.deleteAgency(id));
     } on DioException catch (e) {
       throw ErrorHandler.fromDioException(e);
     } catch (e) {

@@ -1,9 +1,8 @@
-import 'package:final_flutter/features/admin/domain/user_management_repository.dart';
+﻿import 'package:final_flutter/features/admin/domain/user_management_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
-import 'package:final_flutter/features/auth/data/models/user_type_enum.dart';
+import 'package:final_flutter/features/auth/data/models/user_role_enum.dart';
 import 'package:final_flutter/core/error/app_exception.dart';
-
 import 'user_management_state.dart';
 
 class UserManagementCubit extends Cubit<UserManagementState> {
@@ -25,6 +24,7 @@ class UserManagementCubit extends Cubit<UserManagementState> {
       _hasMore = true;
       _users.clear();
       _total = 0;
+      _isLoadingMore = false;
       emit(UserManagementLoading());
     } else if (state is UserManagementLoaded && !_hasMore) {
       return;
@@ -47,11 +47,11 @@ class UserManagementCubit extends Cubit<UserManagementState> {
 
       final newUsers = result.users;
       _users.addAll(newUsers);
-      _total = result.total;
+      _total = result.total ?? 0;
 
-      _hasMore = newUsers.length == _perPage;
+      _hasMore = (_currentPage * _perPage) < _total;
       _currentPage++;
-
+      print('Total: $_total, currentPage: $_currentPage, hasMore: $_hasMore');
       emit(
         UserManagementLoaded(
           users: List.unmodifiable(_users),
@@ -81,6 +81,7 @@ class UserManagementCubit extends Cubit<UserManagementState> {
   }
 
   void loadMore() {
+    print('loadMore called: hasMore=$_hasMore, isLoadingMore=$_isLoadingMore');
     if (_hasMore && !_isLoadingMore && state is UserManagementLoaded) {
       loadUsers();
     }
@@ -91,7 +92,6 @@ class UserManagementCubit extends Cubit<UserManagementState> {
       await _repository.deleteUser(userId);
       _users.removeWhere((u) => u.id == userId);
       _total--;
-
       if (state is UserManagementLoaded) {
         emit(
           (state as UserManagementLoaded).copyWith(
@@ -120,7 +120,7 @@ class UserManagementCubit extends Cubit<UserManagementState> {
     }
   }
 
-  Future<void> changeRole(UserModel user, UserType newRole) async {
+  Future<void> changeRole(UserModel user, UserRole newRole) async {
     try {
       final updated = await _repository.updateUser(user.id, {
         'type': newRole.name,
@@ -144,6 +144,23 @@ class UserManagementCubit extends Cubit<UserManagementState> {
           ),
         );
       }
+    }
+  }
+
+  void updateUserInList(UserModel updated) {
+    _replaceUser(updated);
+  }
+
+  void removeUserLocally(int userId) {
+    _users.removeWhere((u) => u.id == userId);
+    _total--;
+    if (state is UserManagementLoaded) {
+      emit(
+        (state as UserManagementLoaded).copyWith(
+          users: List.unmodifiable(_users),
+          total: _total,
+        ),
+      );
     }
   }
 }

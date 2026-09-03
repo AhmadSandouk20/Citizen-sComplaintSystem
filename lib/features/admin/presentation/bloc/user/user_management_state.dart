@@ -3,7 +3,6 @@ import '../../../../auth/data/models/user_model.dart';
 
 sealed class UserManagementState extends Equatable {
   const UserManagementState();
-
   @override
   List<Object> get props => [];
 }
@@ -50,7 +49,6 @@ class UserManagementLoaded extends UserManagementState {
 class UserManagementError extends UserManagementState {
   final String message;
   const UserManagementError(this.message);
-
   @override
   List<Object> get props => [message];
 }

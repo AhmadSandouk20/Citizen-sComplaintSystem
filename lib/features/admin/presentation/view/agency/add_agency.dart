@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddAgency extends StatefulWidget {
-  AddAgency({super.key});
+  const AddAgency({super.key});
 
   @override
   State<AddAgency> createState() => _AddAgencyState();

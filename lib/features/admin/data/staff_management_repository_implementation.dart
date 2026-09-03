@@ -1,5 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:final_flutter/core/api/api_base.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:final_flutter/core/api/api_service.dart';
 import 'package:final_flutter/core/api/endpoints/api_endpoints.dart';
 import '../../../core/error/app_exception.dart';
@@ -16,7 +15,7 @@ class StaffManagementRepoImplementation implements StaffManagementRepository {
   Future<List<UserModel>> getAgencyStaff(int agencyId) async {
     try {
       final response = await _apiService.getData(
-        path: APIEndpoints.AGENCY_STAFF(agencyId),
+        path: APIEndpoints.agencyStaff(agencyId),
       );
 
       final data = response.data as Map<String, dynamic>;
@@ -38,7 +37,7 @@ class StaffManagementRepoImplementation implements StaffManagementRepository {
   ) async {
     try {
       final response = await _apiService.postData(
-        APIEndpoints.CREATE_STAFF(agencyId),
+        APIEndpoints.createStaff(agencyId),
         bodyData: userData,
       );
       final data = response.data as Map<String, dynamic>;

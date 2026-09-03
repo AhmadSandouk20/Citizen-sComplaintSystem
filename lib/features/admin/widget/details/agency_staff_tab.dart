@@ -64,7 +64,7 @@ class _AgencyStaffTabState extends State<AgencyStaffTab> {
               return AlertDialog(
                 title: Text('Transfer ${user.name}'),
                 content: DropdownButtonFormField<int>(
-                  value: null,
+                  initialValue: null,
                   hint: const Text('Select new agency'),
                   items: agencies
                       .where((agency) => agency.id != widget.agencyId)

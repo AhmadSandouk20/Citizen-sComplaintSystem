@@ -1,154 +1,112 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:final_flutter/core/localization/local_keys.dart';
+﻿import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/localization/local_keys.dart';
 import '../../core/router/route_paths.dart';
-import '../locale/presentation/bloc/locale_cubit.dart';
-import '../theme/presentation/bloc/theme_cubit.dart';
+import '../auth/presentation/bloc/auth_cubit.dart';
 
-// ----------------Profile-------------------
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+/// Placeholders for screens whose tracks have not landed yet.
+///
+/// Each one is a real route target so navigation, deep links and the shell can
+/// be exercised end to end. Delete a stub the moment its owner pushes the real
+/// screen â€” do not build features in here.
+///
+/// Only the staff workspace is still outstanding (Leen): the inbox,
+/// complaint details, the lock mechanism, revisions and request-info.
+class _Stub extends StatelessWidget {
+  const _Stub(this.title, {this.detail});
+
+  final String title;
+  final String? detail;
+
+  static const IconData icon = Icons.construction_outlined;
 
   @override
   Widget build(BuildContext context) {
-    final themeCubit = context.read<ThemeCubit>();
-    final localeCubit = context.read<LocaleCubit>();
-
-    final currentTheme = context.watch<ThemeCubit>().state;
-    final currentLocale = context.watch<LocaleCubit>().state;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile (Test Center)'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+      appBar: AppBar(title: Text(title)),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 48, color: Theme.of(context).colorScheme.outline),
+              const SizedBox(height: 12),
+              Text(
+                LocaleKeys.notImplementedYet.tr(),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${LocaleKeys.theme.tr()}: ${currentTheme.themeMode == ThemeMode.dark ? LocaleKeys.dark.tr() : LocaleKeys.light.tr()}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () => themeCubit.toggleThemeMode(),
-                      icon: Icon(
-                        currentTheme.themeMode == ThemeMode.dark
-                            ? Icons.light_mode
-                            : Icons.dark_mode,
-                      ),
-                      label: Text(
-                        currentTheme.themeMode == ThemeMode.dark
-                            ? 'Switch to Light'
-                            : 'Switch to Dark',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${LocaleKeys.language.tr()}: ${currentLocale.locale.languageCode == 'en' ? 'English' : 'العربية'}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      onPressed: () => localeCubit.toggleLanguage(context),
-                      icon: Icon(
-                        currentLocale.locale.languageCode == 'en'
-                            ? Icons.translate
-                            : Icons.translate,
-                      ),
-                      label: Text(
-                        currentLocale.locale.languageCode == 'en'
-                            ? 'Switch to العربية'
-                            : 'Switch to English',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
-          ],
+              if (detail != null) ...[
+                const SizedBox(height: 6),
+                Text(detail!, style: Theme.of(context).textTheme.bodySmall),
+              ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
+// ------------------------------- CITIZEN ------------------------------------
+
 class CitizenHomeScreen extends StatelessWidget {
   const CitizenHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Citizen Dashboard')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Welcome!', style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 16),
+    final theme = Theme.of(context);
+    final name = context.select<AuthCubit, String>(
+      (c) => c.user?.name ?? '',
+    );
 
-            Wrap(
-              spacing: 16,
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+          children: [
+            // Greeting carries the signed-in name so the home screen feels
+            // addressed to someone rather than being a menu.
+            Text(LocaleKeys.welcome.tr(), style: theme.textTheme.bodyLarge),
+            const SizedBox(height: 2),
+            Text(
+              name.isEmpty ? LocaleKeys.ccs.tr() : name,
+              style: theme.textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 24),
+
+            // The primary action gets a full card of its own; the two
+            // supporting actions share a row below it.
+            _PrimaryAction(
+              title: LocaleKeys.newComplaint.tr(),
+              subtitle: LocaleKeys.submit.tr(),
+              icon: Icons.add_circle_outline,
+              onTap: () => context.go(RoutePaths.submit),
+            ),
+            const SizedBox(height: 12),
+            Row(
               children: [
-                _QuickActionCard(
-                  title: 'Submit Complaint',
-                  icon: Icons.add_circle,
-                  onTap: () => context.go(RoutePaths.submit),
+                Expanded(
+                  child: _SecondaryAction(
+                    title: LocaleKeys.myComplaintsShort.tr(),
+                    icon: Icons.list_alt_outlined,
+                    onTap: () => context.go(RoutePaths.cComplaints),
+                  ),
                 ),
-                _QuickActionCard(
-                  title: 'Track a Complaint',
-                  icon: Icons.search,
-                  onTap: () => context.go(RoutePaths.cTrackEntry),
-                ),
-                _QuickActionCard(
-                  title: 'My Complaints',
-                  icon: Icons.list,
-                  onTap: () => context.go(RoutePaths.cComplaints),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _SecondaryAction(
+                    title: LocaleKeys.track.tr(),
+                    icon: Icons.search,
+                    // push, not go: tracking lives outside the shell, so
+                    // replacing the stack would strand the citizen there with
+                    // no bottom bar and nothing to go back to.
+                    onTap: () => context.push(RoutePaths.cTrackEntry),
+                  ),
                 ),
               ],
             ),
@@ -159,27 +117,122 @@ class CitizenHomeScreen extends StatelessWidget {
   }
 }
 
-class _QuickActionCard extends StatelessWidget {
+class _PrimaryAction extends StatelessWidget {
+  const _PrimaryAction({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
   final String title;
+  final String subtitle;
   final IconData icon;
   final VoidCallback onTap;
-  const _QuickActionCard({
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: AlignmentDirectional.topStart,
+              end: AlignmentDirectional.bottomEnd,
+              colors: [
+                scheme.primary,
+                Color.lerp(scheme.primary, scheme.secondary, 0.35)!,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  height: 46,
+                  width: 46,
+                  decoration: BoxDecoration(
+                    color: scheme.onPrimary.withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Icon(icon, color: scheme.onPrimary, size: 24),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: scheme.onPrimary,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.onPrimary.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: scheme.onPrimary.withValues(alpha: 0.9),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SecondaryAction extends StatelessWidget {
+  const _SecondaryAction({
     required this.title,
     required this.icon,
     required this.onTap,
   });
+
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Card(
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, size: 48),
-              const SizedBox(height: 8),
-              Text(title),
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                  color: scheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 20, color: scheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 12),
+              Text(title, style: theme.textTheme.titleMedium),
             ],
           ),
         ),
@@ -188,47 +241,31 @@ class _QuickActionCard extends StatelessWidget {
   }
 }
 
-// ----- CITIZEN -----
-class CitizenComplaintListScreen extends StatelessWidget {
-  const CitizenComplaintListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('My Complaints')));
-}
+// -------------------------------- STAFF -------------------------------------
 
-class SubmitComplaintScreen extends StatelessWidget {
-  const SubmitComplaintScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Submit Complaint')));
-}
-
-// ----- STAFF -----
 class StaffComplainsQueueScreen extends StatelessWidget {
   const StaffComplainsQueueScreen({super.key});
+
   @override
   Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Staff Queue')));
+      _Stub(LocaleKeys.queue.tr(), detail: 'GET /api/agency/complaints');
 }
 
-// ----- ADMIN -----
-class AdminStatisticsScreen extends StatelessWidget {
-  const AdminStatisticsScreen({super.key});
+class StaffComplaintDetailScreen extends StatelessWidget {
+  const StaffComplaintDetailScreen({super.key, required this.id});
+
+  final int id;
+
   @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Statistics')));
+  Widget build(BuildContext context) => _Stub(
+    LocaleKeys.queue.tr(),
+    detail: 'GET /api/agency/complaints/$id',
+  );
 }
 
-class AdminUsersListScreen extends StatelessWidget {
-  const AdminUsersListScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Users List')));
-}
-
-class AdminReportsScreen extends StatelessWidget {
-  const AdminReportsScreen({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Reports')));
-}
+// -------------------------------- ADMIN -------------------------------------
+//
+// Every admin screen now has a real implementation:
+//   agencies, agency staff, users  -> features/admin/
+//   statistics, system performance -> features/admin_analytics/
+//   reports                        -> features/admin_reports/

@@ -1,5 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:final_flutter/core/localization/local_keys.dart';
+import 'package:final_flutter/core/router/route_paths.dart';
 import 'package:final_flutter/core/widget/admin_crud_scaffold.dart';
 import 'package:final_flutter/core/widget/empty_state.dart';
 import 'package:final_flutter/features/auth/data/models/user_model.dart';
@@ -19,7 +23,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
             title: 'Users',
             items: const [],
             isLoading: true,
-            itemBuilder: (_, __) => const SizedBox.shrink(),
+            itemBuilder: (_, _) => const SizedBox.shrink(),
           );
         }
         if (state is UserManagementError && state is! UserManagementLoaded) {
@@ -27,7 +31,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
             title: 'Users',
             items: const [],
             errorMessage: state.message,
-            itemBuilder: (_, __) => const SizedBox.shrink(),
+            itemBuilder: (_, _) => const SizedBox.shrink(),
           );
         }
         if (state is UserManagementLoaded) {
@@ -37,6 +41,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
             isLoading: state.isLoadingMore,
             itemBuilder: (context, user) => UserCard(
               user: user,
+              onOpen: () => context.push(RoutePaths.userPath(user.id)),
               onDelete: () =>
                   context.read<UserManagementCubit>().deleteUser(user.id),
               onToggleActive: () =>
@@ -44,13 +49,12 @@ class AdminUsersManagementScreen extends StatelessWidget {
               onChangeRole: (newRole) =>
                   context.read<UserManagementCubit>().changeRole(user, newRole),
             ),
-
             onAdd: null,
             onEdit: null,
-            onDelete: (user) => _confirmDelete(context, user),
+            onDelete: (user) => _confirmDelete(context, user), // restored
             emptyState: EmptyState(
-              message: 'No users found.',
-              buttonText: 'Refresh',
+              message: LocaleKeys.usersEmpty.tr(),
+              buttonText: LocaleKeys.retry.tr(),
               onAction: () =>
                   context.read<UserManagementCubit>().loadUsers(refresh: true),
             ),

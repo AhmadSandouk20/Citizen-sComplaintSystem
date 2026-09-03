@@ -1,230 +1,285 @@
-import 'package:final_flutter/core/di/injector.dart';
-import 'package:final_flutter/features/admin/presentation/view/staff/admin_staff_management_form_screen.dart';
-import 'package:final_flutter/features/admin/presentation/view/user/user_management_screen.dart';
-import 'package:final_flutter/features/auth/data/models/user_model.dart';
-import 'package:final_flutter/features/auth/presentation/bloc/auth_state.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/admin/presentation/bloc/user/user_management_cubit.dart';
+import '../../features/admin/presentation/view/web/admin_dashboard_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agencies_list_screen.dart';
+import '../../features/admin_analytics/presentation/bloc/performance_cubit.dart';
+import '../../features/admin_analytics/presentation/bloc/statistics_cubit.dart';
+import '../../features/admin_reports/presentation/bloc/reports_cubit.dart';
+import '../../features/admin_users/presentation/bloc/admin_user_detail_cubit.dart';
+import '../../features/admin_analytics/presentation/screens/admin_statistics_screen.dart';
+import '../../features/admin_analytics/presentation/screens/system_performance_screen.dart';
+import '../../features/admin_reports/presentation/screens/admin_reports_screen.dart';
+import '../../features/admin_users/presentation/screens/admin_user_detail_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agency_details_screen.dart';
 import '../../features/admin/presentation/view/agency/admin_agency_form_screen.dart';
-import '../../features/auth/data/models/user_type_enum.dart';
+import '../../features/admin/presentation/view/staff/admin_staff_management_form_screen.dart';
+import '../../features/admin/presentation/view/user/user_management_screen.dart';
+import '../../features/agencies/presentation/cubit/agency_cubit.dart';
+import '../../features/attachments/presentation/cubit/attachment_cubit.dart';
+import '../../features/auth/data/models/user_model.dart';
+import '../../features/auth/data/models/user_role_enum.dart';
+import '../../features/complaints/domain/entities/complaint_entity.dart';
+import '../../features/complaints/presentation/cubit/complaint_details_cubit.dart';
+import '../../features/complaints/presentation/cubit/create_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/my_complaints_cubit.dart';
+import '../../features/complaints/presentation/cubit/status_history_cubit.dart';
+import '../../features/complaints/presentation/cubit/track_complaint_cubit.dart';
+import '../../features/complaints/presentation/cubit/update_complaint_cubit.dart';
+import '../../features/complaints/presentation/screens/complaint_details_screen.dart';
+import '../../features/complaints/presentation/screens/complaint_submitted_screen.dart';
+import '../../features/complaints/presentation/screens/my_complaints_screen.dart';
+import '../../features/complaints/presentation/screens/submit_complaint_screen.dart';
+import '../../features/complaints/presentation/screens/track_complaint_entry_screen.dart';
+import '../../features/complaints/presentation/screens/track_complaint_screen.dart';
+import '../../features/complaints/presentation/screens/update_complaint_screen.dart';
 import '../../features/auth/presentation/bloc/auth_cubit.dart';
-import '../../features/auth/presentation/login_screen.dart';
+import '../../features/auth/presentation/bloc/auth_state.dart';
+import '../../features/auth/presentation/screens/account_locked_screen.dart';
+import '../../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/otp_screen.dart';
+import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/auth/presentation/screens/reset_password_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/profile/presentation/screens/delete_account_screen.dart';
+import '../../features/profile/presentation/screens/edit_profile_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/screens_stub/screens_stubs.dart';
+import '../di/injector.dart';
 import '../widget/adaptive_shell_builder.dart';
 import 'navigation_key.dart';
 import 'route_paths.dart';
 
-GoRouter routes = GoRouter(
-  navigatorKey: navigatorKey,
-  initialLocation: RoutePaths.profile,
-  routes: [
-    /*
-    GoRoute(
-      path: RoutePaths.splashScreen,
-      builder: (context, state) => SplashScreen(),
-    ),
-    */
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_cubit.dart';
+import '../../features/agency_workspace/presentation/screens/staff_complaint_screen.dart';
+import '../../features/agency_workspace/presentation/cubit/staff_complaints_details_cubit.dart';
+import '../../features/agency_workspace/presentation/screens/staff_complaint_details_screen.dart';
 
-    // --------------------AUTH--------------------
+final GoRouter routes = GoRouter(
+  navigatorKey: navigatorKey,
+  initialLocation: RoutePaths.login,
+  // Re-runs `redirect` whenever the session changes, so a logout or a 401
+  // bounces the user out without any screen having to navigate manually.
+  refreshListenable: _AuthRefreshNotifier(getIt<AuthCubit>()),
+  redirect: _redirect,
+  routes: [
+    // -------------------------------- Public --------------------------------
     GoRoute(
       path: RoutePaths.login,
-      builder: (context, state) => BlocProvider.value(
-        value: getIt<AuthCubit>(),
-        child: const LoginScreen(),
-      ),
-    ),
-    /*
-    GoRoute(
-      path: RoutePaths.signup,
-      builder: (context, state) => SignupScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.aLocked,
-      builder: (context, state) => AccountLockedScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.verifyOTP,
-      builder: (context, state) => VerifyOtpScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.resendOTP,
-      builder: (context, state) => ResendOtpScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.forgotPassword,
-      builder: (context, state) => ForgotPasswordScreen(),
-    ),
-    GoRoute(
-      path: RoutePaths.resetPassword,
-      builder: (context, state) => ResetPasswordScreen(),
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: RoutePaths.cTrackEntry,
-      builder: (context, state) => TrackEntryScreen(),
+      builder: (context, state) => const TrackComplaintEntryScreen(),
     ),
     GoRoute(
       path: RoutePaths.cTrackCode,
-      builder: (context, state) =>
-          TrackComplaintScreen(code: state.pathParameters['code']!),
+      builder: (context, state) => BlocProvider(
+        create: (_) => getIt<TrackComplaintCubit>(),
+        child: TrackComplaintScreen(
+          referenceCode: state.pathParameters['code']!,
+        ),
+      ),
     ),
-    */
-    // ----------------------------------------
+
+    GoRoute(
+      path: RoutePaths.signup,
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.verifyOTP,
+      // `contact` is the email or phone the code was sent to; it arrives as a
+      // query parameter so a resend link can reopen this screen directly.
+      builder: (context, state) =>
+          OtpScreen(contact: state.uri.queryParameters['contact'] ?? ''),
+    ),
+    GoRoute(
+      path: RoutePaths.forgotPassword,
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.resetPassword,
+      builder: (context, state) => ResetPasswordScreen(
+        contact: state.uri.queryParameters['contact'] ?? '',
+      ),
+    ),
+    GoRoute(
+      path: RoutePaths.aLocked,
+      builder: (context, state) => const AccountLockedScreen(),
+    ),
+
+    // --------------------------- Authenticated shell ------------------------
     ShellRoute(
       builder: (context, state, child) {
-        final state = context.read<AuthCubit>().state;
-        UserModel? user;
-        if (state is LoginSuccessState) {
-          user = state.user;
-        }
-        final role = user?.type ?? UserType.citizen;
-
+        final role = context.select<AuthCubit, UserRole>(
+          (cubit) => cubit.role ?? UserRole.citizen,
+        );
         return AdaptiveShellBuilder(currentChild: child, role: role);
       },
       routes: [
-        /*
-        GoRoute(
-          path: RoutePaths.submissionSuccess,
-          builder: (context, state) => SubmissionSuccessScreen(),
-        ),
-        */
-        // All logged-in users)
+        // ----- All logged-in users -----
         GoRoute(
           path: RoutePaths.profile,
-          builder: (context, state) => ProfileScreen(),
-        ), // GET/PUT/DELETE /api/auth/profile
-        /*
+          builder: (context, state) => const ProfileScreen(),
+          routes: [
+            GoRoute(
+              path: 'edit',
+              builder: (context, state) => const EditProfileScreen(),
+            ),
+            GoRoute(
+              path: 'delete',
+              builder: (context, state) => const DeleteAccountScreen(),
+            ),
+          ],
+        ),
         GoRoute(
           path: RoutePaths.notifications,
-          builder: (context, state) => NotificationsScreen(),
+          builder: (context, state) => const NotificationsScreen(),
         ),
-        */
-        // ----------------------------------------
-        // CITIZEN ( /api/complaints)
-        // ----------------------------------------
-        GoRoute(
-          path: RoutePaths.cComplaints,
-          builder: (context, state) => CitizenComplaintListScreen(),
-        ), // GET /api/complaints
+
+        // ----- Citizen (/api/complaints) -----
         GoRoute(
           path: RoutePaths.cHome,
           builder: (context, state) => const CitizenHomeScreen(),
         ),
-        /*
+        GoRoute(
+          path: RoutePaths.cComplaints,
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<MyComplaintsCubit>(),
+            child: const MyComplaintsScreen(),
+          ),
+        ),
         GoRoute(
           path: RoutePaths.cComplaintDetails,
-          builder: (context, state) => CitizenComplaintDetailScreen(
-            id: int.parse(state.pathParameters['id']!),
+          builder: (context, state) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => getIt<ComplaintDetailsCubit>()),
+              BlocProvider(create: (_) => getIt<StatusHistoryCubit>()),
+            ],
+            child: ComplaintDetailsScreen(
+              complaintId: int.parse(state.pathParameters['id']!),
+            ),
           ),
         ),
-        */
+        // GoRoute(
+        //   path: RoutePaths.cUpdate,
+        //   builder: (context, state) => MultiBlocProvider(
+        //     providers: [
+        //       BlocProvider(create: (_) => getIt<UpdateComplaintCubit>()),
+        //       BlocProvider(create: (_) => getIt<AttachmentCubit>()),
+        //       // The form lets the citizen change the target agency.
+        //       BlocProvider(create: (_) => getIt<AgencyCubit>()),
+        //     ],
+        //     // Passed through `extra` by the details screen; a cold hit on this
+        //     // URL has no complaint to edit and falls back to the list.
+        //     child: UpdateComplaintScreen(
+        //       complaint: state.extra as ComplaintEntity,
+        //     ),
+        //   ),
+        // ),
         GoRoute(
-          path: RoutePaths.submit,
-          builder: (context, state) => SubmitComplaintScreen(),
-        ), // POST /api/complaints (multipart)
-        /*
-        GoRoute(
-          path: RoutePaths.cUpdate,
-          builder: (context, state) => UpdateComplaintScreen(
-            id: int.parse(state.pathParameters['id']!),
+          path: RoutePaths.submissionSuccess,
+          builder: (context, state) => ComplaintSubmittedScreen(
+            referenceCode: state.uri.queryParameters['code'] ?? '',
+            complaintId: int.tryParse(state.uri.queryParameters['id'] ?? ''),
           ),
         ),
-        GoRoute(
-          path: RoutePaths.cAttachments,
-          builder: (context, state) => UploadAttachmentsScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        */
-        // ----------------------------------------
-        // Staff ( /api/agency/ )
-        // ----------------------------------------
+        // GoRoute(
+        //   path: RoutePaths.submit,
+        //   builder: (context, state) => MultiBlocProvider(
+        //     providers: [
+        //       BlocProvider(create: (_) => getIt<CreateComplaintCubit>()),
+        //       BlocProvider(create: (_) => getIt<AttachmentCubit>()),
+        //       // Backs the agency picker in the first step of the form.
+        //       BlocProvider(create: (_) => getIt<AgencyCubit>()),
+        //     ],
+        //     child: const SubmitComplaintScreen(),
+        //   ),
+        // ),
+
+        // ----- Staff (/api/agency/*) — also served to admins -----
         GoRoute(
           path: RoutePaths.sComplaints,
-          builder: (context, state) => StaffComplainsQueueScreen(),
-        ), // GET /api/agency/complaints
-        // GoRoute(
-        //   path: RoutePaths.staffRequestInfo,
-        //   builder: (context, state) => StaffRequestInfoScreen(
-        //     complaintId: int.parse(state.pathParameters['id']!),
-        //   ),
-        // ), // POST /api/agency/complaints/{id}/request-info
-        /*
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<StaffComplaintsCubit>()..loadComplaints(),
+            child: const StaffComplaintsScreen(),
+          ),
+        ),
         GoRoute(
           path: RoutePaths.sComplaint,
-          builder: (context, state) => StaffComplaintDetailScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
+          builder: (context, state) {
+            final complaintId = int.parse(state.pathParameters['id']!);
+
+            return BlocProvider(
+              create: (_) =>
+                  getIt<StaffComplaintDetailsCubit>()
+                    ..loadComplaint(complaintId),
+              child: StaffComplaintDetailsScreen(complaintId: complaintId),
+            );
+          },
         ),
-        GoRoute(
-          path: RoutePaths.updateComplaint,
-          builder: (context, state) => StaffUpdateComplaintScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintLock,
-          builder: (context, state) => StaffLockComplaintScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintUnlock,
-          builder: (context, state) => StaffUnlockComplaintScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintRevisions,
-          builder: (context, state) => StaffRevisionsScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        GoRoute(
-          path: RoutePaths.complaintStatusHistory,
-          builder: (context, state) => StaffStatusHistoryScreen(
-            id: int.parse(state.pathParameters['id']!),
-          ),
-        ),
-        */
-        // ----------------------------------------
-        // ADMIN ( /api/admin, /api/statistics, /api/agencies)
-        // ----------------------------------------
+
+        // ----- Admin (/api/admin, /api/statistics, /api/agencies) -----
         GoRoute(
           path: RoutePaths.statistics,
-          builder: (context, state) => AdminStatisticsScreen(),
-        ), // GET /api/statistics/overall, /by-agency, /by-date, /performance
+          builder: (context, state) => Scaffold(),
+        ),
         GoRoute(
           path: RoutePaths.users,
           builder: (context, state) => BlocProvider(
+            // The screen is stateless and has no initState, so the first
+            // fetch has to be kicked off where the cubit is created.
             create: (_) => getIt<UserManagementCubit>()..loadUsers(),
             child: const AdminUsersManagementScreen(),
           ),
-        ), // GET /api/admin/users
-
+        ),
+        GoRoute(
+          path: RoutePaths.user,
+          builder: (context, state) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) =>
+                    getIt<AdminUserDetailCubit>()
+                      ..load(int.parse(state.pathParameters['id']!)),
+              ),
+              // The detail screen refreshes the list after a save or delete.
+              BlocProvider(create: (_) => getIt<UserManagementCubit>()),
+            ],
+            child: AdminUserDetailScreen(
+              id: int.parse(state.pathParameters['id']!),
+            ),
+          ),
+        ),
         GoRoute(
           path: RoutePaths.agencies,
-          builder: (context, state) => AdminAgenciesListScreen(),
-        ), // GET /api/agencies, POST /api/agencies
+          // One destination, two layouts: a two-pane view where there is room
+          // for it, the plain list where there is not.
+          builder: (context, state) => LayoutBuilder(
+            builder: (context, constraints) => constraints.maxWidth >= 900
+                ? const AdminAgenciesWebView()
+                : const AdminAgenciesListScreen(),
+          ),
+        ),
         GoRoute(
           path: RoutePaths.addAgency,
-          builder: (context, state) => AdminAgencyFormScreen(),
-        ), // POST /api/agencies
+          builder: (context, state) => const AdminAgencyFormScreen(),
+        ),
         GoRoute(
           path: RoutePaths.updateAgency,
           builder: (context, state) =>
               AdminAgencyFormScreen(id: int.parse(state.pathParameters['id']!)),
-        ), // PUT /api/agencies/{id}
+        ),
         GoRoute(
           path: RoutePaths.agency,
           builder: (context, state) => AdminAgencyDetailsScreen(
             id: int.parse(state.pathParameters['id']!),
           ),
-        ), // GET /api/agencies/{id}
+        ),
         GoRoute(
           path: RoutePaths.addStaff,
           builder: (context, state) => AdminStaffManagementFormScreen(
@@ -239,65 +294,78 @@ GoRouter routes = GoRouter(
           ),
         ),
         GoRoute(
+          path: RoutePaths.performance,
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<PerformanceCubit>()..load(),
+            child: const SystemPerformanceScreen(),
+          ),
+        ),
+        GoRoute(
           path: RoutePaths.reports,
-          builder: (context, state) => AdminReportsScreen(),
-        ), // GET /api/reports/complaints/csv, /pdf, /statistics/csv
+          builder: (context, state) => BlocProvider(
+            create: (_) => getIt<ReportsCubit>(),
+            child: const AdminReportsScreen(),
+          ),
+        ),
       ],
     ),
   ],
-  redirect: (context, state) => _redirectContent(context, state),
 );
 
-String _getHomePath(UserType role) {
-  switch (role) {
-    case UserType.admin:
-      return RoutePaths.statistics;
-    case UserType.staff:
-      return RoutePaths.sComplaints;
-    case UserType.citizen:
-      return RoutePaths.cHome;
-  }
-}
-
-_redirectContent(BuildContext context, GoRouterState state) {
+/// Auth guard + role guard.
+///
+/// Returning `null` means "let the requested location through".
+String? _redirect(BuildContext context, GoRouterState state) {
   final authState = context.read<AuthCubit>().state;
-  UserModel? user;
-  if (authState is LoginSuccessState) {
-    user = authState.user;
-  }
 
+  // A stored token is still being exchanged for a user — hold the current
+  // location rather than flashing the login screen and redirecting back.
+  if (authState is AuthRestoringState) return null;
+
+  final UserModel? user = authState is LoginSuccessState
+      ? authState.user
+      : null;
   final location = state.matchedLocation;
-  final bool isPublicRoute =
-      location == RoutePaths.cTrackEntry ||
-      location == RoutePaths.cTrackCode ||
-      location == RoutePaths.aLocked ||
-      location == RoutePaths.splashScreen;
-  // Auth Guard
-  final isAuthRoute =
-      location == RoutePaths.login ||
-      location == RoutePaths.signup ||
-      location == RoutePaths.verifyOTP ||
-      location == RoutePaths.resendOTP;
 
-  if (user == null && !isAuthRoute && !isPublicRoute) return RoutePaths.login;
-  if (user != null && isAuthRoute) return _getHomePath(user.type);
-
-  // Role Guard
-  if (user != null) {
-    final isAdminRoute = location.startsWith('/admin');
-    final isStaffRoute = location.startsWith('/staff');
-
-    if (user.type == UserType.citizen && (isStaffRoute || isAdminRoute)) {
-      return RoutePaths.cHome;
+  // --- Auth guard ---
+  if (user == null) {
+    if (RoutePaths.isAuthRoute(location) || RoutePaths.isPublic(location)) {
+      return null;
     }
-    if (user.type == UserType.staff && isAdminRoute) {
-      return RoutePaths.sComplaints;
-    }
+    return RoutePaths.login;
   }
 
-  if (user != null && location == '/') {
-    return _getHomePath(user.type);
+  if (RoutePaths.isAuthRoute(location)) {
+    return RoutePaths.homeForRole(user.role);
+  }
+
+  // --- Role guard ---
+  // Mirrors the backend middleware: `role.admin` on /admin/*, and
+  // `role.staff_or_admin` on the agency workspace.
+  final role = user.role;
+
+  if (RoutePaths.isAdminRoute(location) && !role.isAdmin) {
+    return RoutePaths.homeForRole(role);
+  }
+
+  if (RoutePaths.isStaffRoute(location) && !role.canAccessAgencyWorkspace) {
+    return RoutePaths.homeForRole(role);
   }
 
   return null;
+}
+
+/// Bridges the auth Cubit to go_router's `refreshListenable`.
+class _AuthRefreshNotifier extends ChangeNotifier {
+  _AuthRefreshNotifier(AuthCubit cubit) {
+    _subscription = cubit.stream.listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<AuthState> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }
