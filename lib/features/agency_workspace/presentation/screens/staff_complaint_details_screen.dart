@@ -204,13 +204,6 @@ class _StaffComplaintDetailsScreenState
                     const SizedBox(height: 16),
 
                     RevisionsSection(revisions: state.revisions),
-                    const SizedBox(height: 16),
-
-                    StatusHistorySection(history: state.statusHistory),
-
-                    const SizedBox(height: 16),
-
-                    RevisionsSection(revisions: state.revisions),
                   ],
                 ),
               ),

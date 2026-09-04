@@ -5,24 +5,28 @@ import 'package:final_flutter/features/auth/data/models/user_role_enum.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:go_router/go_router.dart';
 
-void openFromNotification({int? complaintId}) {
-  final context = navigatorKey.currentContext;
-  if (context == null) return;
-
-  if (complaintId == null) {
-    context.go(RoutePaths.notifications);
-    return;
-  }
+/// Where a notification points, given the role of the signed-in user.
+String notificationRoute({int? complaintId}) {
+  if (complaintId == null) return RoutePaths.notifications;
 
   final role = getIt<AuthCubit>().user?.role ?? UserRole.citizen;
   switch (role) {
     case UserRole.staff:
-      context.go(RoutePaths.sComplaintPath(complaintId));
-      return;
+      return RoutePaths.sComplaintPath(complaintId);
     case UserRole.admin:
     case UserRole.citizen:
-      context.go(RoutePaths.cComplaintDetailsPath(complaintId));
+      return RoutePaths.cComplaintDetailsPath(complaintId);
   }
+}
+
+/// Entry point for a tapped *push* notification. The app may be anywhere, or
+/// cold-starting with no stack at all, so this replaces the stack. A tap inside
+/// the notifications list pushes instead, so that back returns to the list.
+void openFromNotification({int? complaintId}) {
+  final context = navigatorKey.currentContext;
+  if (context == null) return;
+
+  context.go(notificationRoute(complaintId: complaintId));
 }
 
 int? complaintIdFromData(Map<String, dynamic> data) {

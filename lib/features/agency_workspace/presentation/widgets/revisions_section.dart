@@ -82,7 +82,7 @@ class _RevisionCard extends StatelessWidget {
         bottom: 16,
       ),
       title: Text(
-        LocaleKeys.versionNumber.tr(args: ['\${current.versionNumber}']),
+        LocaleKeys.versionNumber.tr(args: [current.versionNumber.toString()]),
         style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -90,9 +90,12 @@ class _RevisionCard extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            LocaleKeys.changedBy.tr(args: ['\${current.changedByName}']),
-          ),
+          // The model falls back to an empty name when the API omits the
+          // author, and "By: " on its own reads worse than no line at all.
+          if (current.changedByName.trim().isNotEmpty)
+            Text(
+              LocaleKeys.changedBy.tr(args: [current.changedByName]),
+            ),
           if (current.changedAt != null)
             Text(
               _formatDate(current.changedAt!),

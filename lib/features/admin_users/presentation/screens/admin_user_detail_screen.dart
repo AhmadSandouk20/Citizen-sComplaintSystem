@@ -5,7 +5,6 @@ import 'package:final_flutter/core/widget/app_button.dart';
 import 'package:final_flutter/core/widget/error_view.dart';
 import 'package:final_flutter/features/admin_users/presentation/bloc/admin_user_detail_cubit.dart';
 import 'package:final_flutter/features/admin_users/presentation/bloc/admin_user_detail_state.dart';
-import 'package:final_flutter/features/admin/presentation/bloc/user/user_management_cubit.dart';
 import 'package:final_flutter/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,18 +23,16 @@ class AdminUserDetailScreen extends StatelessWidget {
     return BlocConsumer<AdminUserDetailCubit, AdminUserDetailState>(
       listener: (context, state) {
         if (state is AdminUserDetailSaved) {
-          context.read<UserManagementCubit>().loadUsers(refresh: true);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(LocaleKeys.userUpdated.tr())),
           );
-          context.go(RoutePaths.users);
+          _leave(context);
         }
         if (state is AdminUserDetailDeleted) {
-          context.read<UserManagementCubit>().loadUsers(refresh: true);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(LocaleKeys.userDeleted.tr())),
           );
-          context.go(RoutePaths.users);
+          _leave(context);
         }
         if (state is AdminUserDetailLoaded && state.actionError != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -143,6 +140,17 @@ class AdminUserDetailScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  /// Returns to the list, telling it a change landed so it can reload. Popping
+  /// keeps the list page that pushed us, which is what carries the result back;
+  /// `go` is only the fallback for a deep link straight into this screen.
+  void _leave(BuildContext context) {
+    if (context.canPop()) {
+      context.pop(true);
+    } else {
+      context.go(RoutePaths.users);
+    }
   }
 
   Future<void> _confirmDelete(BuildContext context) async {

@@ -41,7 +41,7 @@ class AdminUsersManagementScreen extends StatelessWidget {
             isLoading: state.isLoadingMore,
             itemBuilder: (context, user) => UserCard(
               user: user,
-              onOpen: () => context.push(RoutePaths.userPath(user.id)),
+              onOpen: () => _openUser(context, user.id),
               onDelete: () =>
                   context.read<UserManagementCubit>().deleteUser(user.id),
               onToggleActive: () =>
@@ -67,6 +67,16 @@ class AdminUsersManagementScreen extends StatelessWidget {
         return const SizedBox.shrink();
       },
     );
+  }
+
+  /// The detail screen edits the user through its own cubit, so this list only
+  /// learns about a role or status change from the result it pops with.
+  Future<void> _openUser(BuildContext context, int userId) async {
+    final cubit = context.read<UserManagementCubit>();
+    final changed = await context.push<bool>(RoutePaths.userPath(userId));
+    if (changed == true) {
+      cubit.loadUsers(refresh: true);
+    }
   }
 
   void _confirmDelete(BuildContext context, UserModel user) {

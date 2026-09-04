@@ -50,8 +50,20 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
     }
   }
 
+  /// Leaves the screen, reporting whether anything changed. A tap on a push
+  /// notification replaces the whole stack, so this screen can be the only page
+  /// left; popping then would trip go_router's empty-stack assert. Fall back to
+  /// the list, which is where a pop would have landed anyway.
+  void _leave(bool changed) {
+    if (context.canPop()) {
+      context.pop(changed);
+    } else {
+      context.go(RoutePaths.cComplaints);
+    }
+  }
+
   void _goBack() {
-    Navigator.of(context).pop(_hasChanges);
+    _leave(_hasChanges);
   }
 
   Future<void> _confirmDelete() async {
@@ -121,7 +133,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                 const SnackBar(content: Text('تم حذف الشكوى بنجاح')),
               );
 
-              Navigator.of(context).pop(true);
+              _leave(true);
             }
           },
           builder: (context, state) {

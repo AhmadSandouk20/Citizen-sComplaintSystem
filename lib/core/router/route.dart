@@ -243,16 +243,13 @@ final GoRouter routes = GoRouter(
         ),
         GoRoute(
           path: RoutePaths.user,
-          builder: (context, state) => MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (_) =>
-                    getIt<AdminUserDetailCubit>()
-                      ..load(int.parse(state.pathParameters['id']!)),
-              ),
-              // The detail screen refreshes the list after a save or delete.
-              BlocProvider(create: (_) => getIt<UserManagementCubit>()),
-            ],
+          // No UserManagementCubit here: it is a factory, so a second provider
+          // would hand the detail screen a throwaway instance and the list
+          // would never see the refresh. The list reloads on pop instead.
+          builder: (context, state) => BlocProvider(
+            create: (_) =>
+                getIt<AdminUserDetailCubit>()
+                  ..load(int.parse(state.pathParameters['id']!)),
             child: AdminUserDetailScreen(
               id: int.parse(state.pathParameters['id']!),
             ),

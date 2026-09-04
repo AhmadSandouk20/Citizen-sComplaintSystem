@@ -8,6 +8,7 @@ import 'package:final_flutter/features/notifications/presentation/widgets/notifi
 import 'package:final_flutter/features/notifications/presentation/notification_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -92,7 +93,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     notification: item,
                     onTap: () {
                       context.read<NotificationsCubit>().markAsRead(item.id);
-                      openFromNotification(complaintId: item.complaintId);
+                      final complaintId = item.complaintId;
+                      // Nothing to open: this list is already the destination.
+                      if (complaintId == null) return;
+                      // Push, so the details screen has this list to go back to.
+                      context.push(
+                        notificationRoute(complaintId: complaintId),
+                      );
                     },
                   );
                 },
