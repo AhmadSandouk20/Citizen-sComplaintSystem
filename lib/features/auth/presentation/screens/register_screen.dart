@@ -92,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) return 'الرجاء إدخال كلمة المرور';
-                      if (value.length < 6) return 'كلمة المرور قصيرة جداً (6 أحرف على الأقل)';
+                      if (value.length < 8) return 'كلمة المرور قصيرة جداً (8 أحرف على الأقل)';
                       return null;
                     },
                   ),
