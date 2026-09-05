@@ -43,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _onLoggedIn(BuildContext context, UserRole role) async {
-    // Register for push and pull the badge count before the first shell frame.
     await getIt<FcmService>().syncToken();
     await getIt<NotificationsCubit>().refreshUnreadCount();
     if (!context.mounted) return;
@@ -62,14 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
             _onLoggedIn(context, state.user.role);
           }
           if (state is LoginFailState) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: scheme.error,
-                ),
-              );
+            if (state.message.toLowerCase().contains('locked')) {
+              context.go(RoutePaths.aLocked);
+            } else {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(state.message), backgroundColor: scheme.error));
+            }
           }
         },
         builder: (context, state) {
@@ -77,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
           return CustomScrollView(
             slivers: [
-              // A calm branded header instead of a bare icon on white.
               SliverToBoxAdapter(
                 child: Container(
                   width: double.infinity,
@@ -86,10 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     gradient: LinearGradient(
                       begin: AlignmentDirectional.topStart,
                       end: AlignmentDirectional.bottomEnd,
-                      colors: [
-                        scheme.primary,
-                        Color.lerp(scheme.primary, scheme.secondary, 0.35)!,
-                      ],
+                      colors: [scheme.primary, Color.lerp(scheme.primary, scheme.secondary, 0.35)!],
                     ),
                     borderRadius: const BorderRadiusDirectional.only(
                       bottomStart: Radius.circular(32),
@@ -106,18 +100,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: scheme.onPrimary.withValues(alpha: 0.16),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Icon(
-                          Icons.account_balance_outlined,
-                          size: 30,
-                          color: scheme.onPrimary,
-                        ),
+                        child: Icon(Icons.account_balance_outlined, size: 30, color: scheme.onPrimary),
                       ),
                       const SizedBox(height: 20),
                       Text(
                         LocaleKeys.ccs.tr(),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          color: scheme.onPrimary,
-                        ),
+                        style: theme.textTheme.headlineMedium?.copyWith(color: scheme.onPrimary),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -151,14 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               autofillHints: const [AutofillHints.username],
                               decoration: InputDecoration(
                                 labelText: LocaleKeys.identifier.tr(),
-                                prefixIcon: const Icon(
-                                  Icons.person_outline,
-                                  size: 20,
-                                ),
+                                prefixIcon: const Icon(Icons.person_outline, size: 20),
                               ),
-                              validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? LocaleKeys.identifierRequired.tr()
-                                  : null,
+                              validator: (v) =>
+                                  (v == null || v.trim().isEmpty) ? LocaleKeys.identifierRequired.tr() : null,
                             ),
                             const SizedBox(height: 14),
                             TextFormField(
@@ -170,10 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onFieldSubmitted: (_) => _submit(),
                               decoration: InputDecoration(
                                 labelText: LocaleKeys.password.tr(),
-                                prefixIcon: const Icon(
-                                  Icons.lock_outline,
-                                  size: 20,
-                                ),
+                                prefixIcon: const Icon(Icons.lock_outline, size: 20),
                                 suffixIcon: IconButton(
                                   tooltip: _obscurePassword
                                       ? LocaleKeys.showPassword.tr()
@@ -184,9 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         : Icons.visibility_off_outlined,
                                     size: 20,
                                   ),
-                                  onPressed: () => setState(
-                                    () => _obscurePassword = !_obscurePassword,
-                                  ),
+                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                                 ),
                               ),
                               validator: (v) {
@@ -203,10 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Align(
                               alignment: AlignmentDirectional.centerEnd,
                               child: TextButton(
-                                onPressed: isLoading
-                                    ? null
-                                    : () =>
-                                          context.push(RoutePaths.forgotPassword),
+                                onPressed: isLoading ? null : () => context.push(RoutePaths.forgotPassword),
                                 child: Text(LocaleKeys.forgotPassword.tr()),
                               ),
                             ),
@@ -224,14 +200,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  LocaleKeys.noAccount.tr(),
-                                  style: theme.textTheme.bodyMedium,
-                                ),
+                                Text(LocaleKeys.noAccount.tr(), style: theme.textTheme.bodyMedium),
                                 TextButton(
-                                  onPressed: isLoading
-                                      ? null
-                                      : () => context.push(RoutePaths.signup),
+                                  onPressed: isLoading ? null : () => context.push(RoutePaths.signup),
                                   child: Text(LocaleKeys.createAccount.tr()),
                                 ),
                               ],
@@ -241,9 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             Center(
                               child: TextButton.icon(
-                                onPressed: isLoading
-                                    ? null
-                                    : () => context.push(RoutePaths.cTrackEntry),
+                                onPressed: isLoading ? null : () => context.push(RoutePaths.cTrackEntry),
                                 icon: const Icon(Icons.search, size: 18),
                                 label: Text(LocaleKeys.trackWithoutLogin.tr()),
                               ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -134,12 +135,7 @@ class AppTheme {
         fontWeight: FontWeight.w700,
         color: scheme.onSurface,
       ),
-      titleLarge: TextStyle(
-        fontSize: 19,
-        height: 1.4,
-        fontWeight: FontWeight.w600,
-        color: scheme.onSurface,
-      ),
+      titleLarge: TextStyle(fontSize: 19, height: 1.4, fontWeight: FontWeight.w600, color: scheme.onSurface),
       titleMedium: TextStyle(
         fontSize: 16,
         height: 1.45,
@@ -152,27 +148,10 @@ class AppTheme {
         fontWeight: FontWeight.w600,
         color: scheme.onSurfaceVariant,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        height: 1.6,
-        color: scheme.onSurface,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        height: 1.6,
-        color: scheme.onSurfaceVariant,
-      ),
-      bodySmall: TextStyle(
-        fontSize: 12.5,
-        height: 1.5,
-        color: scheme.onSurfaceVariant,
-      ),
-      labelLarge: TextStyle(
-        fontSize: 15,
-        height: 1.2,
-        fontWeight: FontWeight.w600,
-        color: scheme.onSurface,
-      ),
+      bodyLarge: TextStyle(fontSize: 16, height: 1.6, color: scheme.onSurface),
+      bodyMedium: TextStyle(fontSize: 14, height: 1.6, color: scheme.onSurfaceVariant),
+      bodySmall: TextStyle(fontSize: 12.5, height: 1.5, color: scheme.onSurfaceVariant),
+      labelLarge: TextStyle(fontSize: 15, height: 1.2, fontWeight: FontWeight.w600, color: scheme.onSurface),
       labelMedium: TextStyle(
         fontSize: 13,
         height: 1.2,
@@ -199,11 +178,7 @@ class AppTheme {
       dividerColor: divider,
       splashFactory: InkSparkle.splashFactory,
 
-      dividerTheme: DividerThemeData(
-        color: divider,
-        thickness: 1,
-        space: 1,
-      ),
+      dividerTheme: DividerThemeData(color: divider, thickness: 1, space: 1),
 
       // Flat app bar that sits on the page rather than floating above it.
       appBarTheme: AppBarTheme(
@@ -216,9 +191,7 @@ class AppTheme {
         titleSpacing: 20,
         titleTextStyle: text.titleLarge,
         iconTheme: IconThemeData(color: scheme.onSurface, size: 22),
-        systemOverlayStyle: isLight
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
+        systemOverlayStyle: isLight ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
       ),
 
       // Border, not shadow. Keeps dense lists calm.
@@ -297,10 +270,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: isLight ? AppColors.surfaceMuted : AppColors.darkSurfaceMuted,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: _control,
           borderSide: BorderSide(color: divider),
@@ -326,37 +296,25 @@ class AppTheme {
           borderSide: BorderSide(color: divider),
         ),
         labelStyle: text.bodyMedium,
-        floatingLabelStyle: TextStyle(
-          color: scheme.primary,
-          fontWeight: FontWeight.w600,
-        ),
-        hintStyle: text.bodyMedium?.copyWith(
-          color: scheme.onSurfaceVariant.withValues(alpha: 0.7),
-        ),
+        floatingLabelStyle: TextStyle(color: scheme.primary, fontWeight: FontWeight.w600),
+        hintStyle: text.bodyMedium?.copyWith(color: scheme.onSurfaceVariant.withValues(alpha: 0.7)),
         errorStyle: text.bodySmall?.copyWith(color: scheme.error),
         prefixIconColor: scheme.onSurfaceVariant,
         suffixIconColor: scheme.onSurfaceVariant,
       ),
 
       chipTheme: ChipThemeData(
-        backgroundColor: isLight
-            ? AppColors.surfaceMuted
-            : AppColors.darkSurfaceMuted,
+        backgroundColor: isLight ? AppColors.surfaceMuted : AppColors.darkSurfaceMuted,
         selectedColor: scheme.primaryContainer,
         labelStyle: text.labelMedium!,
         side: BorderSide(color: divider),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radiusPill),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusPill)),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         showCheckmark: false,
       ),
 
       listTileTheme: ListTileThemeData(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 6,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         shape: RoundedRectangleBorder(borderRadius: _control),
         iconColor: scheme.onSurfaceVariant,
         titleTextStyle: text.titleMedium,
@@ -380,17 +338,13 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         showDragHandle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       ),
 
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: scheme.inverseSurface,
-        contentTextStyle: text.bodyMedium?.copyWith(
-          color: scheme.onInverseSurface,
-        ),
+        contentTextStyle: text.bodyMedium?.copyWith(color: scheme.onInverseSurface),
         actionTextColor: scheme.primary,
         elevation: 2,
         insetPadding: const EdgeInsets.all(16),
@@ -404,9 +358,7 @@ class AppTheme {
         elevation: 0,
         height: 68,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        indicatorShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radiusPill),
-        ),
+        indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusPill)),
         labelTextStyle: WidgetStateProperty.resolveWith(
           (s) => s.contains(WidgetState.selected)
               ? text.labelSmall!.copyWith(color: scheme.primary)
@@ -415,9 +367,7 @@ class AppTheme {
         iconTheme: WidgetStateProperty.resolveWith(
           (s) => IconThemeData(
             size: 23,
-            color: s.contains(WidgetState.selected)
-                ? scheme.onPrimaryContainer
-                : scheme.onSurfaceVariant,
+            color: s.contains(WidgetState.selected) ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
           ),
         ),
       ),
@@ -428,18 +378,10 @@ class AppTheme {
         elevation: 0,
         useIndicator: true,
         indicatorShape: RoundedRectangleBorder(borderRadius: _control),
-        selectedLabelTextStyle: text.labelMedium!.copyWith(
-          color: scheme.primary,
-        ),
+        selectedLabelTextStyle: text.labelMedium!.copyWith(color: scheme.primary),
         unselectedLabelTextStyle: text.labelMedium!,
-        selectedIconTheme: IconThemeData(
-          size: 23,
-          color: scheme.onPrimaryContainer,
-        ),
-        unselectedIconTheme: IconThemeData(
-          size: 23,
-          color: scheme.onSurfaceVariant,
-        ),
+        selectedIconTheme: IconThemeData(size: 23, color: scheme.onPrimaryContainer),
+        unselectedIconTheme: IconThemeData(size: 23, color: scheme.onSurfaceVariant),
       ),
 
       tabBarTheme: TabBarThemeData(
@@ -464,22 +406,15 @@ class AppTheme {
 
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? scheme.onPrimary
-              : scheme.onSurfaceVariant,
+          (s) => s.contains(WidgetState.selected) ? scheme.onPrimary : scheme.onSurfaceVariant,
         ),
         trackColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? scheme.primary
-              : scheme.surfaceContainerHighest,
+          (s) => s.contains(WidgetState.selected) ? scheme.primary : scheme.surfaceContainerHighest,
         ),
       ),
 
       tooltipTheme: TooltipThemeData(
-        decoration: BoxDecoration(
-          color: scheme.inverseSurface,
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(color: scheme.inverseSurface, borderRadius: BorderRadius.circular(8)),
         textStyle: text.bodySmall?.copyWith(color: scheme.onInverseSurface),
       ),
 
